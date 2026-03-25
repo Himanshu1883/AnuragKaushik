@@ -51,7 +51,7 @@ const Index = () => {
           <div className="absolute bottom-[-5rem] left-[14%] -z-10 h-64 w-64 rounded-full bg-[#d0472f]/10 blur-3xl" />
           <div className="absolute right-[8%] top-[12%] -z-10 hidden h-44 w-44 rounded-full border border-[#b9872e]/25 md:block" />
 
-          <div className="mx-auto flex min-h-[92vh] w-full max-w-7xl items-center px-6 py-16 md:px-12 lg:px-8">
+          <div className="mx-auto flex min-h-[92vh] w-full max-w-8xl items-center px-6 py-16 md:px-12 lg:px-8">
             <div className="max-w-2xl">
               <p className="mb-5 font-body text-sm uppercase tracking-[0.35em] text-[#a93d2b]">
                 Luxury Bridal Makeup Artist
