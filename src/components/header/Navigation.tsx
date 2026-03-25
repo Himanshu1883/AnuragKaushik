@@ -16,8 +16,8 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="relative border-b border-[#d8c08a]/70 bg-[#fffaf0]/82 backdrop-blur-xl">
-      <div className="flex h-20 items-center justify-between px-6 md:px-8 lg:px-10">
+    <nav className="relative border-b border-[#d8c08a]/70 bg-[#fffaf0]/50 backdrop-blur-xl">
+      <div className="relative flex h-20 items-center justify-between px-6 md:px-8 lg:px-10">
         <button
           className="rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 p-2.5 text-[#2f2415] shadow-sm transition hover:border-[#a93d2b]/40 hover:text-[#a93d2b] lg:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -25,25 +25,28 @@ const Navigation = () => {
           {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
 
-        <div className="hidden items-center gap-2 rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 px-3 py-2 shadow-[0_10px_28px_rgba(150,115,38,0.10)] lg:flex">
-          {navLinks.map((item) => (
-            <Link
-              key={item.name}
-              to={item.href}
-              className="rounded-full px-4 py-2 font-body text-sm font-medium text-[#5b4a2e] transition hover:bg-[#b9872e]/10 hover:text-[#a93d2b]"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
-
-        <div className="absolute left-1/2 -translate-x-1/2 text-center">
+        <div className="text-center">
           <Link to="/">
-            <span className="block font-display text-2xl tracking-[0.18em] text-[#2f2415]">ANURAAG</span>
+            <span className="block font-display text-2xl tracking-[0.18em] text-[#2f2415]">
+              ANURAAG
+            </span>
             <span className="hidden font-body text-[0.62rem] uppercase tracking-[0.36em] text-[#b9872e] sm:block">
               Makeup Artist
             </span>
           </Link>
+        </div>
+
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-4 border-x rounded-lg border-[#d8c08a]/90 bg-[#fff8e8]/50 px-3 py-2 lg:flex">
+          {navLinks.map((item) => (
+            <Link
+              key={item.name}
+              to={item.href}
+              className="group relative px-4 py-2 font-body text-md font-medium text-[#5b4a2e] transition hover:text-[#a93d2b]"
+            >
+              <span>{item.name}</span>
+              <span className="absolute bottom-1 left-4 right-4 h-px origin-center scale-x-0 bg-[#a93d2b] transition-transform duration-300 group-hover:scale-x-100" />
+            </Link>
+          ))}
         </div>
 
         <button
@@ -78,7 +81,10 @@ const Navigation = () => {
 
       {isCartOpen && (
         <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setIsCartOpen(false)} />
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setIsCartOpen(false)}
+          />
           <div className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l border-[#d8c08a]/80 bg-[#fff8e8]/95 backdrop-blur-xl">
             <div className="flex items-center justify-between border-b border-[#d8c08a]/80 p-6">
               <h2 className="font-display text-lg text-[#2f2415]">Your Cart</h2>
@@ -96,25 +102,44 @@ const Navigation = () => {
               ) : (
                 <div className="space-y-4">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="flex gap-4 rounded-[1.5rem] border border-[#dcc690] bg-[#fff1cf]/82 p-4">
+                    <div
+                      key={item.id}
+                      className="flex gap-4 rounded-[1.5rem] border border-[#dcc690] bg-[#fff1cf]/82 p-4"
+                    >
                       <div className="h-16 w-16 overflow-hidden rounded-xl bg-[#edd7a2]">
-                        <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="h-full w-full object-cover"
+                        />
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-sm font-medium text-[#2f2415]">{item.name}</h4>
-                        <p className="text-xs text-[#7d6a4d]">{item.category}</p>
-                        <p className="mt-1 text-sm font-medium text-[#b9872e]">Rs. {item.price.toLocaleString()}</p>
+                        <h4 className="text-sm font-medium text-[#2f2415]">
+                          {item.name}
+                        </h4>
+                        <p className="text-xs text-[#7d6a4d]">
+                          {item.category}
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-[#b9872e]">
+                          Rs. {item.price.toLocaleString()}
+                        </p>
                       </div>
                       <div className="flex flex-col items-center gap-1">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
                           className="px-2 text-xs text-[#2f2415]"
                         >
                           +
                         </button>
-                        <span className="text-sm text-[#2f2415]">{item.quantity}</span>
+                        <span className="text-sm text-[#2f2415]">
+                          {item.quantity}
+                        </span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
                           className="px-2 text-xs text-[#2f2415]"
                         >
                           -
@@ -130,7 +155,9 @@ const Navigation = () => {
               <div className="border-t border-[#d8c08a]/80 p-6">
                 <div className="mb-4 flex justify-between">
                   <span className="text-[#2f2415]">Total</span>
-                  <span className="font-display text-lg text-[#b9872e]">Rs. {totalPrice.toLocaleString()}</span>
+                  <span className="font-display text-lg text-[#b9872e]">
+                    Rs. {totalPrice.toLocaleString()}
+                  </span>
                 </div>
                 <Link
                   to="/checkout"
