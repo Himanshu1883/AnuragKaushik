@@ -1,11 +1,12 @@
-import bridalMakeup from "@/assets/bridal-makeup.jpg";
-import receptionMakeup from "@/assets/reception-makeup.jpg";
-import partyMakeup from "@/assets/party-makeup.jpg";
-import editorialMakeup from "@/assets/editorial-makeup.jpg";
-import engagementMakeup from "@/assets/engagement-makeup.jpg";
-import preweddingMakeup from "@/assets/prewedding-makeup.jpg";
+import bridalMakeup from "@/assets/bridal.jpg";
+import receptionMakeup from "@/assets/recep.jpg";
+import partyMakeup from "@/assets/party1.jpg";
+import editorialMakeup from "@/assets/edit.jpg";
+import engagementMakeup from "@/assets/engage.jpg";
+import preweddingMakeup from "@/assets/prewed.jpeg";
 import masterclassMakeup from "@/assets/masterclass-makeup.jpg";
-import celebrityMakeup from "@/assets/celebrity-makeup.jpg";
+import celebrityMakeup from "@/assets/recep2.jpg";
+
 
 export interface Service {
   id: number;
@@ -95,3 +96,47 @@ export const services: Service[] = [
     image: celebrityMakeup,
   },
 ];
+
+export const ABOUT_ANURAAG = {
+  name: "Anuraag Kaushik",
+  title: "Professional Makeup Artist",
+  tagline: "Bridal & Fashion Glam Specialist ✨",
+
+  image: "/assets/about.jpeg", // adjust path if needed
+
+  description: `Anuraag Kaushik is a passionate and professional freelance makeup artist specializing in bridal and fashion glam looks. With a keen eye for detail and a deep understanding of skin tones, textures, and trends, Anuraag creates stunning transformations that enhance natural beauty while reflecting each client's unique personality.
+
+From elegant bridal makeovers to high-fashion editorial looks, Anuraag combines creativity with precision to deliver flawless results. Known for professionalism, hygiene, and client comfort, every session is tailored to provide a luxurious and memorable experience.`,
+
+  highlights: [
+    "Specializes in Bridal Makeup",
+    "Expert in Fashion & Glam Looks",
+    "Personalized Makeup Sessions",
+    "High-Quality Premium Products",
+    "Focus on Skin-Friendly Techniques",
+    "Available for Travel Worldwide ✈️"
+  ],
+
+  services: [
+    "Bridal Makeup",
+    "Engagement & Reception Makeup",
+    "Fashion & Editorial Shoots",
+    "Party & Occasion Makeup",
+    "Photoshoot Makeup",
+    "Makeup Consultation"
+  ],
+
+  stats: [
+    { value: "500+", label: "Brides Styled" },
+    { value: "8+", label: "Years Experience" },
+    { value: "50+", label: "Celebrity Clients" },
+    { value: "4.9★", label: "Average Rating" },
+  ],
+
+  experienceNote: "Freelance Makeup Artist with diverse experience across bridal, fashion, and event makeup.",
+
+  contact: {
+    phone: "+91 9625272041",
+    availability: "Available for bookings worldwide"
+  }
+};

@@ -11,7 +11,7 @@ const Navigation = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
-    { name: "About", href: "/about/our-story" },
+    { name: "About", href: "/about-us" },
     { name: "Contact", href: "/contact" },
   ];
 
