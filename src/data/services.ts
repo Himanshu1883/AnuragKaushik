@@ -1,11 +1,11 @@
 import bridalMakeup from "@/assets/bridal-makeup.jpg";
-import receptionMakeup from "@/assets/reception-makeup.jpg";
-import partyMakeup from "@/assets/party-makeup.jpg";
+import celebrityMakeup from "@/assets/celebrity-makeup.jpg";
 import editorialMakeup from "@/assets/editorial-makeup.jpg";
 import engagementMakeup from "@/assets/engagement-makeup.jpg";
-import preweddingMakeup from "@/assets/prewedding-makeup.jpg";
 import masterclassMakeup from "@/assets/masterclass-makeup.jpg";
-import celebrityMakeup from "@/assets/celebrity-makeup.jpg";
+import partyMakeup from "@/assets/party-makeup.jpg";
+import preweddingMakeup from "@/assets/prewedding-makeup.jpg";
+import receptionMakeup from "@/assets/reception-makeup.jpg";
 
 export interface Service {
   id: number;
