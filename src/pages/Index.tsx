@@ -15,39 +15,100 @@ const Index = () => {
       <Header />
 
       <main>
-        {/* Hero */}
-        <section className="relative min-h-[90vh] flex items-center">
+        {/* Hero - Magazine Editorial Style */}
+        <section className="relative min-h-screen flex items-center overflow-hidden">
           <div className="absolute inset-0">
             <img
               src={anuraagImage}
               alt="Anuraag Kaushik - Makeup Artist"
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-cover object-center scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
           </div>
-          <div className="relative z-10 px-6 md:px-12 lg:px-20 max-w-2xl">
-            <p className="text-primary font-body text-sm tracking-[0.3em] uppercase mb-4">Professional Makeup Artist</p>
-            <h1 className="font-display text-5xl md:text-7xl text-foreground leading-tight mb-6">
-              Anuraag<br />
-              <span className="text-gradient">Kaushik</span>
-            </h1>
-            <p className="text-foreground/70 font-body font-light text-lg mb-8 max-w-md">
-              Transforming faces into art. Bridal, editorial & celebrity makeup artistry that redefines beauty.
-            </p>
-            <div className="flex gap-4 flex-wrap">
-              <Link
-                to="/services"
-                className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-body font-medium hover:opacity-90 transition flex items-center gap-2"
-              >
-                Book Now <ArrowRight size={16} />
-              </Link>
-              <Link
-                to="/about/our-story"
-                className="border border-foreground/30 text-foreground px-8 py-3 rounded-lg font-body font-light hover:border-primary hover:text-primary transition"
-              >
-                Learn More
-              </Link>
+          
+          {/* Magazine-style typography overlay */}
+          <div className="relative z-10 w-full px-6 md:px-12 lg:px-20">
+            <div className="max-w-7xl mx-auto">
+              {/* Left side - Bold typography */}
+              <div className="space-y-4 md:space-y-6 mb-12 md:mb-0">
+                <div className="inline-block">
+                  <p className="text-white/80 font-body text-xs md:text-sm tracking-[0.3em] uppercase mb-2 border-l-2 border-primary pl-4">
+                    Makeup Artist & Creative Director
+                  </p>
+                </div>
+                
+                <div className="relative">
+                  <h1 className="font-display text-8xl md:text-9xl lg:text-[10rem] text-white leading-[0.9] tracking-tight">
+                    ANURAAG
+                  </h1>
+                  <div className="relative mt-2">
+                    <h1 className="font-display text-7xl md:text-8xl lg:text-[8rem] text-primary/90 leading-[0.9] tracking-tighter italic">
+                      KAUSHIK
+                    </h1>
+                  </div>
+                </div>
+                
+                {/* Magazine-style tagline */}
+                <div className="flex flex-wrap gap-3 mt-6">
+                  <span className="bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 rounded-full text-white text-xs md:text-sm tracking-wide">
+                    BRIDAL
+                  </span>
+                  <span className="bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 rounded-full text-white text-xs md:text-sm tracking-wide">
+                    EDITORIAL
+                  </span>
+                  <span className="bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 rounded-full text-white text-xs md:text-sm tracking-wide">
+                    CELEBRITY
+                  </span>
+                </div>
+              </div>
+              
+              {/* Right side - Magazine quote */}
+              <div className="mt-12 md:mt-16 flex flex-col items-start gap-6">
+                <div className="max-w-xl">
+                  <p className="text-white/90 font-body text-base md:text-lg leading-relaxed mb-6 italic">
+                    "Transforming faces into art. Creating looks that define moments, 
+                    enhance beauty, and tell your unique story."
+                  </p>
+                  
+                  <div className="flex gap-4 flex-wrap">
+                    <Link
+                      to="/services"
+                      className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-body font-medium hover:opacity-90 transition flex items-center gap-2 group"
+                    >
+                      Book Your Session 
+                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                    <Link
+                      to="/about/our-story"
+                      className="border border-white/30 text-white px-8 py-3 rounded-lg font-body font-light hover:border-primary hover:text-primary transition"
+                    >
+                      Discover the Art
+                    </Link>
+                  </div>
+                </div>
+                
+                {/* Magazine-style meta info */}
+                <div className="flex gap-8 text-white/60 text-xs md:text-sm uppercase tracking-wider mt-4">
+                  <span>✦ FEATURED IN</span>
+                  <span>VOGUE INDIA</span>
+                  <span>✦ COSMOPOLITAN</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Decorative corner elements - Magazine style */}
+          <div className="absolute bottom-8 right-8 z-10 hidden md:block">
+            <div className="text-right">
+              <p className="text-white/40 text-xs tracking-widest">EST. 2015</p>
+              <div className="w-12 h-px bg-white/30 mt-2 ml-auto"></div>
+            </div>
+          </div>
+          
+          <div className="absolute top-8 left-8 z-10 hidden md:block">
+            <div className="text-left">
+              <div className="w-12 h-px bg-white/30 mb-2"></div>
+              <p className="text-white/40 text-xs tracking-widest">MAKEUP ARTISTRY</p>
             </div>
           </div>
         </section>
