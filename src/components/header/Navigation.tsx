@@ -1,12 +1,12 @@
-import { X, ShoppingCart, Menu } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { Menu, ShoppingCart, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "@/contexts/CartContext";
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { cartItems, updateQuantity, removeFromCart, totalItems, totalPrice } = useCart();
+  const { cartItems, updateQuantity, totalItems, totalPrice } = useCart();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -16,110 +16,126 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="relative bg-background/90 backdrop-blur-md border-b border-border">
-      <div className="flex items-center justify-between h-16 px-6">
-        {/* Mobile menu */}
+    <nav className="relative border-b border-[#d8c08a]/70 bg-[#fffaf0]/82 backdrop-blur-xl">
+      <div className="flex h-20 items-center justify-between px-6 md:px-8 lg:px-10">
         <button
-          className="lg:hidden p-2 text-foreground"
+          className="rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 p-2.5 text-[#2f2415] shadow-sm transition hover:border-[#a93d2b]/40 hover:text-[#a93d2b] lg:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
 
-        {/* Left nav */}
-        <div className="hidden lg:flex space-x-8">
+        <div className="hidden items-center gap-2 rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 px-3 py-2 shadow-[0_10px_28px_rgba(150,115,38,0.10)] lg:flex">
           {navLinks.map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              className="text-foreground/80 hover:text-primary transition-colors text-sm font-body font-light"
+              className="rounded-full px-4 py-2 font-body text-sm font-medium text-[#5b4a2e] transition hover:bg-[#b9872e]/10 hover:text-[#a93d2b]"
             >
               {item.name}
             </Link>
           ))}
         </div>
 
-        {/* Logo */}
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <Link to="/" className="font-display text-xl tracking-wider text-foreground">
-            ANURAAG
+        <div className="absolute left-1/2 -translate-x-1/2 text-center">
+          <Link to="/">
+            <span className="block font-display text-2xl tracking-[0.18em] text-[#2f2415]">ANURAAG</span>
+            <span className="hidden font-body text-[0.62rem] uppercase tracking-[0.36em] text-[#b9872e] sm:block">
+              Makeup Artist
+            </span>
           </Link>
         </div>
 
-        {/* Cart */}
         <button
-          className="p-2 text-foreground relative"
+          className="relative rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 p-2.5 text-[#2f2415] shadow-sm transition hover:border-[#a93d2b]/40 hover:text-[#a93d2b]"
           onClick={() => setIsCartOpen(true)}
         >
           <ShoppingCart size={20} />
           {totalItems > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 bg-primary text-primary-foreground text-[0.6rem] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#a93d2b] text-[0.6rem] font-bold text-white">
               {totalItems}
             </span>
           )}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-background border-b border-border z-50 px-6 py-6 space-y-4">
-          {navLinks.map((item) => (
-            <Link
-              key={item.name}
-              to={item.href}
-              className="block text-foreground/80 hover:text-primary text-lg font-light"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
+        <div className="absolute left-0 right-0 top-full z-50 border-b border-[#d8c08a]/80 bg-[#fff7e7]/95 px-6 py-6 shadow-[0_18px_45px_rgba(150,115,38,0.14)] backdrop-blur-xl lg:hidden">
+          <div className="space-y-2 rounded-[1.75rem] border border-[#d8c08a]/80 bg-[#fff2d3]/82 p-3">
+            {navLinks.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="block rounded-2xl px-4 py-3 font-body text-base font-medium text-[#5b4a2e] transition hover:bg-[#b9872e]/10 hover:text-[#a93d2b]"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Cart drawer */}
       {isCartOpen && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/60" onClick={() => setIsCartOpen(false)} />
-          <div className="absolute right-0 top-0 h-full w-full max-w-md bg-card border-l border-border flex flex-col">
-            <div className="flex items-center justify-between p-6 border-b border-border">
-              <h2 className="font-display text-lg text-foreground">Your Cart</h2>
-              <button onClick={() => setIsCartOpen(false)} className="text-foreground"><X size={20} /></button>
+          <div className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l border-[#d8c08a]/80 bg-[#fff8e8]/95 backdrop-blur-xl">
+            <div className="flex items-center justify-between border-b border-[#d8c08a]/80 p-6">
+              <h2 className="font-display text-lg text-[#2f2415]">Your Cart</h2>
+              <button
+                onClick={() => setIsCartOpen(false)}
+                className="rounded-full border border-[#d8c08a]/80 bg-[#fff2d3] p-2 text-[#2f2415] transition hover:text-[#a93d2b]"
+              >
+                <X size={20} />
+              </button>
             </div>
+
             <div className="flex-1 overflow-y-auto p-6">
               {cartItems.length === 0 ? (
-                <p className="text-muted-foreground text-sm">Your cart is empty.</p>
+                <p className="text-sm text-[#7d6a4d]">Your cart is empty.</p>
               ) : (
                 <div className="space-y-4">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="flex gap-4 border-b border-border pb-4">
-                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-secondary">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div key={item.id} className="flex gap-4 rounded-[1.5rem] border border-[#dcc690] bg-[#fff1cf]/82 p-4">
+                      <div className="h-16 w-16 overflow-hidden rounded-xl bg-[#edd7a2]">
+                        <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-sm text-foreground font-medium">{item.name}</h4>
-                        <p className="text-xs text-muted-foreground">{item.category}</p>
-                        <p className="text-sm text-primary font-medium mt-1">₹{item.price.toLocaleString()}</p>
+                        <h4 className="text-sm font-medium text-[#2f2415]">{item.name}</h4>
+                        <p className="text-xs text-[#7d6a4d]">{item.category}</p>
+                        <p className="mt-1 text-sm font-medium text-[#b9872e]">Rs. {item.price.toLocaleString()}</p>
                       </div>
                       <div className="flex flex-col items-center gap-1">
-                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="text-foreground text-xs px-2">+</button>
-                        <span className="text-sm text-foreground">{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="text-foreground text-xs px-2">−</button>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="px-2 text-xs text-[#2f2415]"
+                        >
+                          +
+                        </button>
+                        <span className="text-sm text-[#2f2415]">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className="px-2 text-xs text-[#2f2415]"
+                        >
+                          -
+                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
             </div>
+
             {cartItems.length > 0 && (
-              <div className="p-6 border-t border-border">
-                <div className="flex justify-between mb-4">
-                  <span className="text-foreground">Total</span>
-                  <span className="text-primary font-display text-lg">₹{totalPrice.toLocaleString()}</span>
+              <div className="border-t border-[#d8c08a]/80 p-6">
+                <div className="mb-4 flex justify-between">
+                  <span className="text-[#2f2415]">Total</span>
+                  <span className="font-display text-lg text-[#b9872e]">Rs. {totalPrice.toLocaleString()}</span>
                 </div>
                 <Link
                   to="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="block w-full bg-primary text-primary-foreground text-center py-3 rounded-lg font-medium hover:opacity-90 transition"
+                  className="block w-full rounded-xl bg-[#b9872e] py-3 text-center font-medium text-white transition hover:bg-[#a93d2b]"
                 >
                   Proceed to Checkout
                 </Link>
