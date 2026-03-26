@@ -114,7 +114,7 @@ From elegant bridal makeovers to high-fashion editorial looks, Anuraag combines 
     "Personalized Makeup Sessions",
     "High-Quality Premium Products",
     "Focus on Skin-Friendly Techniques",
-    "Available for Travel Worldwide ✈️"
+    "Available for Travel Worldwide "
   ],
 
   services: [

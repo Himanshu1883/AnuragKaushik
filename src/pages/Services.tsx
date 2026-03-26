@@ -1,11 +1,16 @@
-import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import Header from "@/components/header/Header";
 import { useCart } from "@/contexts/CartContext";
 import { services } from "@/data/services";
-import { useState, useEffect, useRef } from "react";
-import { FaClock, FaStar, FaShoppingCart } from "react-icons/fa";
+import { sendToWhatsapp } from "@/utils/whatsapp";
+import { useEffect, useRef, useState } from "react";
+import { BsWhatsapp } from "react-icons/bs";
+import { FaClock, FaStar } from "react-icons/fa";
 
-const categories = ["All", ...Array.from(new Set(services.map((s) => s.category)))];
+const categories = [
+  "All",
+  ...Array.from(new Set(services.map((s) => s.category))),
+];
 
 const Services = () => {
   const { addToCart } = useCart();
@@ -14,7 +19,10 @@ const Services = () => {
   const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
   const cardsRef = useRef<Record<number, HTMLDivElement | null>>({});
 
-  const filtered = activeCategory === "All" ? services : services.filter((s) => s.category === activeCategory);
+  const filtered =
+    activeCategory === "All"
+      ? services
+      : services.filter((s) => s.category === activeCategory);
 
   // Re-observe whenever filtered list changes
   useEffect(() => {
@@ -29,7 +37,7 @@ const Services = () => {
           }
         });
       },
-      { threshold: 0.1, rootMargin: "50px" }
+      { threshold: 0.1, rootMargin: "50px" },
     );
 
     // Small delay so DOM updates before we observe
@@ -45,7 +53,12 @@ const Services = () => {
     };
   }, [activeCategory]); // re-run on category change
 
-  const animationVariants = ["fadeInUp", "fadeInDown", "fadeInLeft", "fadeInRight"];
+  const animationVariants = [
+    "fadeInUp",
+    "fadeInDown",
+    "fadeInLeft",
+    "fadeInRight",
+  ];
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#FFFFFF" }}>
@@ -130,20 +143,35 @@ const Services = () => {
           transform: translateY(0);
           pointer-events: auto;
         }
+          @keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll {
+  animation: scroll 18s linear infinite;
+}
       `}</style>
 
       <Header />
       <main className="px-6 py-16 max-w-7xl mx-auto">
         {/* Hero */}
         <div className="mb-16 text-center">
-          <p className="font-body text-sm tracking-[0.2em] uppercase mb-3 font-semibold" style={{ color: "#b9872e" }}>
+          <p
+            className="font-body text-sm tracking-[0.2em] uppercase mb-3 font-semibold"
+            style={{ color: "#b9872e" }}
+          >
             Premium Services
           </p>
-          <h1 className="font-display text-5xl md:text-6xl mb-4" style={{ color: "#000000" }}>
+          <h1
+            className="font-display text-5xl md:text-6xl mb-4"
+            style={{ color: "#000000" }}
+          >
             Elevate Your Experience
           </h1>
           <p className="text-lg max-w-2xl mx-auto" style={{ color: "#4A4A4A" }}>
-            Discover our curated collection of world-class services designed to exceed your expectations
+            Discover our curated collection of world-class services designed to
+            exceed your expectations
           </p>
         </div>
 
@@ -158,7 +186,11 @@ const Services = () => {
                   ? "text-white shadow-lg"
                   : "border-2 text-gray-700 hover:border-[#b9872e] hover:text-[#b9872e]"
               }`}
-              style={activeCategory === cat ? { backgroundColor: "#b9872e" } : { borderColor: "#E5E5E5" }}
+              style={
+                activeCategory === cat
+                  ? { backgroundColor: "#b9872e" }
+                  : { borderColor: "#E5E5E5" }
+              }
             >
               {cat}
             </button>
@@ -168,13 +200,16 @@ const Services = () => {
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((service, index) => {
-            const animationClass = animationVariants[index % animationVariants.length];
+            const animationClass =
+              animationVariants[index % animationVariants.length];
             const isVisible = visibleCards.has(service.id.toString());
 
             return (
               <div
                 key={`${activeCategory}-${service.id}`} // force remount on category change
-                ref={(el) => { cardsRef.current[service.id] = el; }}
+                ref={(el) => {
+                  cardsRef.current[service.id] = el;
+                }}
                 data-id={service.id}
                 className={`service-card ${isVisible ? animationClass : "opacity-0"}`}
               >
@@ -186,13 +221,19 @@ const Services = () => {
 
                 {/* Badges */}
                 <div className="absolute top-4 right-4 z-10">
-                  <span className="inline-block text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg" style={{ backgroundColor: "#b92e6f" }}>
+                  <span
+                    className="inline-block text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
+                    style={{ backgroundColor: "#b92e6f" }}
+                  >
                     {service.category}
                   </span>
                 </div>
                 {service.popular && (
                   <div className="absolute top-4 left-4 z-10">
-                    <span className="inline-flex items-center gap-1.5 text-white text-xs font-black px-3 py-1.5 rounded-full shadow-lg" style={{ backgroundColor: "#b9872e" }}>
+                    <span
+                      className="inline-flex items-center gap-1.5 text-white text-xs font-black px-3 py-1.5 rounded-full shadow-lg"
+                      style={{ backgroundColor: "#b9872e" }}
+                    >
                       <FaStar size={12} fill="currentColor" />
                       POPULAR
                     </span>
@@ -201,38 +242,48 @@ const Services = () => {
 
                 {/* Bottom content */}
                 <div className="card-bottom">
-                  <h3 className="font-display text-2xl text-white font-bold mb-1">{service.name}</h3>
+                  <h3 className="font-display text-2xl text-white font-bold mb-1">
+                    {service.name}
+                  </h3>
 
                   {/* Meta row */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-1.5">
                       <FaClock size={13} style={{ color: "#b9872e" }} />
-                      <span className="text-gray-300 text-xs font-semibold">{service.duration}</span>
+                      <span className="text-gray-300 text-xs font-semibold">
+                        {service.duration}
+                      </span>
                     </div>
-                    <p className="font-display text-xl font-bold" style={{ color: "#b9872e" }}>₹{service.price.toLocaleString()}</p>
+                    <p
+                      className="font-display text-xl font-bold"
+                      style={{ color: "#b9872e" }}
+                    >
+                      ₹{service.price.toLocaleString()}
+                    </p>
                   </div>
 
                   {/* Description — slides in on hover via CSS only */}
                   <div className="card-desc">
-                    <p className="text-gray-300 text-sm leading-relaxed mb-4">{service.description}</p>
+                    <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                      {service.description}
+                    </p>
                   </div>
 
                   {/* Button — fades in on hover via CSS only */}
                   <button
-                    className="card-btn w-full text-white px-6 py-2.5 rounded-lg text-sm font-bold active:scale-95 shadow-md flex items-center justify-center gap-2"
-                    style={{ backgroundColor: "#b9872e" }}
-                    onClick={() =>
-                      addToCart({
-                        id: service.id,
-                        name: service.name,
-                        price: service.price,
-                        image: service.image,
-                        category: service.category,
-                      })
-                    }
+                    onClick={() => sendToWhatsapp(service)}
+                    className="card-btn w-full px-6 py-2.5 rounded-lg text-sm font-semibold 
+  flex items-center justify-center gap-2 
+  text-white shadow-md 
+  transition-all duration-300 
+  hover:-translate-y-[1px] active:scale-95
+  border border-[#d8c08a]/30"
+                    style={{
+                      background: "linear-gradient(135deg, #b9872e, #a17829)",
+                    }}
                   >
-                    <FaShoppingCart size={15} />
-                    Add to Cart
+                    <BsWhatsapp size={16} className="drop-shadow-sm" />
+                    Book Now
                   </button>
                 </div>
               </div>
@@ -242,10 +293,86 @@ const Services = () => {
 
         {filtered.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-lg" style={{ color: "#4A4A4A" }}>No services found in this category</p>
+            <p className="text-lg" style={{ color: "#4A4A4A" }}>
+              No services found in this category
+            </p>
           </div>
         )}
       </main>
+      {/* ================= OUR BRANDS ================= */}
+      <section className="mt-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Heading */}
+          <div className="text-center mb-16">
+            <p
+              className="text-sm tracking-[0.25em] uppercase font-body mb-3"
+              style={{ color: "#b9872e" }}
+            >
+              Luxury Brands
+            </p>
+
+            <h2 className="font-display text-4xl md:text-5xl text-[#2f2415]">
+              Our Professional Kit
+            </h2>
+          </div>
+
+          {/* Brands */}
+          <div className="relative overflow-hidden">
+            <div className="flex gap-20 animate-scroll items-center py-6">
+              {[
+                // "/brands (1).jpeg",
+                "/brands (2).jpeg",
+                "/brand (3).jpg",
+                "/brands (4).jpeg",
+                "/brands (5).jpeg",
+                "/brands (6).jpeg",
+                "/brands (7).jpeg",
+                // "/brands (8).jpeg",
+                "/brands (9).jpeg",
+                "/brands (10).jpeg",
+              ].map((logo, i) => (
+                <div
+                  key={i}
+                  className="group min-w-[210px] h-[150px] flex items-center justify-center
+  bg-white rounded-2xl
+  border border-[#b9872e]/25
+  shadow-[0_15px_35px_rgba(185,135,46,0.15)]
+  transition-all duration-500
+  hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(185,135,46,0.25)]"
+                >
+                  <img
+                    src={logo}
+                    alt="brand"
+                    className="h-[140px] w-auto object-cover object-[center_20%]
+    opacity-90 group-hover:opacity-100
+    transition duration-500"
+                  />
+                </div>
+              ))}
+
+              {/* Duplicate for smooth infinite scroll */}
+              {[
+                // "/brands (1).jpeg",
+                "/brands (2).jpeg",
+                "/brand (3).jpg",
+                "/brands (4).jpeg",
+                "/brands (5).jpeg",
+                "/brands (6).jpeg",
+                "/brands (7).jpeg",
+                // "/brands (8).jpeg",
+                "/brands (9).jpeg",
+                "/brands (10).jpeg",
+              ].map((logo, i) => (
+                <img
+                  key={"dup" + i}
+                  src={logo}
+                  className="max-h-12 opacity-40"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
       <Footer />
     </div>
   );
