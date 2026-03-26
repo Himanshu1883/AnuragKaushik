@@ -1,3 +1,4 @@
+import anuraagImage from "@/assets/footer.jpeg";
 import {
   ArrowRight,
   Facebook,
@@ -7,7 +8,7 @@ import {
   Phone,
   Youtube,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Footer = () => {
   const whatsappNumber = "+918765972595"; // with country code
@@ -57,124 +58,233 @@ const Footer = () => {
 
             <div className="mt-7 border-t border-[#d8c08a]/45 pt-7 sm:mt-8 sm:pt-8" />
 
-            <div className="grid min-h-[38vh] grid-cols-1 gap-10 pb-6 pt-4 lg:min-h-[42vh] lg:grid-cols-[1.2fr_1.8fr] lg:gap-12 xl:gap-16">
-              <div
-                className="animate-fade-in min-w-0"
-                style={{ animationDelay: "40ms", animationFillMode: "both" }}
-              >
-                <h3 className="font-display text-[2.5rem] leading-none text-[#2f2415] sm:text-[2.8rem]">
-                  Anuraag Kaushik
-                </h3>
-                <p className="mt-5 max-w-md font-body text-[1rem] leading-8 text-[#655438] sm:text-[1.08rem]">
-                  Bridal, editorial, and celebrity makeup with refined,
-                  camera-ready finishing.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-10 md:grid-cols-3 xl:grid-cols-[1fr_1fr_1.1fr]">
-                <div
-                  className="animate-fade-in min-w-0"
-                  style={{ animationDelay: "90ms", animationFillMode: "both" }}
-                >
-                  <h4 className="mb-5 font-body text-[0.78rem] font-semibold uppercase tracking-[0.24em] text-[#a93d2b]">
-                    Contact
-                  </h4>
-                  <ul className="space-y-4">
-                    <li className="flex items-center gap-2.5 text-[1rem] text-[#655438]">
-                      <MapPin className="h-4.5 w-4.5 text-[#a93d2b]" /> New
-                      Delhi, India
-                    </li>
-                    <li className="flex items-center gap-2.5 text-[1rem] text-[#655438]">
-                      <Phone className="h-4.5 w-4.5 text-[#a93d2b]" /> +91 98765
-                      43210
-                    </li>
-                    <li className="flex items-center gap-2.5 text-[1rem] text-[#655438]">
-                      <Mail className="h-4.5 w-4.5 text-[#a93d2b]" />{" "}
-                      hello@anuraagkaushik.com
-                    </li>
-                  </ul>
-                </div>
-
-                <div
-                  className="animate-fade-in min-w-0"
-                  style={{ animationDelay: "140ms", animationFillMode: "both" }}
-                >
-                  <h4 className="mb-5 font-body text-[0.78rem] font-semibold uppercase tracking-[0.24em] text-[#a93d2b]">
-                    Quick Links
-                  </h4>
-                  <ul className="space-y-4">
-                    {[
-                      { label: "Services", href: "/services" },
-                      { label: "About", href: "/about/our-story" },
-                      { label: "Contact", href: "/contact" },
-                      { label: "Blog", href: "/blog" },
-                      { label: "Portfolio", href: "/portfolio" },
-                      { label: "Privacy Policy", href: "/privacy-policy" },
-                    ].map((item) => (
-                      <li key={item.label}>
-                        <Link
-                          to={item.href}
-                          className="font-body text-[1rem] text-[#655438] transition duration-300 hover:translate-x-1 hover:text-[#a93d2b]"
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div
-                  className="animate-fade-in min-w-0"
-                  style={{ animationDelay: "190ms", animationFillMode: "both" }}
-                >
-                  <h4 className="mb-5 font-body text-[0.78rem] font-semibold uppercase tracking-[0.24em] text-[#a93d2b]">
-                    Social
-                  </h4>
-                  <div className="flex flex-wrap gap-2.5">
-                    {[
-                      { label: "Instagram", Icon: Instagram },
-                      { label: "YouTube", Icon: Youtube },
-                      { label: "Facebook", Icon: Facebook },
-                      { label: "LinkedIn", Icon: Instagram },
-                      { label: "TikTok", Icon: Youtube },
-                    ].map(({ label, Icon }) => (
-                      <a
-                        key={label}
-                        href="#"
-                        className="group inline-flex w-fit items-center gap-2.5 rounded-lg border border-[#b9872e]/12 bg-white/45 px-3.5 py-2.5 text-[1rem] text-[#655438] transition duration-300 hover:-translate-y-0.5 hover:border-[#a93d2b]/25 hover:text-[#a93d2b]"
-                      >
-                        <Icon className="h-[1.05rem] w-[1.05rem] transition duration-300 group-hover:scale-110" />
-                        <span>{label}</span>
-                      </a>
-                    ))}
+            <div
+              className="relative overflow-hidden rounded-[2.6rem] border border-[#d8c08a]/35 
+bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(250,242,211,0.98),rgba(255,249,236,0.94))] 
+px-6 py-10 lg:px-12 lg:py-12"
+            >
+              <div className="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+                {/* Left Image */}
+                <div className="flex flex-col lg:flex-row items-center gap-10">
+                  {/* Left: Image */}
+                  <div className="flex justify-center lg:justify-start">
+                    <div className="relative group">
+                      <div className="absolute inset-0 rounded-full bg-[#b9872e]/25 blur-3xl group-hover:scale-110 transition duration-500" />
+                      <img
+                        src={anuraagImage}
+                        alt="Anuraag Kaushik"
+                        className="relative h-60 w-60 sm:h-64 sm:w-64 lg:h-72 lg:w-72 rounded-full 
+        object-cover object-[center_20%] border-[6px] border-[#f3e1b2] 
+        shadow-[0_30px_70px_rgba(150,115,38,0.22)] 
+        transition duration-500 group-hover:scale-105"
+                      />
+                    </div>
                   </div>
 
-                  <div className="mt-4 rounded-xl border border-[#d8c08a]/40 bg-white/70 p-4">
-                    <p className="mb-2 text-[0.88rem] font-semibold text-[#655438]">
-                      Stay in the loop with exclusive bridal tips and style
-                      news.
+                  {/* Right: Content */}
+                  <div className="flex-1 text-center lg:text-left">
+                    {/* <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#2f2415]">
+                      Anuraag Kaushik
+                    </h3> */}
+
+                    <p className="mt-3 max-w-xl font-body text-[0.98rem] leading-7 text-[#655438]">
+                      Bridal, editorial, and celebrity makeup artist crafting
+                      radiant, camera-ready looks with refined elegance and
+                      modern luxury finishes.
                     </p>
-                    <form className="flex gap-2">
-                      <input
-                        type="email"
-                        aria-label="Subscribe email"
-                        placeholder="Your email"
-                        className="w-full rounded-md border border-[#d8c08a]/40 bg-white p-2 text-[0.9rem] text-[#2f2415] outline-none focus:border-[#a93d2b]"
-                      />
-                      <button
-                        type="submit"
-                        className="rounded-md bg-[#a93d2b] px-3 py-2 text-[0.9rem] font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#8c2a1e]"
+
+                    {/* Highlights */}
+                    <div className="mt-6 flex flex-wrap justify-center lg:justify-start gap-3">
+                      {[
+                        "Bridal Specialist",
+                        "HD Makeup",
+                        "Destination Weddings",
+                      ].map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-4 py-1.5 rounded-full text-xs tracking-[0.18em] uppercase
+          border border-[#b9872e]/25 text-[#7a5417] bg-white/60"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* CTA */}
+                    <div className="mt-6 flex flex-wrap justify-center lg:justify-start gap-3">
+                      {/* <a
+                        href={getWhatsappLink(
+                          "Hi, I want to book makeup services",
+                        )}
+                        className="inline-flex items-center rounded-full bg-[#b9872e] px-6 py-3 
+        text-xs font-semibold uppercase tracking-[0.18em] text-white 
+        shadow-[0_15px_40px_rgba(185,135,46,0.28)] transition hover:bg-[#a17829]"
                       >
-                        Join
-                      </button>
-                    </form>
+                        Book Now
+                      </a> */}
+
+                      <Link
+                        to="/services"
+                        className="inline-flex items-center rounded-full border border-[#b9872e]/25 
+        bg-white/70 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] 
+        text-[#6a4f1f] transition hover:border-[#a93d2b]/35"
+                      >
+                        View Services
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Content */}
+                <div className="flex flex-col justify-between h-full">
+                  <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] items-start">
+                    {/* Left */}
+                    <div>
+                      <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#2f2415]">
+                        Anuraag Kaushik
+                      </h3>
+
+                      <p className="mt-3 max-w-xl font-body text-[0.98rem] leading-7 text-[#655438]">
+                        Luxury bridal and editorial makeup artist delivering
+                        radiant skin, refined definition, and camera-ready
+                        finishes tailored for weddings, occasions, and
+                        destination events.
+                      </p>
+
+                      {/* small tags */}
+                      {/* <div className="mt-5 flex flex-wrap gap-2">
+                        {["Bridal", "Editorial", "Celebrity", "HD Finish"].map(
+                          (tag) => (
+                            <span
+                              key={tag}
+                              className="px-3 py-1 text-[10px] tracking-[0.18em] uppercase
+          border border-[#b9872e]/25 text-[#7a5417] rounded-full bg-white/60"
+                            >
+                              {tag}
+                            </span>
+                          ),
+                        )}
+                      </div> */}
+                    </div>
+
+                    {/* Right */}
+                    <div className="space-y-4 lg:pl-10 border-l border-[#b9872e]/20">
+                      <p className="text-xs uppercase tracking-[0.28em] text-[#a93d2b]">
+                        Available For
+                      </p>
+
+                      <ul className="space-y-2 text-[#655438] text-sm">
+                        <li>• Bridal Makeup</li>
+                        <li>• Engagement Looks</li>
+                        <li>• Reception Glam</li>
+                        <li>• Destination Weddings</li>
+                      </ul>
+
+                      <div className="pt-2">
+                        <a
+                          href={getWhatsappLink(
+                            "Hi, I want to enquire about makeup booking",
+                          )}
+                          className="inline-flex items-center text-xs uppercase tracking-[0.2em] 
+        text-[#7a5417] hover:text-[#a93d2b] transition"
+                        >
+                          Enquire Now →
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3">
+                    {/* Contact */}
+                    <div className="space-y-4">
+                      <h4 className="font-body text-xs uppercase tracking-[0.28em] text-[#a93d2b]">
+                        Contact
+                      </h4>
+
+                      <div className="flex items-center gap-3">
+                        <MapPin className="text-[#a93d2b]" size={18} />
+                        <span>New Delhi, India</span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <Phone className="text-[#a93d2b]" size={18} />
+                        <span>+91 9910649876</span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <Mail className="text-[#a93d2b]" size={18} />
+                        <span>hello@anuraagkaushik.com</span>
+                      </div>
+                    </div>
+
+                    {/* Social */}
+                    <div className="space-y-4">
+                      <h4 className="font-body text-xs uppercase tracking-[0.28em] text-[#a93d2b]">
+                        Follow
+                      </h4>
+
+                      <div className="flex gap-3">
+                        <a className="p-3 rounded-full border border-[#b9872e]/20 hover:bg-[#b9872e] hover:text-white transition">
+                          <Instagram size={18} />
+                        </a>
+                        <a className="p-3 rounded-full border border-[#b9872e]/20 hover:bg-[#b9872e] hover:text-white transition">
+                          <Youtube size={18} />
+                        </a>
+                        <a className="p-3 rounded-full border border-[#b9872e]/20 hover:bg-[#b9872e] hover:text-white transition">
+                          <Facebook size={18} />
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="space-y-4 flex flex-col h-full">
+                      <h4 className="font-body text-xs uppercase tracking-[0.28em] text-[#a93d2b]">
+                        Navigate
+                      </h4>
+
+                      <div className="flex flex-wrap items-center gap-8 lg:gap-3">
+                        {[
+                          { label: "Home", to: "/" },
+                          { label: "Services", to: "/services" },
+                          // { label: "Portfolio", to: "/portfolio" },
+                          { label: "About", to: "/about/our-story" },
+                          { label: "Contact", to: "/contact" },
+                        ].map((item) => (
+                          <NavLink
+                            key={item.to}
+                            to={item.to}
+                            className={({ isActive }) =>
+                              `relative font-body text-sm uppercase tracking-[0.14em] transition-all duration-300 
+          ${
+            isActive ? "text-[#a93d2b]" : "text-[#655438] hover:text-[#a93d2b]"
+          }`
+                            }
+                          >
+                            {({ isActive }) => (
+                              <span className="relative">
+                                {item.label}
+
+                                {/* Premium underline animation */}
+                                <span
+                                  className={`absolute left-0 -bottom-1 h-[1px] bg-[#a93d2b] transition-all duration-300 ${
+                                    isActive
+                                      ? "w-full"
+                                      : "w-0 group-hover:w-full"
+                                  }`}
+                                />
+                              </span>
+                            )}
+                          </NavLink>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-5 border-t border-[#d8c08a]/35 pt-5 sm:mt-10">
+          <div className="border-t border-[#d8c08a]/35 pt-5 sm:mt-10">
             <div className="flex flex-col items-center justify-between gap-2 text-xs uppercase tracking-[0.16em] text-[#8d7855] sm:flex-row">
               <p>&copy; 2026 Anuraag Kaushik. All rights reserved.</p>
               <p>Luxury Beauty Direction</p>
@@ -186,7 +296,7 @@ const Footer = () => {
         href={getWhatsappLink("Hi, I'm interested in your makeup services")}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-[9999] inline-flex items-center gap-2 rounded-full bg-[#b9872e] px-5 py-3 text-white shadow-[0_14px_40px_rgba(169,61,43,0.32)] transition-all duration-300 hover:scale-105 whatsapp-float"
+        className="fixed bottom-20 left-6 z-[9997] inline-flex items-center gap-2 rounded-full bg-[#b9872e] px-5 py-3 text-white shadow-[0_14px_40px_rgba(169,61,43,0.32)] transition-all duration-300 hover:scale-105 whatsapp-float"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

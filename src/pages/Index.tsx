@@ -1,11 +1,15 @@
 import anuraagImage from "@/assets/anuraag-kaushik.jpg";
-import bridalMakeupImage from "@/assets/bridal-makeup.jpg";
-import celebrityMakeupImage from "@/assets/celebrity-makeup.jpg";
-import editorialMakeupImage from "@/assets/editorial-makeup.jpg";
-import receptionMakeupImage from "@/assets/reception-makeup.jpg";
 import { useCart } from "@/contexts/CartContext";
 import { services } from "@/data/services";
-import { ArrowRight, Camera, Heart, Sparkles, Star } from "lucide-react";
+import { sendToWhatsapp } from "@/utils/whatsapp";
+import {
+  ArrowRight,
+  ArrowUp,
+  Camera,
+  Heart,
+  Instagram,
+  Sparkles,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer/Footer";
@@ -35,6 +39,9 @@ const Index = () => {
     y: 0,
   });
 
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showScroll, setShowScroll] = useState(false);
+
   const suppressGlobalCursor = (enabled: boolean) => {
     if (typeof document === "undefined") return;
     document.body.classList.toggle("hide-global-cursor", enabled);
@@ -44,40 +51,48 @@ const Index = () => {
     return () => suppressGlobalCursor(false);
   }, []);
 
-  const stats = [
+  const reels = [
     {
-      value: "500+",
-      label: "Brides Styled",
-      kicker: "Bridal Archive",
-      detail:
-        "Refined bridal finishes across intimate mornings and large-scale celebrations.",
-      image: bridalMakeupImage,
+      id: 1,
+      video: "/REEL_1.MP4",
+      title: "Bridal Preparation",
     },
     {
-      value: "8+",
-      label: "Years Experience",
-      kicker: "Built Over Time",
-      detail:
-        "Built through luxury bookings, editorial sets, and high-pressure event timelines.",
-      image: editorialMakeupImage,
+      id: 2,
+      video: "/REEL_2.MP4",
+      title: "Makeup Application",
     },
     {
-      value: "50+",
-      label: "Celebrity Clients",
-      kicker: "Trusted Presence",
-      detail:
-        "Trusted for elevated camera-ready work where polish and precision both matter.",
-      image: celebrityMakeupImage,
+      id: 3,
+      video: "/REEL_3.MP4",
+      title: "Finishing Touches",
     },
     {
-      value: "4.9",
-      label: "Average Rating",
-      kicker: "Client Response",
-      detail:
-        "Consistently praised for calm artistry, skin finish, and long-wear comfort.",
-      image: receptionMakeupImage,
+      id: 4,
+      video: "/REEL_4.MP4",
+      title: "Final Look",
     },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+
+      const progress = (scrollTop / height) * 100;
+      setScrollProgress(progress);
+      setShowScroll(scrollTop > 200);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const highlights = [
     {
@@ -248,7 +263,7 @@ const Index = () => {
       {
         threshold: 0.22,
         rootMargin: "0px 0px -8% 0px",
-      }
+      },
     );
 
     cards.forEach((card) => observer.observe(card));
@@ -261,7 +276,7 @@ const Index = () => {
       <Header />
 
       <main className="overflow-hidden">
-        <section className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#fffdf7_0%,#f7eed2_100%)] md:min-h-[92vh]">
+        <section className="relative z-[9998] isolate overflow-hidden bg-[linear-gradient(180deg,#fffdf7_0%,#f7eed2_100%)] md:min-h-[92vh]">
           <img
             src={anuraagImage}
             alt="Anuraag Kaushik - Makeup Artist"
@@ -361,77 +376,181 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="px-4 py-8 sm:px-5 md:px-8 md:py-10 lg:px-5">
+        <section className="px-4 py-5 sm:px-5 md:px-8 md:py-6 lg:px-5">
           <div
             ref={statsSectionRef}
-            className={`stats-shell mx-auto w-full max-w-[1520px] rounded-[2.6rem] border border-[#b9872e]/15 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(250,242,211,0.97),rgba(255,250,239,0.92))] p-4 shadow-[0_22px_55px_rgba(150,115,38,0.10)] backdrop-blur md:p-6 ${
+            className="relative"
+            onMouseMove={(event) => {
+              if (window.innerWidth < 768) return;
+              const rect = event.currentTarget.getBoundingClientRect();
+              setServicesHoverTop({
+                visible: true,
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top,
+              });
+            }}
+            onMouseEnter={() => {
+              if (window.innerWidth < 768) return;
+              setServicesHoverTop((prev) => ({ ...prev, visible: true }));
+              suppressGlobalCursor(true);
+            }}
+            onMouseLeave={() => {
+              if (window.innerWidth < 768) return;
+              setServicesHoverTop((prev) => ({ ...prev, visible: false }));
+              suppressGlobalCursor(false);
+            }}
+            className={`reels-shell reels-reveal mx-auto w-full max-w-[1520px] h-auto min-h-[400px] md:min-h-[500px] rounded-[2.6rem] border border-[#b9872e]/15 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(250,242,211,0.97),rgba(255,250,239,0.92))] p-3 shadow-[0_22px_55px_rgba(150,115,38,0.10)] backdrop-blur md:p-4 ${
               isStatsVisible ? "is-visible" : ""
             }`}
           >
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[1.35fr_repeat(4,minmax(0,1fr))]">
-              <div
-                className="stats-panel relative overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-[radial-gradient(circle_at_top_left,rgba(241,217,139,0.34),transparent_44%),linear-gradient(180deg,rgba(255,255,255,0.82),rgba(245,233,193,0.96))] p-7"
-                style={{ ["--delay" as string]: "0ms" }}
-              >
-                <div className="absolute right-5 top-5 h-16 w-16 rounded-full border border-[#b9872e]/15" />
-                <p className="font-body text-[0.72rem] uppercase tracking-[0.32em] text-[#a93d2b]">
-                  At a Glance
-                </p>
-                <h3 className="mt-4 max-w-xs font-display text-[2.2rem] leading-none text-[#2f2415] sm:text-4xl">
-                  Crafted numbers with luxury detail.
-                </h3>
-                <p className="mt-5 max-w-sm font-body text-sm leading-7 text-[#6c5937]">
-                  A broader view of the experience behind the brush: volume,
-                  longevity, recognition, and the consistency clients return
-                  for.
-                </p>
-                <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-[#b9872e]/15 bg-white/55 px-4 py-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#b9872e]" />
-                  <span className="font-body text-[0.68rem] uppercase tracking-[0.28em] text-[#7a5417]">
-                    Luxury bridal direction
+            <div
+              className={`pointer-events-none absolute z-20 transition duration-300 hidden md:block ${
+                servicesHoverTop.visible ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                left: servicesHoverTop.x,
+                top: servicesHoverTop.y,
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-black/18 blur-lg" />
+                <div className="relative flex min-h-[56px] min-w-[160px] max-w-[220px] items-center justify-center rounded-full border border-white/20 bg-black/28 px-2 py-2 backdrop-blur-md md:min-h-[38px] md:min-w-[130px]">
+                  <span className="font-semibold text-[0.72rem] leading-none tracking-tight text-[#e6ba55] md:text-[0.7rem]">
+                    @anuraagkaushik_92
                   </span>
                 </div>
               </div>
+            </div>
 
-              {stats.map((stat, i) => (
-                <div
-                  key={i}
-                  className="stats-tile group relative overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(248,238,206,0.92))]"
-                  style={{ ["--delay" as string]: `${140 + i * 110}ms` }}
+            <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.2fr_repeat(4,minmax(0,1fr))] items-stretch">
+              {/* Instagram CTA Panel */}
+              <div
+                className="reels-cta reels-reveal-item relative overflow-hidden rounded-[2rem] border border-[#b9872e]/12 
+  bg-[radial-gradient(circle_at_top_left,rgba(241,217,139,0.34),transparent_44%),linear-gradient(180deg,rgba(255,255,255,0.82),rgba(245,233,193,0.96))] 
+  p-4 sm:p-5 md:p-6 flex flex-col h-full lg:min-h-[520px] xl:min-h-0"
+                style={{ ["--delay" as string]: "0ms" }}
+              >
+                <p className="font-body text-[0.65rem] sm:text-[0.7rem] tracking-[0.28em] sm:tracking-[0.32em] uppercase text-[#a93d2b]">
+                  Behind the Brush
+                </p>
+
+                <h3
+                  className="mt-3 sm:mt-4 max-w-xs font-display 
+  text-[1.45rem] sm:text-[1.7rem] md:text-[2.2rem] lg:text-4xl 
+  leading-[1.05] text-[#2f2415]"
                 >
-                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#e6cf86] via-[#b9872e] to-[#a93d2b]" />
-                  <div className="relative aspect-[0.95/1.05] overflow-hidden">
+                  See the magic in motion.
+                </h3>
+
+                <p
+                  className="mt-4 sm:mt-5 max-w-sm font-body 
+  text-[0.8rem] sm:text-sm leading-6 sm:leading-7 text-[#6c5937]"
+                >
+                  Watch exclusive reels of signature bridal looks, makeup
+                  techniques, and behind-the-scenes moments from the studio.
+                </p>
+
+                <a
+                  href="https://www.instagram.com/anuraagkaushik_92?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 sm:mt-8 inline-flex items-center gap-2 sm:gap-3 
+    rounded-full border border-[#b9872e]/15 bg-white/55 
+    px-3 sm:px-4 py-2 transition hover:border-[#a93d2b]/30 hover:bg-white/75 w-fit"
+                >
+                  <Instagram className="h-4 w-4 text-[#a93d2b]" />
+                  <span className="font-body text-[0.65rem] sm:text-[0.68rem] uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#7a5417]">
+                    Follow on Instagram
+                  </span>
+                </a>
+
+                {/* Profile */}
+                <div className="mt-auto pt-5 sm:pt-6 lg:pt-4 flex items-start gap-3 sm:gap-4">
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-[#b9872e]/20 flex-shrink-0">
                     <img
-                      src={stat.image}
-                      alt={stat.label}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-110 group-hover:rotate-[1.5deg]"
+                      src={anuraagImage}
+                      alt="profile"
+                      className="h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(47,36,21,0.04),rgba(47,36,21,0.7))]" />
-                    <div className="absolute inset-x-5 top-5 flex items-start justify-between gap-4">
-                      <span className="rounded-full border border-white/30 bg-white/20 px-3 py-1 font-body text-[0.58rem] uppercase tracking-[0.28em] text-white backdrop-blur">
-                        {stat.kicker}
-                      </span>
-                      <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-white/18 text-white backdrop-blur transition duration-500 group-hover:rotate-[12deg] group-hover:bg-[#a93d2b]/55">
-                        <Star className="h-4 w-4" />
-                      </span>
-                    </div>
-                    <div className="absolute inset-x-5 bottom-5">
-                      <p className="font-display text-5xl leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.24)]">
-                        {stat.value}
-                      </p>
-                      <p className="mt-2 font-body text-[0.7rem] uppercase tracking-[0.24em] text-white/82">
-                        {stat.label}
-                      </p>
-                    </div>
                   </div>
-                  <div className="relative px-6 py-6">
-                    <div className="absolute right-4 top-4 h-16 w-16 rounded-full bg-[#f2db8f]/20 blur-2xl transition duration-500 group-hover:scale-125 group-hover:bg-[#d0472f]/12" />
-                    <p className="max-w-[18rem] font-body text-sm leading-6 text-[#6c5937] transition duration-500 group-hover:text-[#4f3e21]">
-                      {stat.detail}
+
+                  <div className="flex-1">
+                    <p className="font-body text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#a93d2b]">
+                      Anuraag Kaushik
                     </p>
+
+                    <p className="mt-1 text-[0.7rem] sm:text-[0.75rem] leading-5 text-[#6c5937]">
+                      Bridal Makeup Artist ✨ <br />
+                      Transforming moments into timeless beauty. <br />
+                      Delhi | Destination Weddings
+                    </p>
+
+                    {/* <div className="mt-2 sm:mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.6rem] sm:text-[0.65rem] text-[#7a5417]">
+                      <span>
+                        <strong>120K+</strong> followers
+                      </span>
+                      <span>
+                        <strong>850+</strong> posts
+                      </span>
+                      <span>
+                        <strong>5★</strong> rated
+                      </span>
+                    </div> */}
                   </div>
                 </div>
-              ))}
+
+                <p className="mt-3 sm:mt-4 text-[0.6rem] sm:text-[0.65rem] text-center text-[#a93d2b]/80 italic">
+                  “Every bride deserves to feel iconic.”
+                </p>
+              </div>
+
+              {/* Reels Grid */}
+              <div className="lg:col-span-4 h-full">
+                <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-2 scrollbar-hide">
+                  {reels.map((reel, i) => (
+                    <a
+                      key={reel.id}
+                      href="https://www.instagram.com/anuraagkaushik_92?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="reel-tile reels-reveal-item group relative overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-[#2f2415] cursor-pointer min-w-[220px] sm:min-w-[240px] md:min-w-0 snap-start"
+                      style={{ ["--delay" as string]: `${200 + i * 250}ms` }}
+                    >
+                      {/* <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#e6cf86] via-[#b9872e] to-[#a93d2b] z-10" /> */}
+
+                      <div
+                        className="relative w-full h-full max-h-[420px] sm:max-h-[480px] md:max-h-[550px] overflow-hidden"
+                        style={{ aspectRatio: "9/16" }}
+                      >
+                        <video
+                          src={reel.video}
+                          className="h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
+                          preload="metadata"
+                          autoPlay
+                          muted
+                          loop
+                        />
+
+                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(47,36,21,0.1),rgba(47,36,21,0.4))]" />
+
+                        <div className="absolute inset-x-4 top-4 flex items-center justify-between z-20">
+                          <span className="rounded-full border border-white/30 bg-white/20 px-3 py-1 font-body text-[0.58rem] uppercase tracking-[0.28em] text-white backdrop-blur">
+                            Instagram
+                          </span>
+                          {/* <span className="text-white opacity-75">✨</span> */}
+                        </div>
+
+                        <div className="absolute inset-x-4 bottom-4 z-20">
+                          <p className="font-body text-[0.7rem] uppercase tracking-[0.24em] text-white/90">
+                            {reel.title}
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -558,21 +677,21 @@ const Index = () => {
                   key={service.id}
                   className="group overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-white/88 shadow-[0_24px_55px_rgba(150,115,38,0.10)] transition-all hover:-translate-y-1 hover:border-[#a93d2b]/18 hover:shadow-[0_28px_65px_rgba(150,115,38,0.16)]"
                 >
-                  <div className="aspect-[4/4.8] overflow-hidden bg-[#f8f0d9]">
+                  <div className="aspect-[4/3.8] overflow-hidden bg-[#f8f0d9]">
                     <img
                       src={service.image}
                       alt={service.name}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  <div className="p-6">
+                  <div className="p-5">
                     <p className="mb-2 font-body text-xs uppercase tracking-[0.22em] text-[#a93d2b]">
                       {service.category}
                     </p>
                     <h3 className="mb-2 font-display text-3xl leading-none text-[#2f2415]">
                       {service.name}
                     </h3>
-                    <p className="mb-5 font-body text-sm font-light leading-7 text-[#7d6a4d] line-clamp-3">
+                    <p className="mb-4 font-body text-sm font-light leading-7 text-[#7d6a4d] line-clamp-3">
                       {service.description}
                     </p>
                     <div className="flex items-end justify-between gap-4 border-t border-[#e7d8ad] pt-5">
@@ -585,18 +704,10 @@ const Index = () => {
                         </span>
                       </div>
                       <button
-                        onClick={() =>
-                          addToCart({
-                            id: service.id,
-                            name: service.name,
-                            price: service.price,
-                            image: service.image,
-                            category: service.category,
-                          })
-                        }
-                        className="rounded-full bg-[#2f2415] px-5 py-2.5 font-body text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-[#a93d2b]"
+                        onClick={() => sendToWhatsapp(service)}
+                        className="rounded-full bg-[#b9872e] px-5 py-2.5 font-body text-xs font-semibold tracking-[0.16em] text-white transition hover:bg-[#a17829]"
                       >
-                        Add to Cart
+                        Book Now
                       </button>
                     </div>
                   </div>
@@ -1015,7 +1126,29 @@ const Index = () => {
           </div>
         </section>
       </main>
+      <button
+        onClick={scrollToTop}
+        className={`fixed right-3 md:right-3 bottom-24 md:bottom-18 z-50 
+  flex flex-col items-center gap-2 md:gap-3 
+  transition-opacity duration-500 ${showScroll ? "opacity-100" : "opacity-0"}`}
+      >
+        <ArrowUp
+          size={18}
+          className="text-[#e23314] md:group-hover:-translate-y-1 transition-transform"
+        />
 
+        <span
+          className="text-[12px] font-bold tracking-[0.35em] font-body uppercase [writing-mode:vertical-rl] rotate-180"
+          style={{
+            backgroundImage: `linear-gradient(to top, #e23314 ${scrollProgress}%, #d8c08a ${scrollProgress}%)`,
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+          }}
+        >
+          To the Beginning
+        </span>
+      </button>
       <Footer />
     </div>
   );
