@@ -71,7 +71,7 @@ const useScrollReveal = () => {
           }
         });
       },
-      { threshold: 0.2, rootMargin: "0px 0px -60px 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
     );
     
     elements.forEach((el) => observer.observe(el));
@@ -122,7 +122,7 @@ const AnimatedStat = ({
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
     
     if (elementRef.current) observer.observe(elementRef.current);
@@ -142,26 +142,30 @@ const AnimatedStat = ({
       ref={elementRef}
       onMouseEnter={() => setHoveredStat(index)}
       onMouseLeave={() => setHoveredStat(null)}
+      onTouchStart={() => {
+        setHoveredStat(index);
+        setTimeout(() => setHoveredStat(null), 300);
+      }}
       style={{
         background: hoveredStat === index ? "#2f2415" : "rgba(255,255,255,0.9)",
         border: `1px solid ${
           hoveredStat === index ? "#b9872e" : "rgba(185,135,46,0.15)"
         }`,
-        borderRadius: "2rem",
-        padding: "2.5rem 1.5rem",
+        borderRadius: "clamp(1rem, 4vw, 2rem)",
+        padding: "clamp(1.5rem, 5vw, 2.5rem) clamp(0.8rem, 3vw, 1.5rem)",
         textAlign: "center",
         boxShadow:
           hoveredStat === index
-            ? "0 30px 70px rgba(47,36,21,0.2)"
-            : "0 8px 30px rgba(150,115,38,0.08)",
-        transition: "all 0.4s cubic-bezier(0.23,1,0.32,1)",
+            ? "0 20px 40px rgba(47,36,21,0.15)"
+            : "0 4px 20px rgba(150,115,38,0.06)",
+        transition: "all 0.3s cubic-bezier(0.23,1,0.32,1)",
         cursor: "default",
-        transform: hoveredStat === index ? "translateY(-8px) scale(1.02)" : "none",
+        transform: hoveredStat === index ? "translateY(-4px)" : "none",
       }}
     >
       <p
         style={{
-          fontSize: "clamp(2.5rem,5vw,4rem)",
+          fontSize: "clamp(2rem, 8vw, 4rem)",
           fontWeight: 700,
           color: hoveredStat === index ? "#e0c168" : "#7a5417",
           margin: 0,
@@ -173,12 +177,12 @@ const AnimatedStat = ({
       </p>
       <p
         style={{
-          fontFamily: "sans-serif",
-          fontSize: "0.7rem",
-          letterSpacing: "0.25em",
+          fontFamily: "'Inter', sans-serif",
+          fontSize: "clamp(0.6rem, 3vw, 0.7rem)",
+          letterSpacing: "0.2em",
           textTransform: "uppercase",
-          color: hoveredStat === index ? "rgba(255,255,255,0.6)" : "#7d6a4d",
-          margin: "0.75rem 0 0",
+          color: hoveredStat === index ? "rgba(255,255,255,0.7)" : "#7d6a4d",
+          margin: "0.6rem 0 0",
         }}
       >
         {stat.label}
@@ -190,27 +194,57 @@ const AnimatedStat = ({
 const AboutUs = () => {
   const [hoveredStat, setHoveredStat] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    
     const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
+
+  // Video 10-second loop logic
+useEffect(() => {
+  const video = videoRef.current;
+  if (!video) return;
+
+  const playVideo = () => {
+    video.play().catch((e) => {
+      console.log("Video autoplay prevented:", e);
+    });
+  };
+
+  // Small delay to ensure video is ready
+  const timeout = setTimeout(playVideo, 200);
+
+  return () => clearTimeout(timeout);
+}, []);
 
   // Initialize scroll reveal animations
   useScrollReveal();
 
-  // Parallax values for hero
-  const imgScale = 1 + scrollY * 0.0003;
-  const contentOpacity = Math.max(0, 1 - scrollY / 380);
-  const contentTranslate = scrollY * 0.18;
+  // Parallax values for hero - reduced effect on mobile
+  const imgScale = isMobile ? 1 + scrollY * 0.0002 : 1 + scrollY * 0.0003;
+  const contentOpacity = Math.max(0, 1 - scrollY / (isMobile ? 280 : 380));
+  const contentTranslate = scrollY * (isMobile ? 0.1 : 0.18);
 
   return (
-    <div style={{ background: "#fdfaf2", color: "#2f2415", fontFamily: "'Georgia', serif" }}>
-      <Header />
-
+    <div style={{ background: "#fdfaf2", color: "#2f2415", fontFamily: "'Inter', 'Georgia', serif", overflowX: "hidden" }}>
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <Header />
+      </div>
       {/* ════════════════════════════════════════════
-          FIXED FULL-BLEED HERO
+          FIXED FULL-BLEED HERO - Mobile Optimized
       ════════════════════════════════════════════ */}
       <section
         style={{
@@ -229,7 +263,7 @@ const AboutUs = () => {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            objectPosition: "center 20%",
+            objectPosition: isMobile ? "center 30%" : "center 20%",
             transform: `scale(${imgScale})`,
             transformOrigin: "center center",
             transition: "transform 0.05s linear",
@@ -241,7 +275,7 @@ const AboutUs = () => {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, rgba(16,10,4,0.38) 0%, rgba(16,10,4,0.52) 45%, rgba(16,10,4,0.80) 100%)",
+              "linear-gradient(180deg, rgba(16,10,4,0.4) 0%, rgba(16,10,4,0.6) 50%, rgba(16,10,4,0.85) 100%)",
             zIndex: 1,
           }}
         />
@@ -251,7 +285,7 @@ const AboutUs = () => {
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(ellipse at center, transparent 40%, rgba(8,5,2,0.55) 100%)",
+              "radial-gradient(ellipse at center, transparent 40%, rgba(8,5,2,0.5) 100%)",
             zIndex: 2,
           }}
         />
@@ -261,7 +295,7 @@ const AboutUs = () => {
             position: "absolute",
             inset: 0,
             zIndex: 3,
-            opacity: 0.28,
+            opacity: 0.2,
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
             backgroundSize: "160px",
             pointerEvents: "none",
@@ -278,7 +312,7 @@ const AboutUs = () => {
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
-            padding: "0 1.5rem",
+            padding: isMobile ? "0 1.2rem" : "0 1.5rem",
             opacity: contentOpacity,
             transform: `translateY(${contentTranslate}px)`,
             transition: "opacity 0.04s, transform 0.04s",
@@ -286,21 +320,23 @@ const AboutUs = () => {
         >
           <p
             style={{
-              fontFamily: "sans-serif",
-              fontSize: "0.7rem",
-              letterSpacing: "0.42em",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: isMobile ? "0.6rem" : "0.7rem",
+              letterSpacing: "0.3em",
               textTransform: "uppercase",
               color: "rgba(224,193,104,0.85)",
-              marginBottom: "1.6rem",
+              marginBottom: isMobile ? "1rem" : "1.6rem",
               display: "flex",
               alignItems: "center",
-              gap: "0.75rem",
+              gap: "0.5rem",
+              flexWrap: "wrap",
+              justifyContent: "center",
             }}
           >
             <span
               style={{
                 display: "inline-block",
-                width: "2rem",
+                width: isMobile ? "1.5rem" : "2rem",
                 height: "1px",
                 background: "rgba(224,193,104,0.5)",
               }}
@@ -309,7 +345,7 @@ const AboutUs = () => {
             <span
               style={{
                 display: "inline-block",
-                width: "2rem",
+                width: isMobile ? "1.5rem" : "2rem",
                 height: "1px",
                 background: "rgba(224,193,104,0.5)",
               }}
@@ -318,14 +354,15 @@ const AboutUs = () => {
 
           <h1
             style={{
-              fontSize: "clamp(2.8rem, 7vw, 7rem)",
+              fontSize: isMobile ? "clamp(2rem, 10vw, 3.5rem)" : "clamp(2.8rem, 7vw, 7rem)",
               fontWeight: 400,
-              lineHeight: 1.08,
+              lineHeight: 1.1,
               color: "#ffffff",
-              margin: "0 0 1.4rem",
+              margin: "0 0 1rem",
               letterSpacing: "-0.02em",
               maxWidth: "900px",
-              textShadow: "0 4px 40px rgba(0,0,0,0.4)",
+              textShadow: "0 4px 30px rgba(0,0,0,0.4)",
+              padding: isMobile ? "0 0.5rem" : 0,
             }}
           >
             Where{" "}
@@ -356,13 +393,14 @@ const AboutUs = () => {
 
           <p
             style={{
-              fontFamily: "sans-serif",
-              fontSize: "clamp(0.95rem, 2vw, 1.2rem)",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: isMobile ? "0.85rem" : "clamp(0.95rem, 2vw, 1.2rem)",
               fontWeight: 300,
-              color: "rgba(255,255,255,0.78)",
-              marginBottom: "1.8rem",
-              lineHeight: 1.7,
+              color: "rgba(255,255,255,0.8)",
+              marginBottom: isMobile ? "1.2rem" : "1.8rem",
+              lineHeight: 1.6,
               maxWidth: "600px",
+              padding: isMobile ? "0 0.5rem" : 0,
             }}
           >
             From bridal mornings to editorial shoots — every look is crafted to feel like you, only
@@ -373,20 +411,21 @@ const AboutUs = () => {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "1.2rem",
-              marginBottom: "2.8rem",
+              gap: isMobile ? "0.8rem" : "1.2rem",
+              marginBottom: isMobile ? "1.8rem" : "2.8rem",
               flexWrap: "wrap",
               justifyContent: "center",
+              padding: isMobile ? "0 0.5rem" : 0,
             }}
           >
             {ABOUT_ANURAAG.badges.map((badge, i) => (
-              <span key={i} style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
+              <span key={i} style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
                 <span
                   style={{
-                    fontFamily: "sans-serif",
-                    fontSize: "0.72rem",
-                    letterSpacing: "0.18em",
-                    color: "rgba(255,255,255,0.62)",
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: isMobile ? "0.6rem" : "0.72rem",
+                    letterSpacing: "0.12em",
+                    color: "rgba(255,255,255,0.7)",
                     textTransform: "uppercase",
                   }}
                 >
@@ -396,7 +435,7 @@ const AboutUs = () => {
                   <span
                     style={{
                       width: "1px",
-                      height: "14px",
+                      height: "12px",
                       background: "rgba(255,255,255,0.3)",
                       display: "inline-block",
                     }}
@@ -406,23 +445,23 @@ const AboutUs = () => {
             ))}
           </div>
 
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
+          <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap", justifyContent: "center", padding: "0 1rem" }}>
             <a
               href="/services"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "0.5rem",
+                gap: "0.4rem",
                 background: "#ffffff",
                 color: "#2f2415",
-                padding: "0.95rem 2.2rem",
+                padding: isMobile ? "0.7rem 1.5rem" : "0.95rem 2.2rem",
                 borderRadius: "999px",
-                fontFamily: "sans-serif",
-                fontSize: "0.8rem",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: isMobile ? "0.7rem" : "0.8rem",
                 fontWeight: 700,
                 letterSpacing: "0.08em",
                 textDecoration: "none",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
+                boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
                 transition: "all 0.3s",
               }}
               onMouseEnter={(e) => {
@@ -430,14 +469,12 @@ const AboutUs = () => {
                 el.style.background = "#b9872e";
                 el.style.color = "#fff";
                 el.style.transform = "translateY(-2px)";
-                el.style.boxShadow = "0 14px 40px rgba(185,135,46,0.35)";
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget as HTMLElement;
                 el.style.background = "#ffffff";
                 el.style.color = "#2f2415";
                 el.style.transform = "translateY(0)";
-                el.style.boxShadow = "0 8px 30px rgba(0,0,0,0.25)";
               }}
             >
               Book a Session
@@ -447,29 +484,29 @@ const AboutUs = () => {
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "0.5rem",
+                gap: "0.4rem",
                 background: "transparent",
-                color: "rgba(255,255,255,0.88)",
-                padding: "0.95rem 2.2rem",
+                color: "rgba(255,255,255,0.9)",
+                padding: isMobile ? "0.7rem 1.5rem" : "0.95rem 2.2rem",
                 borderRadius: "999px",
-                fontFamily: "sans-serif",
-                fontSize: "0.8rem",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: isMobile ? "0.7rem" : "0.8rem",
                 fontWeight: 500,
                 letterSpacing: "0.08em",
                 textDecoration: "none",
-                border: "1px solid rgba(255,255,255,0.3)",
-                backdropFilter: "blur(6px)",
+                border: "1px solid rgba(255,255,255,0.4)",
+                backdropFilter: "blur(4px)",
                 transition: "all 0.3s",
               }}
               onMouseEnter={(e) => {
                 const el = e.currentTarget as HTMLElement;
-                el.style.borderColor = "rgba(224,193,104,0.6)";
+                el.style.borderColor = "rgba(224,193,104,0.8)";
                 el.style.color = "#e0c168";
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget as HTMLElement;
-                el.style.borderColor = "rgba(255,255,255,0.3)";
-                el.style.color = "rgba(255,255,255,0.88)";
+                el.style.borderColor = "rgba(255,255,255,0.4)";
+                el.style.color = "rgba(255,255,255,0.9)";
               }}
             >
               View Works
@@ -480,12 +517,12 @@ const AboutUs = () => {
         <div
           style={{
             position: "absolute",
-            bottom: "1.8rem",
+            bottom: "1.5rem",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 5,
             opacity: contentOpacity,
-            display: "flex",
+            display: isMobile ? "none" : "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: "0.5rem",
@@ -494,17 +531,17 @@ const AboutUs = () => {
           <div
             style={{
               width: "1px",
-              height: "3rem",
+              height: "2.5rem",
               background: "linear-gradient(to bottom, rgba(224,193,104,0.8), transparent)",
               animation: "scrollPulse 2s ease-in-out infinite",
             }}
           />
           <span
             style={{
-              fontFamily: "sans-serif",
-              fontSize: "0.52rem",
-              letterSpacing: "0.42em",
-              color: "rgba(224,193,104,0.55)",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.48rem",
+              letterSpacing: "0.3em",
+              color: "rgba(224,193,104,0.6)",
               textTransform: "uppercase",
             }}
           >
@@ -523,22 +560,19 @@ const AboutUs = () => {
             top: 0,
             left: 0,
             right: 0,
-            height: "6px",
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.4), transparent)",
+            height: "4px",
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.3), transparent)",
             pointerEvents: "none",
             zIndex: 1,
           }}
         />
 
-        {/* ── MARQUEE ── */}
-
-
-        {/* ── STATS SECTION with counting animation ── */}
+        {/* ── STATS SECTION with counting animation - Mobile Grid ── */}
         <section
           id="story"
           style={{
             background: "#fdfaf2",
-            padding: "5rem 2rem",
+            padding: isMobile ? "3rem 1rem" : "5rem 2rem",
             position: "relative",
             overflow: "hidden",
           }}
@@ -546,11 +580,11 @@ const AboutUs = () => {
           <span
             style={{
               position: "absolute",
-              top: "-2rem",
-              right: "-1rem",
-              fontSize: "16rem",
+              top: "-1rem",
+              right: "-0.5rem",
+              fontSize: isMobile ? "8rem" : "16rem",
               fontWeight: 900,
-              color: "rgba(185,135,46,0.05)",
+              color: "rgba(185,135,46,0.04)",
               userSelect: "none",
               pointerEvents: "none",
               lineHeight: 1,
@@ -564,8 +598,8 @@ const AboutUs = () => {
               maxWidth: "1100px",
               margin: "0 auto",
               display: "grid",
-              gridTemplateColumns: "repeat(4,1fr)",
-              gap: "1.5rem",
+              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+              gap: isMobile ? "0.8rem" : "1.5rem",
             }}
           >
             {ABOUT_ANURAAG.stats.map((stat, i) => (
@@ -580,10 +614,10 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* ── STORY SECTION with left/right reveals ── */}
+        {/* ── STORY SECTION with left/right reveals - Mobile Stack ── */}
         <section
           style={{
-            padding: "7rem 2rem",
+            padding: isMobile ? "4rem 1rem" : "7rem 2rem",
             background: "linear-gradient(170deg,#fff9ed 0%,#f7eed2 100%)",
             position: "relative",
             overflow: "hidden",
@@ -592,15 +626,16 @@ const AboutUs = () => {
           <div
             style={{
               position: "absolute",
-              left: "1.5rem",
+              left: "1rem",
               top: "50%",
               transform: "translateY(-50%) rotate(-90deg)",
-              fontFamily: "sans-serif",
-              fontSize: "0.6rem",
-              letterSpacing: "0.45em",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.55rem",
+              letterSpacing: "0.3em",
               textTransform: "uppercase",
-              color: "rgba(185,135,46,0.35)",
+              color: "rgba(185,135,46,0.3)",
               userSelect: "none",
+              display: isMobile ? "none" : "block",
             }}
           >
             The Story
@@ -610,33 +645,33 @@ const AboutUs = () => {
               maxWidth: "1100px",
               margin: "0 auto",
               display: "grid",
-              gridTemplateColumns: "1.1fr 0.9fr",
-              gap: "5rem",
+              gridTemplateColumns: isMobile ? "1fr" : "1.1fr 0.9fr",
+              gap: isMobile ? "2.5rem" : "5rem",
               alignItems: "start",
             }}
             className="story-grid"
           >
-            {/* Left column - fade up from left */}
+            {/* Left column */}
             <div className="reveal-left">
               <p
                 style={{
-                  fontFamily: "sans-serif",
-                  fontSize: "0.7rem",
-                  letterSpacing: "0.3em",
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: isMobile ? "0.65rem" : "0.7rem",
+                  letterSpacing: "0.25em",
                   textTransform: "uppercase",
                   color: "#a93d2b",
-                  marginBottom: "1.5rem",
+                  marginBottom: "1rem",
                 }}
               >
                 The Philosophy
               </p>
               <h2
                 style={{
-                  fontSize: "clamp(2.2rem,4.5vw,4rem)",
-                  lineHeight: 1.05,
+                  fontSize: isMobile ? "clamp(1.8rem, 6vw, 2.8rem)" : "clamp(2.2rem, 4.5vw, 4rem)",
+                  lineHeight: 1.1,
                   fontWeight: 400,
                   color: "#2f2415",
-                  margin: "0 0 2rem",
+                  margin: "0 0 1.5rem",
                   letterSpacing: "-0.02em",
                 }}
               >
@@ -655,21 +690,21 @@ const AboutUs = () => {
               </h2>
               <p
                 style={{
-                  fontFamily: "sans-serif",
-                  fontSize: "1.05rem",
-                  lineHeight: 1.9,
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: isMobile ? "0.95rem" : "1.05rem",
+                  lineHeight: 1.7,
                   color: "#5b4a2e",
                   fontWeight: 300,
-                  marginBottom: "1.5rem",
+                  marginBottom: "1.2rem",
                 }}
               >
                 {ABOUT_ANURAAG.description.split("\n\n")[0]}
               </p>
               <p
                 style={{
-                  fontFamily: "sans-serif",
-                  fontSize: "1.05rem",
-                  lineHeight: 1.9,
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: isMobile ? "0.95rem" : "1.05rem",
+                  lineHeight: 1.7,
                   color: "#5b4a2e",
                   fontWeight: 300,
                 }}
@@ -678,20 +713,20 @@ const AboutUs = () => {
               </p>
               <blockquote
                 style={{
-                  margin: "3rem 0 0",
-                  padding: "1.5rem 2rem",
-                  borderLeft: "4px solid #b9872e",
+                  margin: "2rem 0 0",
+                  padding: isMobile ? "1rem 1.2rem" : "1.5rem 2rem",
+                  borderLeft: "3px solid #b9872e",
                   background: "rgba(185,135,46,0.06)",
-                  borderRadius: "0 1.5rem 1.5rem 0",
+                  borderRadius: "0 1rem 1rem 0",
                 }}
               >
                 <p
                   style={{
-                    fontSize: "1.25rem",
+                    fontSize: isMobile ? "1rem" : "1.25rem",
                     fontStyle: "italic",
                     color: "#7a5417",
                     margin: 0,
-                    lineHeight: 1.7,
+                    lineHeight: 1.6,
                   }}
                 >
                   "Every face is a canvas. Every look, a love letter to the person wearing it."
@@ -699,12 +734,12 @@ const AboutUs = () => {
                 <cite
                   style={{
                     display: "block",
-                    fontFamily: "sans-serif",
-                    fontSize: "0.75rem",
-                    letterSpacing: "0.2em",
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "0.7rem",
+                    letterSpacing: "0.15em",
                     textTransform: "uppercase",
                     color: "#7d6a4d",
-                    marginTop: "0.75rem",
+                    marginTop: "0.6rem",
                     fontStyle: "normal",
                   }}
                 >
@@ -713,16 +748,16 @@ const AboutUs = () => {
               </blockquote>
             </div>
 
-            {/* Right column - stagger reveal from right */}
+            {/* Right column */}
             <div className="reveal-right">
               <p
                 style={{
-                  fontFamily: "sans-serif",
-                  fontSize: "0.7rem",
-                  letterSpacing: "0.3em",
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: isMobile ? "0.65rem" : "0.7rem",
+                  letterSpacing: "0.25em",
                   textTransform: "uppercase",
                   color: "#a93d2b",
-                  marginBottom: "1.5rem",
+                  marginBottom: "1rem",
                 }}
               >
                 What Sets Us Apart
@@ -732,7 +767,7 @@ const AboutUs = () => {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: "0.85rem",
+                  gap: "0.7rem",
                 }}
               >
                 {ABOUT_ANURAAG.highlights.map((item, i) => (
@@ -741,13 +776,13 @@ const AboutUs = () => {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "1rem",
-                      padding: "1rem 1.4rem",
-                      background: "rgba(255,255,255,0.8)",
+                      gap: "0.8rem",
+                      padding: isMobile ? "0.8rem 1rem" : "1rem 1.4rem",
+                      background: "rgba(255,255,255,0.9)",
                       border: "1px solid rgba(185,135,46,0.15)",
-                      borderRadius: "1rem",
-                      backdropFilter: "blur(8px)",
-                      boxShadow: "0 4px 20px rgba(150,115,38,0.07)",
+                      borderRadius: "0.8rem",
+                      backdropFilter: "blur(4px)",
+                      boxShadow: "0 2px 12px rgba(150,115,38,0.05)",
                       transition: "all 0.3s",
                       cursor: "default",
                     }}
@@ -755,30 +790,28 @@ const AboutUs = () => {
                       const el = e.currentTarget as HTMLElement;
                       el.style.background = "#2f2415";
                       el.style.borderColor = "#b9872e";
-                      el.style.transform = "translateX(8px)";
                       const t = el.querySelector(".hl") as HTMLElement;
                       if (t) t.style.color = "rgba(255,255,255,0.9)";
                     }}
                     onMouseLeave={(e) => {
                       const el = e.currentTarget as HTMLElement;
-                      el.style.background = "rgba(255,255,255,0.8)";
+                      el.style.background = "rgba(255,255,255,0.9)";
                       el.style.borderColor = "rgba(185,135,46,0.15)";
-                      el.style.transform = "translateX(0)";
                       const t = el.querySelector(".hl") as HTMLElement;
                       if (t) t.style.color = "#2f2415";
                     }}
                   >
                     <span
                       style={{
-                        width: "32px",
-                        height: "32px",
+                        width: isMobile ? "28px" : "32px",
+                        height: isMobile ? "28px" : "32px",
                         borderRadius: "50%",
                         background: "linear-gradient(135deg,#b9872e,#e0c168)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         flexShrink: 0,
-                        fontSize: "0.7rem",
+                        fontSize: isMobile ? "0.6rem" : "0.7rem",
                         fontWeight: 700,
                         color: "#fff",
                       }}
@@ -788,18 +821,18 @@ const AboutUs = () => {
                     <span
                       className="hl"
                       style={{
-                        fontFamily: "sans-serif",
-                        fontSize: "0.9rem",
+                        fontFamily: "'Inter', sans-serif",
+                        fontSize: isMobile ? "0.85rem" : "0.9rem",
                         color: "#2f2415",
                         fontWeight: 500,
                         display: "flex",
                         alignItems: "center",
-                        gap: "0.4rem",
+                        gap: "0.3rem",
                         transition: "color 0.3s",
                       }}
                     >
                       {item}
-                      {i === 5 && <Plane size={14} style={{ color: "#b9872e", flexShrink: 0 }} />}
+                      {i === 5 && <Plane size={isMobile ? 12 : 14} style={{ color: "#b9872e", flexShrink: 0 }} />}
                     </span>
                   </div>
                 ))}
@@ -808,294 +841,492 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* ── SERVICES SECTION with scale reveal on each card ── */}
-<section
-  style={{
-    background: "#2f2415",
-    padding: "7rem 2rem",
-    position: "relative",
-    overflow: "hidden",
-  }}
->
-  <div
-    style={{
-      position: "absolute",
-      top: "-8rem",
-      right: "-8rem",
-      width: "30rem",
-      height: "30rem",
-      borderRadius: "50%",
-      background: "radial-gradient(circle,rgba(185,135,46,0.15) 0%,transparent 70%)",
-      pointerEvents: "none",
-    }}
-  />
-  <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-    <div
-      className="reveal-fadeup"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        marginBottom: "3rem",
-        flexWrap: "wrap",
-        gap: "1rem",
-      }}
-    >
-      <div>
-        <p
-          style={{
-            fontFamily: "sans-serif",
-            fontSize: "0.7rem",
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            color: "#b9872e",
-            marginBottom: "0.75rem",
-          }}
-        >
-          Expertise
-        </p>
-        <h2
-          style={{
-            fontSize: "clamp(2rem,4vw,3.5rem)",
-            fontWeight: 400,
-            color: "#fdfaf2",
-            margin: 0,
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-          }}
-        >
-          Services <em style={{ fontStyle: "italic", color: "#e0c168" }}>offered</em>
-        </h2>
-      </div>
-      <a
-        href="/services"
-        style={{
-          fontFamily: "sans-serif",
-          fontSize: "0.75rem",
-          letterSpacing: "0.2em",
-          textTransform: "uppercase",
-          color: "#b9872e",
-          textDecoration: "none",
-          borderBottom: "1px solid rgba(185,135,46,0.3)",
-          paddingBottom: "2px",
-        }}
-      >
-        View All →
-      </a>
-    </div>
-    
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "2rem",
-      }}
-      className="services-grid"
-    >
-      {ABOUT_ANURAAG.services.map((service, i) => {
-        // Map service names to image imports
-        const serviceImages: Record<string, string> = {
-          "Bridal Makeup": bridalMakeup,
-          "Engagement & Reception Makeup": engagementMakeup,
-          "Fashion & Editorial Shoots": editorialMakeup,
-          "Party & Occasion Makeup": partyMakeup,
-          "Photoshoot Makeup": celebrityMakeup,
-          "Makeup Consultation": masterclassMakeup,
-        };
-        
-        const backgroundImage = serviceImages[service] || "";
-        
-        return (
-          <div
-            key={i}
-            className="reveal-scale service-card"
-            style={{
-              position: "relative",
-              height: "380px",
-              borderRadius: "1.5rem",
-              overflow: "hidden",
-              cursor: "pointer",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-              transition: "all 0.4s cubic-bezier(0.23,1,0.32,1)",
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(185,135,46,0.15)",
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.transform = "translateY(-8px)";
-              el.style.boxShadow = "0 20px 40px rgba(0,0,0,0.3)";
-              
-              // Image rises from bottom
-              const imgContainer = el.querySelector(".image-container") as HTMLElement;
-              if (imgContainer) {
-                imgContainer.style.transform = "translateY(0)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.transform = "translateY(0)";
-              el.style.boxShadow = "0 4px 20px rgba(0,0,0,0.2)";
-              
-              // Image goes back down
-              const imgContainer = el.querySelector(".image-container") as HTMLElement;
-              if (imgContainer) {
-                imgContainer.style.transform = "translateY(100%)";
-              }
-            }}
-          >
-            {/* Image Container - rises from bottom on hover */}
-            <div
-              className="image-container"
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                top: 0,
-                transform: "translateY(100%)",
-                transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-                zIndex: 0,
-                overflow: "hidden",
-              }}
-            >
-              <img
-                src={backgroundImage}
-                alt={service}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
-              {/* Dark overlay for text readability when image rises */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "linear-gradient(135deg, rgba(47,36,21,0.85) 0%, rgba(185,135,46,0.7) 100%)",
-                  mixBlendMode: "multiply",
-                }}
-              />
-            </div>
-            
-            {/* Content - always visible with dark background by default */}
-            <div
-              style={{
-                position: "relative",
-                zIndex: 2,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-end",
-                padding: "2rem",
-                transition: "all 0.3s ease",
-                background: "rgba(47,36,21,0.85)", // Dark background by default
-              }}
-              className="card-content"
-            >
-              <span
-                style={{
-                  fontFamily: "sans-serif",
-                  fontSize: "0.6rem",
-                  letterSpacing: "0.3em",
-                  textTransform: "uppercase",
-                  color: "#b9872e",
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  transition: "color 0.3s ease",
-                }}
-                className="service-number"
-              >
-                0{i + 1}
-              </span>
-              <span
-                style={{
-                  fontSize: "1.3rem",
-                  color: "#fdfaf2",
-                  fontWeight: 500,
-                  display: "block",
-                  lineHeight: 1.3,
-                  transition: "transform 0.3s ease, color 0.3s ease",
-                }}
-                className="service-title"
-              >
-                {service}
-              </span>
-              <span
-                style={{
-                  display: "inline-block",
-                  marginTop: "0.75rem",
-                  fontSize: "0.85rem",
-                  color: "#b9872e",
-                  opacity: 0,
-                  transform: "translateX(-10px)",
-                  transition: "all 0.3s ease",
-                }}
-                className="card-arrow"
-              >
-                Learn more →
-              </span>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </div>
-  
-  <style>{`
-    .service-card {
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    
-    .service-card:hover .card-content {
-      background: transparent !important;
-    }
-    
-    .service-card:hover .service-title {
-      transform: translateX(4px);
-      color: #e0c168;
-    }
-    
-    .service-card:hover .service-number {
-      color: #e0c168;
-    }
-    
-    .service-card:hover .card-arrow {
-      opacity: 1 !important;
-      transform: translateX(0) !important;
-    }
-    
-    @media (max-width: 900px) {
-      .services-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 1.5rem !important;
-      }
-      
-      .service-card {
-        height: 340px !important;
-      }
-    }
-    
-    @media (max-width: 560px) {
-      .services-grid {
-        grid-template-columns: 1fr !important;
-      }
-      
-      .service-card {
-        height: 320px !important;
-      }
-    }
-  `}</style>
-</section>
-
-        {/* ── CTA SECTION ── */}
+        {/* ── SERVICES SECTION - Mobile Responsive Grid with Video Background ── */}
         <section
           style={{
-            padding: "8rem 2rem",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Video Background */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 0,
+            }}
+          >
+            <video
+              ref={videoRef}
+              src="/conVid.mp4"
+              muted
+              playsInline
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            {/* Dark tint overlay matching the current bg color (#2f2415) */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "rgba(47, 36, 21, 0.88)",
+              }}
+            />
+          </div>
+
+          {/* Content */}
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              background: "#2f2415",
+              padding: isMobile ? "4rem 1rem" : "7rem 2rem",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: "-4rem",
+                right: "-4rem",
+                width: isMobile ? "15rem" : "30rem",
+                height: isMobile ? "15rem" : "30rem",
+                borderRadius: "50%",
+                background: "radial-gradient(circle,rgba(185,135,46,0.12) 0%,transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
+            <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+              <div
+                className="reveal-fadeup"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  marginBottom: isMobile ? "2rem" : "3rem",
+                  flexWrap: "wrap",
+                  gap: "1rem",
+                }}
+              >
+                <div>
+                  <p
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: isMobile ? "0.6rem" : "0.7rem",
+                      letterSpacing: "0.25em",
+                      textTransform: "uppercase" as const,
+                      color: "#b9872e",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    Expertise
+                  </p>
+                  <h2
+                    style={{
+                      fontSize: isMobile ? "clamp(1.6rem, 6vw, 2.5rem)" : "clamp(2rem,4vw,3.5rem)",
+                      fontWeight: 400,
+                      color: "#fdfaf2",
+                      margin: 0,
+                      lineHeight: 1.1,
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    Services <em style={{ fontStyle: "italic", color: "#e0c168" }}>offered</em>
+                  </h2>
+                </div>
+                <a
+                  href="/services"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: isMobile ? "0.65rem" : "0.75rem",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase" as const,
+                    color: "#b9872e",
+                    textDecoration: "none",
+                    borderBottom: "1px solid rgba(185,135,46,0.4)",
+                    paddingBottom: "2px",
+                  }}
+                >
+                  View All &#8594;
+                </a>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+                  gap: isMobile ? "1.2rem" : "2rem",
+                }}
+                className="services-grid"
+              >
+                {ABOUT_ANURAAG.services.map((service, i) => {
+                  const serviceImages: Record<string, string> = {
+                    "Bridal Makeup": bridalMakeup,
+                    "Engagement & Reception Makeup": engagementMakeup,
+                    "Fashion & Editorial Shoots": editorialMakeup,
+                    "Party & Occasion Makeup": partyMakeup,
+                    "Photoshoot Makeup": celebrityMakeup,
+                    "Makeup Consultation": masterclassMakeup,
+                  };
+
+                  const serviceDescriptions: Record<string, string> = {
+                    "Bridal Makeup": "Complete bridal makeup with HD finish, including pre-bridal consultation and trial session.",
+                    "Engagement & Reception Makeup": "Glamorous reception look with long-lasting products and airbrush finish.",
+                    "Fashion & Editorial Shoots": "High-fashion editorial looks for magazines, lookbooks, and creative campaigns.",
+                    "Party & Occasion Makeup": "Stunning party-ready look for any occasion — birthdays, anniversaries, or night outs.",
+                    "Photoshoot Makeup": "Camera-ready makeup for professional photoshoots, celebrity events, and red carpets.",
+                    "Makeup Consultation": "Personalized one-on-one consultation to understand your skin type and style preferences.",
+                  };
+
+                  const backgroundImage = serviceImages[service] ?? "";
+                  const description =
+                    serviceDescriptions[service] ??
+                    "Professional makeup artistry tailored to your unique style and needs.";
+
+                  const handleEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+                    const el = e.currentTarget;
+                    el.style.transform = "translateY(-6px)";
+                    el.style.boxShadow = "0 15px 30px rgba(0,0,0,0.3)";
+
+                    const imgContainer = el.querySelector<HTMLElement>(".image-container");
+                    if (imgContainer) imgContainer.style.transform = "translateY(0)";
+
+                    const textBlock = el.querySelector<HTMLElement>(".text-block");
+                    if (textBlock) textBlock.style.transform = "translateY(0)";
+
+                    const arrowIcon = el.querySelector<HTMLElement>(".hover-arrow-icon");
+                    if (arrowIcon) {
+                      arrowIcon.style.opacity = "0";
+                    }
+                  };
+
+                  const handleLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+                    const el = e.currentTarget;
+                    el.style.transform = "translateY(0)";
+                    el.style.boxShadow = "0 4px 15px rgba(0,0,0,0.2)";
+
+                    const imgContainer = el.querySelector<HTMLElement>(".image-container");
+                    if (imgContainer) imgContainer.style.transform = "translateY(100%)";
+
+                    const textBlock = el.querySelector<HTMLElement>(".text-block");
+                    if (textBlock) textBlock.style.transform = "translateY(100%)";
+
+                    const arrowIcon = el.querySelector<HTMLElement>(".hover-arrow-icon");
+                    if (arrowIcon) {
+                      arrowIcon.style.opacity = "1";
+                    }
+                  };
+
+                  return (
+                    <div
+                      key={i}
+                      className="reveal-scale service-card"
+                      style={{
+                        position: "relative",
+                        height: isMobile ? "380px" : "420px",
+                        borderRadius: "1.2rem",
+                        overflow: "hidden",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+                        transition: "transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s cubic-bezier(0.23,1,0.32,1)",
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(185,135,46,0.2)",
+                      }}
+                      onMouseEnter={handleEnter}
+                      onMouseLeave={handleLeave}
+                      onTouchStart={(e) => {
+                        const el = e.currentTarget;
+                        const isActive = el.classList.contains("touch-active");
+                        
+                        if (!isActive) {
+                          document.querySelectorAll<HTMLElement>(".service-card").forEach((card) => {
+                            card.classList.remove("touch-active");
+                            const imgContainer = card.querySelector<HTMLElement>(".image-container");
+                            const textBlock = card.querySelector<HTMLElement>(".text-block");
+                            const arrowIcon = card.querySelector<HTMLElement>(".hover-arrow-icon");
+                            if (imgContainer) imgContainer.style.transform = "translateY(100%)";
+                            if (textBlock) textBlock.style.transform = "translateY(100%)";
+                            if (arrowIcon) arrowIcon.style.opacity = "1";
+                            card.style.transform = "translateY(0)";
+                          });
+                          
+                          el.classList.add("touch-active");
+                          const imgContainer = el.querySelector<HTMLElement>(".image-container");
+                          const textBlock = el.querySelector<HTMLElement>(".text-block");
+                          const arrowIcon = el.querySelector<HTMLElement>(".hover-arrow-icon");
+                          if (imgContainer) imgContainer.style.transform = "translateY(0)";
+                          if (textBlock) textBlock.style.transform = "translateY(0)";
+                          if (arrowIcon) arrowIcon.style.opacity = "0";
+                        } else {
+                          el.classList.remove("touch-active");
+                          const imgContainer = el.querySelector<HTMLElement>(".image-container");
+                          const textBlock = el.querySelector<HTMLElement>(".text-block");
+                          const arrowIcon = el.querySelector<HTMLElement>(".hover-arrow-icon");
+                          if (imgContainer) imgContainer.style.transform = "translateY(100%)";
+                          if (textBlock) textBlock.style.transform = "translateY(100%)";
+                          if (arrowIcon) arrowIcon.style.opacity = "1";
+                        }
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          zIndex: 1,
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "flex-start",
+                          padding: isMobile ? "1.5rem" : "2rem",
+                          background: "rgba(47,36,21,0.88)",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: isMobile ? "0.7rem" : "0.75rem",
+                            letterSpacing: "0.25em",
+                            textTransform: "uppercase" as const,
+                            color: "#b9872e",
+                            display: "block",
+                            marginBottom: "0.6rem",
+                            fontWeight: 500,
+                          }}
+                        >
+                          0{i + 1}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: isMobile ? "1.3rem" : "1.6rem",
+                            color: "#fdfaf2",
+                            fontWeight: 600,
+                            display: "block",
+                            lineHeight: 1.2,
+                            marginBottom: "0.8rem",
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          {service}
+                        </span>
+                        <p
+                          style={{
+                            fontSize: isMobile ? "0.85rem" : "0.95rem",
+                            color: "rgba(253,250,242,0.85)",
+                            lineHeight: 1.5,
+                            margin: 0,
+                            fontWeight: 400,
+                          }}
+                        >
+                          {description}
+                        </p>
+                      </div>
+
+                      <div
+                        className="image-container"
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          transform: "translateY(100%)",
+                          transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                          zIndex: 2,
+                          overflow: "hidden",
+                        }}
+                      >
+                        <img
+                          src={backgroundImage}
+                          alt={service}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover" as const,
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            background:
+                              "linear-gradient(to top, rgba(30,18,6,0.9) 0%, rgba(30,18,6,0.5) 40%, rgba(30,18,6,0.1) 100%)",
+                          }}
+                        />
+                      </div>
+
+                      <div
+                        className="text-block"
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          zIndex: 3,
+                          padding: isMobile ? "1.5rem" : "2rem",
+                          transform: "translateY(100%)",
+                          transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: isMobile ? "0.7rem" : "0.75rem",
+                            letterSpacing: "0.25em",
+                            textTransform: "uppercase" as const,
+                            color: "#e0c168",
+                            display: "block",
+                            marginBottom: "0.6rem",
+                            fontWeight: 500,
+                          }}
+                        >
+                          0{i + 1}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: isMobile ? "1.3rem" : "1.6rem",
+                            color: "#e0c168",
+                            fontWeight: 600,
+                            display: "block",
+                            lineHeight: 1.2,
+                            marginBottom: "0.8rem",
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          {service}
+                        </span>
+                        <p
+                          style={{
+                            fontSize: isMobile ? "0.85rem" : "0.95rem",
+                            color: "rgba(253,250,242,1)",
+                            lineHeight: 1.5,
+                            margin: 0,
+                            fontWeight: 400,
+                          }}
+                        >
+                          {description}
+                        </p>
+                      </div>
+
+                      {/* Arrow Icon */}
+                      <div
+                        className="hover-arrow-icon"
+                        style={{
+                          position: "absolute",
+                          bottom: "1.2rem",
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                          zIndex: 4,
+                          opacity: 1,
+                          transition: "opacity 0.3s ease",
+                          pointerEvents: "none",
+                        }}
+                      >
+                        <svg
+                          width={isMobile ? "24" : "28"}
+                          height={isMobile ? "24" : "28"}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          style={{
+                            animation: "bounceSoft 1.5s ease-in-out infinite",
+                            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
+                          }}
+                        >
+                          <path
+                            d="M12 19L12 5M12 19L5 12M12 19L19 12"
+                            stroke="#b9872e"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <style>{`
+              .service-card {
+                -webkit-tap-highlight-color: transparent;
+              }
+              @keyframes bounceSoft {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(5px); }
+              }
+              @keyframes scrollPulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.3; }
+              }
+              .reveal-fadeup {
+                opacity: 0;
+                transform: translateY(35px);
+                transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1), transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1);
+              }
+              .reveal-fadeup.revealed {
+                opacity: 1;
+                transform: translateY(0);
+              }
+              .reveal-left {
+                opacity: 0;
+                transform: translateX(-40px);
+                transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1), transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1);
+              }
+              .reveal-left.revealed {
+                opacity: 1;
+                transform: translateX(0);
+              }
+              .reveal-right {
+                opacity: 0;
+                transform: translateX(40px);
+                transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1), transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1);
+              }
+              .reveal-right.revealed {
+                opacity: 1;
+                transform: translateX(0);
+              }
+              .reveal-scale {
+                opacity: 0;
+                transform: scale(0.95);
+                transition: opacity 0.5s cubic-bezier(0.2, 0.9, 0.4, 1), transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1);
+              }
+              .reveal-scale.revealed {
+                opacity: 1;
+                transform: scale(1);
+              }
+              .stagger-children > * {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1);
+              }
+              .stagger-children.revealed > * {
+                opacity: 1;
+                transform: translateY(0);
+              }
+              .stagger-children > *:nth-child(1) { transition-delay: 0s; }
+              .stagger-children > *:nth-child(2) { transition-delay: 0.05s; }
+              .stagger-children > *:nth-child(3) { transition-delay: 0.1s; }
+              .stagger-children > *:nth-child(4) { transition-delay: 0.15s; }
+              .stagger-children > *:nth-child(5) { transition-delay: 0.2s; }
+              .stagger-children > *:nth-child(6) { transition-delay: 0.25s; }
+            `}</style>
+          </div>
+        </section>
+
+        {/* ── CTA SECTION - Mobile Optimized ── */}
+        <section
+          style={{
+            padding: isMobile ? "5rem 1rem 6rem 1rem" : "8rem 2rem 10rem 2rem",
             background: "linear-gradient(135deg,#fffdf5 0%,#f4e5b8 60%,#ecdfa0 100%)",
             textAlign: "center",
             position: "relative",
             overflow: "hidden",
+            minHeight: isMobile ? "500px" : "620px",
           }}
         >
           {[1, 2, 3].map((r) => (
@@ -1106,10 +1337,10 @@ const AboutUs = () => {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%,-50%)",
-                width: `${r * 18}rem`,
-                height: `${r * 18}rem`,
+                width: isMobile ? `${r * 10}rem` : `${r * 18}rem`,
+                height: isMobile ? `${r * 10}rem` : `${r * 18}rem`,
                 borderRadius: "50%",
-                border: `1px solid rgba(185,135,46,${0.1 / r})`,
+                border: `1px solid rgba(185,135,46,${0.08 / r})`,
                 pointerEvents: "none",
               }}
             />
@@ -1125,23 +1356,23 @@ const AboutUs = () => {
           >
             <p
               style={{
-                fontFamily: "sans-serif",
-                fontSize: "0.7rem",
-                letterSpacing: "0.35em",
-                textTransform: "uppercase",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: isMobile ? "0.6rem" : "0.7rem",
+                letterSpacing: "0.25em",
+                textTransform: "uppercase" as const,
                 color: "#a93d2b",
-                marginBottom: "1rem",
+                marginBottom: "0.8rem",
               }}
             >
               Let's Create Together
             </p>
             <h2
               style={{
-                fontSize: "clamp(2.5rem,6vw,5rem)",
+                fontSize: isMobile ? "clamp(1.8rem, 8vw, 3rem)" : "clamp(2.5rem,6vw,5rem)",
                 fontWeight: 400,
-                lineHeight: 1.05,
+                lineHeight: 1.1,
                 color: "#2f2415",
-                margin: "0 0 1.5rem",
+                margin: "0 0 1.2rem",
                 letterSpacing: "-0.02em",
               }}
             >
@@ -1160,12 +1391,13 @@ const AboutUs = () => {
             </h2>
             <p
               style={{
-                fontFamily: "sans-serif",
-                fontSize: "1rem",
-                lineHeight: 1.9,
+                fontFamily: "'Inter', sans-serif",
+                fontSize: isMobile ? "0.9rem" : "1rem",
+                lineHeight: 1.7,
                 color: "#5b4a2e",
                 fontWeight: 300,
-                marginBottom: "2.5rem",
+                marginBottom: "2rem",
+                padding: isMobile ? "0 0.5rem" : 0,
               }}
             >
               {ABOUT_ANURAAG.contact.availability} — reach out at{" "}
@@ -1176,24 +1408,24 @@ const AboutUs = () => {
                 {ABOUT_ANURAAG.contact.phone}
               </a>
             </p>
-            <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "0.8rem", flexWrap: "wrap" }}>
               <a
                 href="/services"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "0.6rem",
+                  gap: "0.5rem",
                   background: "#b9872e",
                   color: "#fff",
-                  padding: "1rem 2.5rem",
+                  padding: isMobile ? "0.8rem 1.8rem" : "1rem 2.5rem",
                   borderRadius: "999px",
-                  fontFamily: "sans-serif",
-                  fontSize: "0.75rem",
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: isMobile ? "0.7rem" : "0.75rem",
                   fontWeight: 700,
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase" as const,
                   textDecoration: "none",
-                  boxShadow: "0 18px 45px rgba(185,135,46,0.28)",
+                  boxShadow: "0 12px 30px rgba(185,135,46,0.25)",
                   transition: "all 0.3s",
                 }}
                 onMouseEnter={(e) => {
@@ -1205,7 +1437,7 @@ const AboutUs = () => {
                   (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                 }}
               >
-                Book Now →
+                Book Now &#8594;
               </a>
               <a
                 href={`tel:${ABOUT_ANURAAG.contact.phone}`}
@@ -1214,14 +1446,14 @@ const AboutUs = () => {
                   alignItems: "center",
                   background: "transparent",
                   color: "#2f2415",
-                  padding: "1rem 2.5rem",
+                  padding: isMobile ? "0.8rem 1.8rem" : "1rem 2.5rem",
                   borderRadius: "999px",
-                  border: "1px solid rgba(47,36,21,0.25)",
-                  fontFamily: "sans-serif",
-                  fontSize: "0.75rem",
+                  border: "1px solid rgba(47,36,21,0.3)",
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: isMobile ? "0.7rem" : "0.75rem",
                   fontWeight: 600,
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase" as const,
                   textDecoration: "none",
                   transition: "all 0.3s",
                 }}
@@ -1232,7 +1464,7 @@ const AboutUs = () => {
                 }}
                 onMouseLeave={(e) => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = "rgba(47,36,21,0.25)";
+                  el.style.borderColor = "rgba(47,36,21,0.3)";
                   el.style.color = "#2f2415";
                 }}
               >
@@ -1244,85 +1476,6 @@ const AboutUs = () => {
 
         <Footer />
       </div>
-
-      <style>{`
-        @keyframes marquee {
-          from { transform: translateX(0); }
-          to { transform: translateX(-33.333%); }
-        }
-        @keyframes scrollPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.25; }
-        }
-        
-        /* Reveal animation base classes */
-        .reveal-fadeup {
-          opacity: 0;
-          transform: translateY(45px);
-          transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .reveal-fadeup.revealed {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        
-        .reveal-left {
-          opacity: 0;
-          transform: translateX(-60px);
-          transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .reveal-left.revealed {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        
-        .reveal-right {
-          opacity: 0;
-          transform: translateX(60px);
-          transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .reveal-right.revealed {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        
-        .reveal-scale {
-          opacity: 0;
-          transform: scale(0.92);
-          transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1), transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1);
-        }
-        .reveal-scale.revealed {
-          opacity: 1;
-          transform: scale(1);
-        }
-        
-        /* Stagger children animations */
-        .stagger-children > * {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1);
-        }
-        .stagger-children.revealed > * {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .stagger-children > *:nth-child(1) { transition-delay: 0s; }
-        .stagger-children > *:nth-child(2) { transition-delay: 0.08s; }
-        .stagger-children > *:nth-child(3) { transition-delay: 0.16s; }
-        .stagger-children > *:nth-child(4) { transition-delay: 0.24s; }
-        .stagger-children > *:nth-child(5) { transition-delay: 0.32s; }
-        .stagger-children > *:nth-child(6) { transition-delay: 0.4s; }
-        
-        @media (max-width: 900px) {
-          .story-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .services-grid { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-        @media (max-width: 560px) {
-          .stats-grid { grid-template-columns: 1fr 1fr !important; }
-          .services-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </div>
   );
 };

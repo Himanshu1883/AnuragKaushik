@@ -1,12 +1,14 @@
 import { useCart } from "@/contexts/CartContext";
 import { Menu, ShoppingCart, X } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { cartItems, updateQuantity, totalItems, totalPrice } = useCart();
+  const location = useLocation();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -15,8 +17,29 @@ const Navigation = () => {
     { name: "Contact", href: "/contact" },
   ];
 
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return location.pathname === path;
+    }
+    return location.pathname.startsWith(path);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <nav className="relative border-b border-[#d8c08a]/70 bg-[#fffaf0]/50 backdrop-blur-xl">
+    <nav 
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? "border-b border-[#d8c08a]/70 bg-[#fffaf0]/90 backdrop-blur-xl shadow-lg" 
+          : "border-b border-[#d8c08a]/70 bg-[#fffaf0]/50 backdrop-blur-xl"
+      }`}
+    >
       <div className="relative flex h-20 items-center justify-between px-6 md:px-8 lg:px-10">
         <button
           className="rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 p-2.5 text-[#2f2415] shadow-sm transition hover:border-[#a93d2b]/40 hover:text-[#a93d2b] lg:hidden"
@@ -41,10 +64,20 @@ const Navigation = () => {
             <Link
               key={item.name}
               to={item.href}
-              className="group relative px-4 py-2 font-body text-md font-medium text-[#5b4a2e] transition hover:text-[#a93d2b]"
+              className={`group relative px-4 py-2 font-body text-md font-medium transition ${
+                isActive(item.href)
+                  ? "text-[#a93d2b]"
+                  : "text-[#5b4a2e] hover:text-[#a93d2b]"
+              }`}
             >
               <span>{item.name}</span>
-              <span className="absolute bottom-1 left-4 right-4 h-px origin-center scale-x-0 bg-[#a93d2b] transition-transform duration-300 group-hover:scale-x-100" />
+              <span
+                className={`absolute bottom-1 left-4 right-4 h-px origin-center bg-[#a93d2b] transition-transform duration-300 ${
+                  isActive(item.href)
+                    ? "scale-x-100"
+                    : "scale-x-0 group-hover:scale-x-100"
+                }`}
+              />
             </Link>
           ))}
         </div>
@@ -69,7 +102,11 @@ const Navigation = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className="block rounded-2xl px-4 py-3 font-body text-base font-medium text-[#5b4a2e] transition hover:bg-[#b9872e]/10 hover:text-[#a93d2b]"
+                className={`block rounded-2xl px-4 py-3 font-body text-base font-medium transition hover:bg-[#b9872e]/10 ${
+                  isActive(item.href)
+                    ? "bg-[#b9872e]/10 text-[#a93d2b]"
+                    : "text-[#5b4a2e] hover:text-[#a93d2b]"
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.name}

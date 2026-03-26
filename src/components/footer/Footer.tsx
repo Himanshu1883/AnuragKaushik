@@ -17,7 +17,7 @@ const Footer = () => {
   };
   return (
     <>
-      <footer className="mt-10 flex min-h-screen w-full items-stretch border-t border-[#d8c08a]/35 bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(249,239,207,0.98))] px-0 py-6 text-[#2f2415] sm:px-0 sm:py-8 lg:px-0">
+      <footer className="mt-0 flex w-full items-stretch border-t border-[#d8c08a]/35 bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(249,239,207,0.98))] px-0 py-6 text-[#2f2415] sm:px-0 sm:py-8 lg:px-0">
         <div className="flex w-full flex-1 flex-col justify-between px-4 sm:px-6 lg:px-10">
           <div className="flex flex-1 flex-col justify-between">
             <div className="overflow-hidden rounded-[2.4rem] border border-[#d8c08a]/40 bg-[radial-gradient(circle_at_top_left,rgba(241,217,139,0.3),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.9),rgba(249,239,207,0.86),rgba(255,248,235,0.94))] px-5 py-7 shadow-[0_18px_50px_rgba(150,115,38,0.10)] sm:px-7 sm:py-9 lg:px-10 lg:py-12">
