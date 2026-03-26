@@ -1,10 +1,10 @@
-import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import Header from "@/components/header/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FiPhone, FiMail, FiMapPin } from "react-icons/fi";
 import { FaInstagram } from "react-icons/fa";
+import { FiMail, FiMapPin, FiPhone } from "react-icons/fi";
 
 const Contact = () => {
   const bgImages = [
@@ -185,7 +185,7 @@ const Contact = () => {
         {/* ═══════════════════════════════════════════
             SECTION 2 — CONTACT FORM + INFO
         ═══════════════════════════════════════════ */}
-        <section className="relative bg-[#0d0a06] py-14 sm:py-20 md:py-28 px-4 sm:px-6 md:px-10">
+        <section className="relative bg-[#fdfaf2] py-14 sm:py-20 md:py-28 px-4 sm:px-6 md:px-10">
           {/* Subtle grain texture overlay */}
           <div
             className="absolute inset-0 pointer-events-none opacity-[0.04]"
@@ -218,15 +218,15 @@ const Contact = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
               {/* Contact Form */}
-              <div className="relative backdrop-blur-2xl bg-white/[0.06] rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 border border-white/10 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 pointer-events-none" />
+              <div className="relative backdrop-blur-2xl bg-white/95 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 border border-[#b9872e]/20 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/30 pointer-events-none" />
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#b9872e]/60 to-transparent" />
 
                 <div className="relative z-10 mb-6 sm:mb-8">
-                  <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-white tracking-tight">
+                  <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-[#2f2415] tracking-tight">
                     Send a Message
                   </h2>
-                  <p className="font-body text-white/60 text-sm mt-2">
+                  <p className="font-body text-[#4a4a4a] text-sm mt-2">
                     I'll get back to you within 24 hours
                   </p>
                 </div>
@@ -236,11 +236,11 @@ const Contact = () => {
                     <Input
                       placeholder="Your Name"
                       style={{
-                        backgroundColor: "rgba(255, 255, 255, 0.07)",
-                        borderColor: "rgba(255, 255, 255, 0.15)",
-                        color: "#FFFFFF",
+                        backgroundColor: "rgba(255, 255, 255, 0.85)",
+                        borderColor: "rgba(185, 135, 46, 0.4)",
+                        color: "#2f2415",
                       }}
-                      className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent h-12 sm:h-14 text-sm sm:text-base rounded-xl sm:rounded-2xl placeholder:text-white/40"
+                      className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent h-12 sm:h-14 text-sm sm:text-base rounded-xl sm:rounded-2xl placeholder:text-[#a17f40]"
                     />
                     <Input
                       placeholder="Phone Number"
@@ -256,11 +256,11 @@ const Contact = () => {
                   <Input
                     placeholder="Email Address"
                     style={{
-                      backgroundColor: "rgba(255, 255, 255, 0.07)",
-                      borderColor: "rgba(255, 255, 255, 0.15)",
-                      color: "#FFFFFF",
+                      backgroundColor: "rgba(255, 255, 255, 0.85)",
+                      borderColor: "rgba(185, 135, 46, 0.4)",
+                      color: "#2f2415",
                     }}
-                    className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent h-12 sm:h-14 text-sm sm:text-base rounded-xl sm:rounded-2xl placeholder:text-white/40"
+                    className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent h-12 sm:h-14 text-sm sm:text-base rounded-xl sm:rounded-2xl placeholder:text-[#a17f40]"
                   />
 
                   <Input
@@ -277,11 +277,11 @@ const Contact = () => {
                     placeholder="Tell us about your event and requirements..."
                     rows={4}
                     style={{
-                      backgroundColor: "rgba(255, 255, 255, 0.07)",
-                      borderColor: "rgba(255, 255, 255, 0.15)",
-                      color: "#FFFFFF",
+                      backgroundColor: "rgba(255, 255, 255, 0.85)",
+                      borderColor: "rgba(185, 135, 46, 0.4)",
+                      color: "#2f2415",
                     }}
-                    className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent text-sm sm:text-base rounded-xl sm:rounded-2xl resize-y min-h-[120px] sm:min-h-[140px] placeholder:text-white/40"
+                    className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent text-sm sm:text-base rounded-xl sm:rounded-2xl resize-y min-h-[120px] sm:min-h-[140px] placeholder:text-[#a17f40]"
                   />
 
                   <Button
@@ -298,8 +298,8 @@ const Contact = () => {
 
               {/* Contact Info */}
               <div className="space-y-6 sm:space-y-8">
-                <div className="relative backdrop-blur-2xl bg-white/[0.06] rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 pointer-events-none" />
+                <div className="relative backdrop-blur-2xl bg-white/90 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-[#b9872e]/20 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-transparent to-white/80 pointer-events-none" />
                   <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#b9872e]/60 to-transparent" />
 
                   <div className="relative z-10 space-y-6 sm:space-y-8">
@@ -314,10 +314,10 @@ const Contact = () => {
                         />
                       </div>
                       <div>
-                        <div className="text-xs font-body tracking-[0.125em] text-white/50 mb-1">
+                        <div className="text-xs font-body tracking-[0.125em] text-[#4a4a4a] mb-1">
                           PHONE
                         </div>
-                        <div className="font-medium text-base sm:text-lg text-white">
+                        <div className="font-medium text-base sm:text-lg text-[#2f2415]">
                           +91 96252 72041
                         </div>
                       </div>
@@ -334,10 +334,10 @@ const Contact = () => {
                         />
                       </div>
                       <div>
-                        <div className="text-xs font-body tracking-[0.125em] text-white/50 mb-1">
+                        <div className="text-xs font-body tracking-[0.125em] text-[#4a4a4a] mb-1">
                           EMAIL
                         </div>
-                        <div className="font-medium text-base sm:text-lg text-white break-all">
+                        <div className="font-medium text-base sm:text-lg text-[#2f2415] break-all">
                           hello@anuraagkaushik.com
                         </div>
                       </div>
@@ -348,13 +348,13 @@ const Contact = () => {
                         <FiMapPin size={18} className="text-white" />
                       </div>
                       <div>
-                        <div className="text-xs font-body tracking-[0.125em] text-white/50 mb-1">
+                        <div className="text-xs font-body tracking-[0.125em] text-[#4a4a4a] mb-1">
                           STUDIO LOCATION
                         </div>
-                        <div className="font-medium text-base sm:text-lg text-white">
+                        <div className="font-medium text-base sm:text-lg text-[#2f2415]">
                           New Delhi, India
                         </div>
-                        <p className="text-xs sm:text-sm text-white/50 mt-1">
+                        <p className="text-xs sm:text-sm text-[#4a4a4a] mt-1">
                           Available for travel worldwide
                         </p>
                       </div>
@@ -373,10 +373,10 @@ const Contact = () => {
                         />
                       </div>
                       <div>
-                        <div className="text-xs font-body tracking-[0.125em] text-white/50 mb-1">
+                        <div className="text-xs font-body tracking-[0.125em] text-[#4a4a4a] mb-1">
                           INSTAGRAM
                         </div>
-                        <div className="font-medium text-base sm:text-lg text-white">
+                        <div className="font-medium text-base sm:text-lg text-[#2f2415]">
                           @anuraagkaushik
                         </div>
                       </div>

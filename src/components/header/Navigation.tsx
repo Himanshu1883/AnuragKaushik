@@ -1,6 +1,6 @@
 import { useCart } from "@/contexts/CartContext";
 import { Menu, ShoppingCart, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
@@ -33,11 +33,11 @@ const Navigation = () => {
   }, []);
 
   return (
-    <nav 
+    <nav
       className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? "border-b border-[#d8c08a]/70 bg-[#fffaf0]/90 backdrop-blur-xl shadow-lg" 
-          : "border-b border-[#d8c08a]/70 bg-[#fffaf0]/50 backdrop-blur-xl"
+        isScrolled
+          ? "border-b border-[#d8c08a]/70 bg-[#fffaf0]/90 backdrop-blur-xl shadow-lg"
+          : "border-b border-[#d8c08a]/70 bg-[#fffaf0]/90 backdrop-blur-xl shadow-lg"
       }`}
     >
       <div className="relative flex h-20 items-center justify-between px-6 md:px-8 lg:px-10">
