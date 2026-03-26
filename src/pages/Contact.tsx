@@ -7,120 +7,406 @@ import { FiPhone, FiMail, FiMapPin } from "react-icons/fi";
 import { FaInstagram } from "react-icons/fa";
 
 const Contact = () => {
-  return (
-    <div className="min-h-screen" style={{ backgroundColor: "#FFFFFF" }}>
-      <Header />
-      <main className="px-6 py-12 max-w-5xl mx-auto">
-        <div className="mb-12">
-          <p className="font-body text-sm tracking-[0.2em] uppercase mb-2" style={{ color: "#b9872e" }}>
-            Get in Touch
-          </p>
-          <h1 className="font-display text-4xl md:text-5xl" style={{ color: "#000000" }}>
-            Contact Anuraag
-          </h1>
-        </div>
+  const bgImages = [
+    "/bridal.jpg",
+    "/celeb.jpg",
+    "/prewed.jpeg",
+    "/con1.jpg",
+    "/con2.jpg",
+    "/con3.jpg",
+  ];
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact form */}
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input 
-                placeholder="Your Name" 
-                style={{ 
-                  backgroundColor: "#F8F8F8", 
-                  borderColor: "#E5E5E5",
-                  color: "#000000",
-                }} 
-                className="border focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent"
+  return (
+    <div className="min-h-screen bg-black overflow-hidden">
+      {/* Header with fixed positioning */}
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <Header />
+      </div>
+
+      <main className="pt-20">
+        {/* ═══════════════════════════════════════════
+            SECTION 1 — HERO
+        ═══════════════════════════════════════════ */}
+        <section
+          className="relative h-screen flex items-center justify-center overflow-hidden"
+          style={{ background: "#b9872e" }}
+        >
+          {/* ── DESKTOP image layout (md+) ── */}
+          <div className="hidden md:block absolute inset-0">
+            {/* Left full-height strip with tint */}
+            <div className="absolute top-0 left-0 h-full w-[22%]">
+              <img
+                src={bgImages[0]}
+                alt=""
+                className="w-full h-full object-cover object-top"
               />
-              <Input 
-                placeholder="Phone Number" 
-                style={{ 
-                  backgroundColor: "#F8F8F8", 
-                  borderColor: "#E5E5E5",
-                  color: "#000000",
-                }} 
-                className="border focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent"
-              />
+              <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
             </div>
-            <Input 
-              placeholder="Email Address" 
-              style={{ 
-                backgroundColor: "#F8F8F8", 
-                borderColor: "#E5E5E5",
-                color: "#000000",
-              }} 
-              className="border focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent"
-            />
-            <Input 
-              placeholder="Event Date (optional)" 
-              style={{ 
-                backgroundColor: "#F8F8F8", 
-                borderColor: "#E5E5E5",
-                color: "#000000",
-              }} 
-              className="border focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent"
-            />
-            <Textarea 
-              placeholder="Tell us about your event and requirements..." 
-              rows={5} 
-              style={{ 
-                backgroundColor: "#F8F8F8", 
-                borderColor: "#E5E5E5",
-                color: "#000000",
-              }} 
-              className="border focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent"
-            />
-            <Button 
-              className="w-full py-3 hover:opacity-90 transition-opacity"
-              style={{ 
-                backgroundColor: "#b9872e",
-                color: "#000000"
-              }}
+
+            {/* Right full-height strip with tint */}
+            <div className="absolute top-0 right-0 h-full w-[22%]">
+              <img
+                src={bgImages[3]}
+                alt=""
+                className="w-full h-full object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
+            </div>
+
+            {/* Top-center arch portrait with tint */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2 overflow-hidden rounded-b-[50%]"
+              style={{ top: 0, width: "21%", height: "48%" }}
             >
-              Send Inquiry
-            </Button>
+              <img
+                src={bgImages[1]}
+                alt=""
+                className="w-full h-full object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
+            </div>
+
+            {/* Bottom-left arch portrait with tint */}
+            <div
+              className="absolute overflow-hidden rounded-t-[50%]"
+              style={{ bottom: 0, left: "23%", width: "19%", height: "46%" }}
+            >
+              <img
+                src={bgImages[4]}
+                alt=""
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
+            </div>
+
+            {/* Bottom-right arch portrait with tint */}
+            <div
+              className="absolute overflow-hidden rounded-t-[50%]"
+              style={{ bottom: 0, right: "23%", width: "19%", height: "44%" }}
+            >
+              <img
+                src={bgImages[5]}
+                alt=""
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
+            </div>
+
+            {/* Cinematic overlays */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse 68% 65% at 50% 50%, transparent 15%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.60) 100%)",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse 50% 55% at 50% 52%, rgba(0,0,0,0.45) 0%, transparent 100%)",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(185,135,46,0.18) 0%, transparent 50%, rgba(185,135,46,0.12) 100%)",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to right, transparent 18%, rgba(0,0,0,0.22) 30%, rgba(0,0,0,0.22) 70%, transparent 82%)",
+              }}
+            />
           </div>
 
-          {/* Info */}
-          <div className="space-y-8">
-            <div>
-              <h3 className="font-display text-xl mb-4" style={{ color: "#000000" }}>Reach Out</h3>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3" style={{ color: "#4A4A4A" }}>
-                  <FiPhone size={18} style={{ color: "#b9872e" }} />
-                  <span className="font-body text-sm font-light">+91 98765 43210</span>
+          {/* ── MOBILE image layout (< md) ── */}
+          <div className="md:hidden absolute inset-0">
+            {/* Base warm fill */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "#2a1a06" }}
+            />
+
+            {/* Left half portrait with tint */}
+            <div className="absolute top-0 left-0 w-1/2 h-full">
+              <img
+                src={bgImages[0]}
+                alt=""
+                className="w-full h-full object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-black/50 mix-blend-multiply" />
+            </div>
+
+            {/* Right half portrait with tint */}
+            <div className="absolute top-0 right-0 w-1/2 h-full">
+              <img
+                src={bgImages[3]}
+                alt=""
+                className="w-full h-full object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-black/50 mix-blend-multiply" />
+            </div>
+
+            {/* Dark overlay so text is readable */}
+            <div className="absolute inset-0 bg-black/70" />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(185,135,46,0.15) 0%, transparent 60%)",
+              }}
+            />
+          </div>
+
+          {/* Hero text */}
+          <div className="relative z-20 text-center px-4 sm:px-6 w-full max-w-3xl mx-auto">
+            <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white tracking-tighter leading-none mb-4 sm:mb-6">
+              Contact Us
+            </h1>
+            <p className="font-body text-sm sm:text-base md:text-lg text-white/80 max-w-xl mx-auto mb-10 sm:mb-12 px-2">
+              Let's bring your vision to life. Reach out for bookings,
+              collaborations, or any inquiries.
+            </p>
+          </div>
+
+          {/* Bottom fade into next section */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 pointer-events-none"
+            style={{
+              background: "linear-gradient(to bottom, transparent, #0d0a06)",
+            }}
+          />
+        </section>
+
+        {/* ═══════════════════════════════════════════
+            SECTION 2 — CONTACT FORM + INFO
+        ═══════════════════════════════════════════ */}
+        <section className="relative bg-[#0d0a06] py-14 sm:py-20 md:py-28 px-4 sm:px-6 md:px-10">
+          {/* Subtle grain texture overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
+            }}
+          />
+
+          {/* Ambient gold glow top-center */}
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] sm:w-[600px] h-[200px] sm:h-[300px] pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(185,135,46,0.12) 0%, transparent 70%)",
+            }}
+          />
+
+          <div className="relative z-10 max-w-7xl mx-auto">
+            {/* Section label */}
+            <div className="text-center mb-10 sm:mb-14">
+              <div className="inline-flex items-center gap-3">
+                <div className="w-8 sm:w-12 h-px bg-[#b9872e]/60" />
+                <span className="font-body text-xs tracking-[0.25em] uppercase text-[#b9872e]">
+                  Reach Out
+                </span>
+                <div className="w-8 sm:w-12 h-px bg-[#b9872e]/60" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
+              {/* Contact Form */}
+              <div className="relative backdrop-blur-2xl bg-white/[0.06] rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 border border-white/10 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 pointer-events-none" />
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#b9872e]/60 to-transparent" />
+
+                <div className="relative z-10 mb-6 sm:mb-8">
+                  <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-white tracking-tight">
+                    Send a Message
+                  </h2>
+                  <p className="font-body text-white/60 text-sm mt-2">
+                    I'll get back to you within 24 hours
+                  </p>
                 </div>
-                <div className="flex items-center gap-3" style={{ color: "#4A4A4A" }}>
-                  <FiMail size={18} style={{ color: "#b9872e" }} />
-                  <span className="font-body text-sm font-light">hello@anuraagkaushik.com</span>
+
+                <div className="relative z-10 space-y-4 sm:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                    <Input
+                      placeholder="Your Name"
+                      style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.07)",
+                        borderColor: "rgba(255, 255, 255, 0.15)",
+                        color: "#FFFFFF",
+                      }}
+                      className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent h-12 sm:h-14 text-sm sm:text-base rounded-xl sm:rounded-2xl placeholder:text-white/40"
+                    />
+                    <Input
+                      placeholder="Phone Number"
+                      style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.07)",
+                        borderColor: "rgba(255, 255, 255, 0.15)",
+                        color: "#FFFFFF",
+                      }}
+                      className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent h-12 sm:h-14 text-sm sm:text-base rounded-xl sm:rounded-2xl placeholder:text-white/40"
+                    />
+                  </div>
+
+                  <Input
+                    placeholder="Email Address"
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.07)",
+                      borderColor: "rgba(255, 255, 255, 0.15)",
+                      color: "#FFFFFF",
+                    }}
+                    className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent h-12 sm:h-14 text-sm sm:text-base rounded-xl sm:rounded-2xl placeholder:text-white/40"
+                  />
+
+                  <Input
+                    placeholder="Event Date (optional)"
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.07)",
+                      borderColor: "rgba(255, 255, 255, 0.15)",
+                      color: "#FFFFFF",
+                    }}
+                    className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent h-12 sm:h-14 text-sm sm:text-base rounded-xl sm:rounded-2xl placeholder:text-white/40"
+                  />
+
+                  <Textarea
+                    placeholder="Tell us about your event and requirements..."
+                    rows={4}
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.07)",
+                      borderColor: "rgba(255, 255, 255, 0.15)",
+                      color: "#FFFFFF",
+                    }}
+                    className="border backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#b9872e] focus:border-transparent text-sm sm:text-base rounded-xl sm:rounded-2xl resize-y min-h-[120px] sm:min-h-[140px] placeholder:text-white/40"
+                  />
+
+                  <Button
+                    className="w-full py-3 sm:py-4 text-sm sm:text-base font-medium tracking-wider hover:scale-[1.02] active:scale-[0.985] transition-all duration-300 shadow-xl"
+                    style={{
+                      backgroundColor: "#b9872e",
+                      color: "#000000",
+                    }}
+                  >
+                    Send Inquiry
+                  </Button>
                 </div>
-                <div className="flex items-center gap-3" style={{ color: "#4A4A4A" }}>
-                  <FiMapPin size={18} style={{ color: "#b9872e" }} />
-                  <span className="font-body text-sm font-light">New Delhi, India</span>
+              </div>
+
+              {/* Contact Info */}
+              <div className="space-y-6 sm:space-y-8">
+                <div className="relative backdrop-blur-2xl bg-white/[0.06] rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 pointer-events-none" />
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#b9872e]/60 to-transparent" />
+
+                  <div className="relative z-10 space-y-6 sm:space-y-8">
+                    <a
+                      href="tel:+919625272041"
+                      className="group flex items-start gap-4 sm:gap-5 hover:translate-x-1 transition-transform duration-300"
+                    >
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#b9872e]/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 group-hover:bg-[#b9872e] transition-all duration-300 border border-white/10">
+                        <FiPhone
+                          size={18}
+                          className="text-white group-hover:text-black transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <div className="text-xs font-body tracking-[0.125em] text-white/50 mb-1">
+                          PHONE
+                        </div>
+                        <div className="font-medium text-base sm:text-lg text-white">
+                          +91 96252 72041
+                        </div>
+                      </div>
+                    </a>
+
+                    <a
+                      href="mailto:hello@anuraagkaushik.com"
+                      className="group flex items-start gap-4 sm:gap-5 hover:translate-x-1 transition-transform duration-300"
+                    >
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#b9872e]/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 group-hover:bg-[#b9872e] transition-all duration-300 border border-white/10">
+                        <FiMail
+                          size={18}
+                          className="text-white group-hover:text-black transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <div className="text-xs font-body tracking-[0.125em] text-white/50 mb-1">
+                          EMAIL
+                        </div>
+                        <div className="font-medium text-base sm:text-lg text-white break-all">
+                          hello@anuraagkaushik.com
+                        </div>
+                      </div>
+                    </a>
+
+                    <div className="flex items-start gap-4 sm:gap-5">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#b9872e]/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 border border-white/10">
+                        <FiMapPin size={18} className="text-white" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-body tracking-[0.125em] text-white/50 mb-1">
+                          STUDIO LOCATION
+                        </div>
+                        <div className="font-medium text-base sm:text-lg text-white">
+                          New Delhi, India
+                        </div>
+                        <p className="text-xs sm:text-sm text-white/50 mt-1">
+                          Available for travel worldwide
+                        </p>
+                      </div>
+                    </div>
+
+                    <a
+                      href="https://www.instagram.com/anuraagkaushik_92"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-start gap-4 sm:gap-5 hover:translate-x-1 transition-transform duration-300"
+                    >
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#b9872e]/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 group-hover:bg-[#b9872e] transition-all duration-300 border border-white/10">
+                        <FaInstagram
+                          size={18}
+                          className="text-white group-hover:text-black transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <div className="text-xs font-body tracking-[0.125em] text-white/50 mb-1">
+                          INSTAGRAM
+                        </div>
+                        <div className="font-medium text-base sm:text-lg text-white">
+                          @anuraagkaushik
+                        </div>
+                      </div>
+                    </a>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3" style={{ color: "#4A4A4A" }}>
-                  <FaInstagram size={18} style={{ color: "#b9872e" }} />
-                  <span className="font-body text-sm font-light">@anuraagkaushik</span>
+
+                <div className="relative backdrop-blur-2xl bg-white/[0.06] rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/10 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 pointer-events-none" />
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#b9872e]/60 to-transparent" />
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                      <div className="w-px h-7 sm:h-8 bg-[#b9872e]" />
+                      <h4 className="font-display text-xl sm:text-2xl text-white tracking-tight">
+                        Booking Note
+                      </h4>
+                    </div>
+                    <p className="font-body text-xs sm:text-sm leading-relaxed text-white/70">
+                      For bridal bookings, we recommend reaching out at least
+                      2-3 months in advance. A complimentary trial session is
+                      included with all bridal packages.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div 
-              className="p-6 rounded-xl border"
-              style={{ 
-                backgroundColor: "#F8F8F8", 
-                borderColor: "#E5E5E5"
-              }}
-            >
-              <h4 className="font-display text-lg mb-2" style={{ color: "#000000" }}>Booking Note</h4>
-              <p className="font-body text-sm font-light" style={{ color: "#4A4A4A" }}>
-                For bridal bookings, we recommend reaching out at least 2-3 months in advance. 
-                A trial session is included with all bridal packages.
-              </p>
-            </div>
           </div>
-        </div>
+        </section>
       </main>
+
       <Footer />
     </div>
   );
