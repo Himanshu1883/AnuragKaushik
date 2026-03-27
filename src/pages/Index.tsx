@@ -136,7 +136,7 @@ const Index = () => {
     centerTop: "/WhatsApp Image 2026-03-25 at 3.01.01 PM.jpeg",
     centerBottom: "/WhatsApp Image 2026-03-25 at 3.00.28 PM.jpeg",
     rightTop: "/WhatsApp Image 2026-03-25 at 3.00.41 PM (1).jpeg",
-    rightBottom: "/WhatsApp Image 2026-03-24 at 9.02.26 PM.jpeg",
+    rightBottom: "/blueceleb.jpeg",
     bottomOne: "/WhatsApp Image 2026-03-24 at 7.17.56 PM.jpeg",
     bottomTwo: "/WhatsApp Image 2026-03-24 at 5.38.05 PM.jpeg",
     bottomThree: "/WhatsApp Image 2026-03-24 at 5.38.07 PM (1).jpeg",
@@ -865,7 +865,7 @@ const Index = () => {
                   >
                     <div className="grid h-full grid-rows-2">
                       <img
-                        src="/blueceleb.jpeg"
+                        src="/anuraag_celeb2.webp"
                         alt="Finished bridal makeup look"
                         className="h-full w-full object-cover object-[center_20%] transition duration-700 group-hover:scale-105"
                       />
@@ -933,9 +933,9 @@ const Index = () => {
               }}
             >
               <div className="relative">
-                <div className="absolute inset-0 rounded-full bg-black/24 blur-lg" />
-                <div className="relative flex h-16 w-16 flex-col items-center justify-center rounded-full border border-white/10 bg-black/24 backdrop-blur-md md:h-16 md:w-16">
-                  <span className="font-semibold text-[0.875rem] leading-none tracking-[-0.01em] text-[#e6ba55] md:text-[0.875rem]">
+                <div className="absolute inset-0 rounded-full bg-black/30 blur-xl" />
+                <div className="relative flex h-16 w-16 flex-col items-center justify-center rounded-full border border-white/20 bg-black/40 backdrop-blur-lg md:h-16 md:w-16">
+                  <span className="font-semibold text-[0.875rem] leading-none tracking-[-0.01em] text-[#ffd459] md:text-[0.875rem]">
                     Services
                   </span>
                   {/* <span className="mt-1 font-body text-[0.38rem] font-semibold tracking-[0.08em] text-white/75">
