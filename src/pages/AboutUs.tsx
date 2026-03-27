@@ -218,18 +218,22 @@ useEffect(() => {
   const video = videoRef.current;
   if (!video) return;
 
-  const playVideo = () => {
-    video.play().catch((e) => {
-      console.log("Video autoplay prevented:", e);
-    });
+  const handleTimeUpdate = () => {
+    if (video.currentTime >= 10) {
+      video.currentTime = 0;
+      video.play();
+    }
   };
 
-  // Small delay to ensure video is ready
-  const timeout = setTimeout(playVideo, 200);
+  video.addEventListener("timeupdate", handleTimeUpdate);
 
-  return () => clearTimeout(timeout);
+  // autoplay fix
+  video.play().catch(() => {});
+
+  return () => {
+    video.removeEventListener("timeupdate", handleTimeUpdate);
+  };
 }, []);
-
   // Initialize scroll reveal animations
   useScrollReveal();
 
@@ -862,6 +866,7 @@ useEffect(() => {
             <video
               ref={videoRef}
               src="/conVid.mp4"
+              autoPlay
               muted
               playsInline
               style={{
@@ -878,7 +883,7 @@ useEffect(() => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: "rgba(47, 36, 21, 0.88)",
+                background: "rgba(47, 36, 21, 0.55)"
               }}
             />
           </div>
@@ -888,7 +893,7 @@ useEffect(() => {
             style={{
               position: "relative",
               zIndex: 1,
-              background: "#2f2415",
+              // background: "#00000066",
               padding: isMobile ? "4rem 1rem" : "7rem 2rem",
             }}
           >
