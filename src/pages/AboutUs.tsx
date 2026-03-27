@@ -22,7 +22,7 @@ interface Stat {
 }
 
 const ABOUT_ANURAAG = {
-  tagline: "Bridal & Fashion Glam Specialist",
+  tagline: "Bridal & Fashion Glam Specialist", 
   badges: ["Delhi's #1 Bridal Makeup Artist", "Trusted by 500+ Brides"],
   description: `Anuraag Kaushik is a passionate and professional freelance makeup artist specializing in bridal and fashion glam looks. With a keen eye for detail and a deep understanding of skin tones, textures, and trends, Anuraag creates stunning transformations that enhance natural beauty while reflecting each client's unique personality.
 
