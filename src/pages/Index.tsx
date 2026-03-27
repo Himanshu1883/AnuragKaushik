@@ -10,7 +10,7 @@ import {
   Instagram,
   Sparkles,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer/Footer";
 import Header from "../components/header/Header";
@@ -23,6 +23,7 @@ const Index = () => {
   const beautySectionRef = useRef<HTMLDivElement | null>(null);
   const chooseSectionRef = useRef<HTMLDivElement | null>(null);
   const worksSectionRef = useRef<HTMLDivElement | null>(null);
+  const reelVideoRefs = useRef<Record<number, HTMLVideoElement | null>>({});
   const [isHeroVisible, setIsHeroVisible] = useState(false);
   const [isStatsVisible, setIsStatsVisible] = useState(false);
   const [isBeautyVisible, setIsBeautyVisible] = useState(false);
@@ -50,6 +51,34 @@ const Index = () => {
   useEffect(() => {
     return () => suppressGlobalCursor(false);
   }, []);
+
+  const isIOSDevice = useMemo(() => {
+    if (typeof navigator === "undefined") return false;
+    const ua = navigator.userAgent ?? "";
+    const isAppleMobile = /iPad|iPhone|iPod/.test(ua);
+    const isIPadOS =
+      navigator.platform === "MacIntel" && (navigator.maxTouchPoints ?? 0) > 1;
+    return isAppleMobile || isIPadOS;
+  }, []);
+
+  const toggleReelPlayback = async (reelId: number) => {
+    const target = reelVideoRefs.current[reelId];
+    if (!target) return;
+
+    if (target.paused) {
+      Object.entries(reelVideoRefs.current).forEach(([id, video]) => {
+        if (Number(id) !== reelId) video?.pause();
+      });
+
+      try {
+        await target.play();
+      } catch {
+        // Ignore: play() can reject due to encoding/network or browser policy.
+      }
+    } else {
+      target.pause();
+    }
+  };
 
   const reels = [
     {
@@ -379,7 +408,6 @@ const Index = () => {
         <section className="px-4 py-5 sm:px-5 md:px-8 md:py-6 lg:px-5">
           <div
             ref={statsSectionRef}
-            className="relative"
             onMouseMove={(event) => {
               if (window.innerWidth < 768) return;
               const rect = event.currentTarget.getBoundingClientRect();
@@ -399,7 +427,7 @@ const Index = () => {
               setServicesHoverTop((prev) => ({ ...prev, visible: false }));
               suppressGlobalCursor(false);
             }}
-            className={`reels-shell reels-reveal mx-auto w-full max-w-[1520px] h-auto min-h-[400px] md:min-h-[500px] rounded-[2.6rem] border border-[#b9872e]/15 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(250,242,211,0.97),rgba(255,250,239,0.92))] p-3 shadow-[0_22px_55px_rgba(150,115,38,0.10)] backdrop-blur md:p-4 ${
+            className={`relative reels-shell reels-reveal mx-auto w-full max-w-[1520px] h-auto min-h-[400px] md:min-h-[500px] rounded-[2.6rem] border border-[#b9872e]/15 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(250,242,211,0.97),rgba(255,250,239,0.92))] p-3 shadow-[0_22px_55px_rgba(150,115,38,0.10)] backdrop-blur md:p-4 ${
               isStatsVisible ? "is-visible" : ""
             }`}
           >
@@ -509,13 +537,20 @@ const Index = () => {
               <div className="lg:col-span-4 h-full">
                 <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-2 scrollbar-hide">
                   {reels.map((reel, i) => (
-                    <a
+                    <div
                       key={reel.id}
-                      href="https://www.instagram.com/anuraagkaushik_92?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Play reel: ${reel.title}`}
                       className="reel-tile reels-reveal-item group relative overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-[#2f2415] cursor-pointer min-w-[220px] sm:min-w-[240px] md:min-w-0 snap-start"
                       style={{ ["--delay" as string]: `${200 + i * 250}ms` }}
+                      onClick={() => toggleReelPlayback(reel.id)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          toggleReelPlayback(reel.id);
+                        }
+                      }}
                     >
                       {/* <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#e6cf86] via-[#b9872e] to-[#a93d2b] z-10" /> */}
 
@@ -527,9 +562,16 @@ const Index = () => {
                           src={reel.video}
                           className="h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
                           preload="metadata"
-                          autoPlay
+                          autoPlay={!isIOSDevice}
                           muted
                           loop
+                          playsInline
+                          controls={isIOSDevice}
+                          disablePictureInPicture
+                          poster={anuraagImage}
+                          ref={(el) => {
+                            reelVideoRefs.current[reel.id] = el;
+                          }}
                         />
 
                         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(47,36,21,0.1),rgba(47,36,21,0.4))]" />
@@ -546,8 +588,16 @@ const Index = () => {
                             {reel.title}
                           </p>
                         </div>
+
+                        {isIOSDevice ? (
+                          <div className="pointer-events-none absolute inset-x-4 bottom-14 z-20">
+                            <p className="font-body text-[0.58rem] uppercase tracking-[0.28em] text-white/75">
+                              Tap to play
+                            </p>
+                          </div>
+                        ) : null}
                       </div>
-                    </a>
+                    </div>
                   ))}
                 </div>
               </div>
