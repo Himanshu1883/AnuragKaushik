@@ -136,7 +136,7 @@ const Index = () => {
     centerTop: "/WhatsApp Image 2026-03-25 at 3.01.01 PM.jpeg",
     centerBottom: "/WhatsApp Image 2026-03-25 at 3.00.28 PM.jpeg",
     rightTop: "/WhatsApp Image 2026-03-25 at 3.00.41 PM (1).jpeg",
-    rightBottom: "/WhatsApp Image 2026-03-24 at 9.02.27 PM.jpeg",
+    rightBottom: "/blueceleb.jpeg",
     bottomOne: "/WhatsApp Image 2026-03-24 at 7.17.56 PM.jpeg",
     bottomTwo: "/WhatsApp Image 2026-03-24 at 5.38.05 PM.jpeg",
     bottomThree: "/WhatsApp Image 2026-03-24 at 5.38.07 PM (1).jpeg",
@@ -720,11 +720,30 @@ const Index = () => {
         <section className="bg-[linear-gradient(180deg,rgba(255,253,247,0.78),rgba(247,238,210,0.98))] px-4 py-16 md:px-8 lg:px-10">
           <div
             ref={chooseSectionRef}
-            className={`choose-band mx-auto w-full max-w-[1480px] rounded-[3rem] border border-[#d8c08a]/50 bg-[linear-gradient(135deg,rgba(255,255,255,0.82),rgba(252,244,217,0.92),rgba(255,249,238,0.86))] p-5 shadow-[0_28px_70px_rgba(150,115,38,0.12)] backdrop-blur md:p-7 ${
+            className={`choose-band relative mx-auto w-full max-w-[1480px] rounded-[3rem] border border-[#d8c08a]/50 bg-[linear-gradient(135deg,rgba(255,255,255,0.82),rgba(252,244,217,0.92),rgba(255,249,238,0.86))] p-5 shadow-[0_28px_70px_rgba(150,115,38,0.12)] backdrop-blur md:p-7 ${
               isChooseVisible ? "is-visible" : ""
             }`}
-            onMouseEnter={() => suppressGlobalCursor(true)}
-            onMouseLeave={() => suppressGlobalCursor(false)}
+            onMouseMove={(event) => {
+              const rect = event.currentTarget.getBoundingClientRect();
+              setServicesHover({
+                visible: true,
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top,
+              });
+            }}
+            onMouseEnter={(event) => {
+              const rect = event.currentTarget.getBoundingClientRect();
+              setServicesHover({
+                visible: true,
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top,
+              });
+              suppressGlobalCursor(true);
+            }}
+            onMouseLeave={() => {
+              setServicesHover((prev) => ({ ...prev, visible: false }));
+              suppressGlobalCursor(false);
+            }}
           >
             <div className="grid gap-5">
               <Link
@@ -732,50 +751,7 @@ const Index = () => {
                 className="choose-media-strip group relative block overflow-hidden rounded-[2.5rem] border border-[#b9872e]/14 bg-[#2f2415]"
                 style={{ ["--delay" as string]: "0ms" }}
                 aria-label="View services"
-                onMouseMove={(event) => {
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  setServicesHoverTop({
-                    visible: true,
-                    x: event.clientX - rect.left,
-                    y: event.clientY - rect.top,
-                  });
-                }}
-                onMouseEnter={(event) => {
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  setServicesHoverTop({
-                    visible: true,
-                    x: event.clientX - rect.left,
-                    y: event.clientY - rect.top,
-                  });
-                  suppressGlobalCursor(true);
-                }}
-                onMouseLeave={() => {
-                  setServicesHoverTop((prev) => ({ ...prev, visible: false }));
-                  suppressGlobalCursor(false);
-                }}
               >
-                <div
-                  className={`pointer-events-none absolute z-20 transition duration-300 ${
-                    servicesHoverTop.visible ? "opacity-100" : "opacity-0"
-                  }`}
-                  style={{
-                    left: servicesHoverTop.x,
-                    top: servicesHoverTop.y,
-                    transform: "translate(-50%, -50%)",
-                  }}
-                >
-                  <div className="relative">
-                    <div className="absolute inset-0 rounded-full bg-black/24 blur-lg" />
-                    <div className="relative flex h-16 w-16 flex-col items-center justify-center rounded-full border border-white/15 bg-black/24 backdrop-blur-md md:h-16 md:w-16">
-                      <span className="font-semibold text-[0.875rem] leading-none tracking-[-0.01em] text-[#e6ba55] md:text-[0.875rem]">
-                        Services
-                      </span>
-                      {/* <span className="mt-1 font-body text-[0.38rem] font-semibold tracking-[0.08em] text-white/75">
-                        Click
-                      </span> */}
-                    </div>
-                  </div>
-                </div>
                 <div className="grid h-[300px] gap-px bg-[#2f2415] sm:h-[320px] md:h-[260px] lg:h-[450px] lg:grid-cols-[1fr_1fr_0.72fr]">
                   <video
                     src="/discussion.mp4"
@@ -816,7 +792,7 @@ const Index = () => {
                       A finish that photographs beautifully, wears comfortably,
                       and feels personal from start to end.
                     </p>
-                    <p className="mt-2 max-w-[17rem] font-body text-[0.88rem] leading-6 text-white/92 sm:mt-3 sm:max-w-xl sm:text-sm sm:leading-6 md:max-w-2xl md:leading-7">
+                    <p className="mt-2 max-w-[17rem] font-body text-[0.88rem] leading-6 text-white/92 sm:mt-3 sm:max-w-xl sm:text-sm sm:leading-6 md:max-w-2xl md:leading-7 hover:text-[#FFD700] transition-colors">
                       Real prep moments, real finish shots, and a calm workflow
                       that turns makeup into a complete luxury service.
                     </p>
@@ -840,54 +816,10 @@ const Index = () => {
                 to="/services"
                 className="group relative block overflow-hidden rounded-[2.3rem] xl:h-[450px]"
                 aria-label="View services"
-                onMouseMove={(event) => {
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  setServicesHover({
-                    visible: true,
-                    x: event.clientX - rect.left,
-                    y: event.clientY - rect.top,
-                  });
-                }}
-                onMouseEnter={(event) => {
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  setServicesHover({
-                    visible: true,
-                    x: event.clientX - rect.left,
-                    y: event.clientY - rect.top,
-                  });
-                  suppressGlobalCursor(true);
-                }}
-                onMouseLeave={() => {
-                  setServicesHover((prev) => ({ ...prev, visible: false }));
-                  suppressGlobalCursor(false);
-                }}
               >
-                <div
-                  className={`pointer-events-none absolute z-20 transition duration-300 ${
-                    servicesHover.visible ? "opacity-100" : "opacity-0"
-                  }`}
-                  style={{
-                    left: servicesHover.x,
-                    top: servicesHover.y,
-                    transform: "translate(-50%, -50%)",
-                  }}
-                >
-                  <div className="relative">
-                    <div className="absolute inset-0 rounded-full bg-black/24 blur-lg" />
-                    <div className="relative flex h-16 w-16 flex-col items-center justify-center rounded-full border border-white/15 bg-black/24 backdrop-blur-md md:h-16 md:w-16">
-                      <span className="font-semibold text-[0.875rem] leading-none tracking-[-0.01em] text-[#a93d2b] md:text-[0.875rem]">
-                        Services
-                      </span>
-                      {/* <span className="mt-1 font-body text-[0.38rem] font-semibold tracking-[0.08em] text-white/75">
-                        Click
-                      </span> */}
-                    </div>
-                  </div>
-                </div>
-
                 <div className="grid gap-5 transition duration-500 group-hover:scale-[0.992] md:grid-cols-2 xl:h-[450px] xl:grid-cols-[0.88fr_0.62fr_1fr]">
                   <div
-                    className="choose-copy relative flex min-h-[340px] flex-col overflow-hidden rounded-[2.4rem] border border-[#b9872e]/14 bg-[radial-gradient(circle_at_top_left,rgba(241,217,139,0.22),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.78),rgba(245,232,192,0.92))] p-5 sm:p-6 md:col-span-2 md:min-h-[360px] md:p-7 xl:h-[450px] xl:min-h-0 xl:col-span-1"
+                    className="choose-copy relative flex min-h-[340px] flex-col overflow-hidden rounded-[2.4rem] border border-[#b9872e]/14 bg-[radial-gradient(circle_at_top_left,rgba(241,217,139,0.22),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.78),rgba(245,232,192,0.92))] p-5 sm:p-6 md:col-span-2 md:min-h-[360px] md:p-7 xl:min-h-0 xl:col-span-1"
                     style={{ ["--delay" as string]: "120ms" }}
                   >
                     {/* <div className="absolute right-6 top-6 h-20 w-20 rounded-full border border-[#b9872e]/14" /> */}
@@ -903,7 +835,7 @@ const Index = () => {
                       skin prep, decision-making, lighting awareness, and a look
                       that still feels like you.
                     </p>
-                    <div className="mt-5 grid flex-1 content-start gap-2.5 sm:grid-cols-2">
+                    <div className="grid flex-1 content-start gap-2.5 sm:grid-cols-2">
                       {[
                         { value: "Skin-first", label: "Finish Philosophy" },
                         { value: "Event-aware", label: "Execution Style" },
@@ -933,7 +865,7 @@ const Index = () => {
                   >
                     <div className="grid h-full grid-rows-2">
                       <img
-                        src="/WhatsApp Image 2026-03-24 at 9.02.27 PM.jpeg"
+                        src="/anuraag_celeb2.webp"
                         alt="Finished bridal makeup look"
                         className="h-full w-full object-cover object-[center_20%] transition duration-700 group-hover:scale-105"
                       />
@@ -988,6 +920,29 @@ const Index = () => {
                   </div>
                 </div>
               </Link>
+            </div>
+
+            <div
+              className={`pointer-events-none absolute z-20 transition duration-300 ${
+                servicesHover.visible ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                left: servicesHover.x,
+                top: servicesHover.y,
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-black/30 blur-xl" />
+                <div className="relative flex h-16 w-16 flex-col items-center justify-center rounded-full border border-white/20 bg-black/40 backdrop-blur-lg md:h-16 md:w-16">
+                  <span className="font-semibold text-[0.875rem] leading-none tracking-[-0.01em] text-[#ffd459] md:text-[0.875rem]">
+                    Services
+                  </span>
+                  {/* <span className="mt-1 font-body text-[0.38rem] font-semibold tracking-[0.08em] text-white/75">
+                    Click
+                  </span> */}
+                </div>
+              </div>
             </div>
           </div>
         </section>

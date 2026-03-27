@@ -149,7 +149,7 @@ const Services = () => {
 }
 
 .animate-scroll {
-  animation: scroll 18s linear infinite;
+  animation: scroll 15s linear infinite;
 }
       `}</style>
 
