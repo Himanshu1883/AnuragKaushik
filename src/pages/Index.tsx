@@ -305,7 +305,7 @@ const Index = () => {
       <Header />
 
       <main className="overflow-hidden">
-        <section className="relative z-[9998] isolate overflow-hidden bg-[linear-gradient(180deg,#fffdf7_0%,#f7eed2_100%)] md:min-h-[92vh]">
+        <section className="relative z-[20] isolate overflow-hidden bg-[linear-gradient(180deg,#fffdf7_0%,#f7eed2_100%)] md:min-h-[92vh]">
           <img
             src={anuraagImage}
             alt="Anuraag Kaushik - Makeup Artist"
