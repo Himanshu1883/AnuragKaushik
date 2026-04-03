@@ -17,7 +17,10 @@ import Header from "../components/header/Header";
 
 const Index = () => {
   const { addToCart } = useCart();
+  const [location, setLocation] = useState<"delhi" | "outsideDelhi">("delhi");
   const popularServices = services.filter((s) => s.popular);
+  const getDisplayPrice = (service: (typeof services)[number]) =>
+    location === "delhi" ? service.delhiPrice : service.outsideDelhiPrice;
   const heroContentRef = useRef<HTMLDivElement | null>(null);
   const statsSectionRef = useRef<HTMLDivElement | null>(null);
   const beautySectionRef = useRef<HTMLDivElement | null>(null);
@@ -721,6 +724,37 @@ const Index = () => {
               </Link>
             </div>
 
+            <div className="mb-8 flex justify-center md:justify-end">
+              <div className="inline-flex rounded-full border border-[#E7D8AD] p-1 bg-white/80">
+                <button
+                  onClick={() => setLocation("delhi")}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-[0.12em] uppercase transition-all ${
+                    location === "delhi" ? "text-white" : "text-[#7d6a4d]"
+                  }`}
+                  style={
+                    location === "delhi"
+                      ? { backgroundColor: "#b9872e" }
+                      : { backgroundColor: "transparent" }
+                  }
+                >
+                  Delhi
+                </button>
+                <button
+                  onClick={() => setLocation("outsideDelhi")}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-[0.12em] uppercase transition-all ${
+                    location === "outsideDelhi" ? "text-white" : "text-[#7d6a4d]"
+                  }`}
+                  style={
+                    location === "outsideDelhi"
+                      ? { backgroundColor: "#b9872e" }
+                      : { backgroundColor: "transparent" }
+                  }
+                >
+                  Outside Delhi
+                </button>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
               {popularServices.map((service) => (
                 <div
@@ -747,14 +781,16 @@ const Index = () => {
                     <div className="flex items-end justify-between gap-4 border-t border-[#e7d8ad] pt-5">
                       <div>
                         <span className="font-display text-2xl text-[#7a5417]">
-                          Rs. {service.price.toLocaleString()}
+                          Rs. {getDisplayPrice(service).toLocaleString()}
                         </span>
                         <span className="ml-2 font-body text-xs uppercase tracking-[0.18em] text-[#7d6a4d]">
                           {service.duration}
                         </span>
                       </div>
                       <button
-                        onClick={() => sendToWhatsapp(service)}
+                        onClick={() =>
+                          sendToWhatsapp({ ...service, price: getDisplayPrice(service) })
+                        }
                         className="rounded-full bg-[#b9872e] px-5 py-2.5 font-body text-xs font-semibold tracking-[0.16em] text-white transition hover:bg-[#a17829]"
                       >
                         Book Now
