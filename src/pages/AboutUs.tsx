@@ -59,9 +59,9 @@ From elegant bridal makeovers to high-fashion editorial looks, Anuraag combines 
 const useScrollReveal = () => {
   useEffect(() => {
     const elements = document.querySelectorAll(
-      ".reveal-fadeup, .reveal-left, .reveal-right, .reveal-scale, .stagger-children"
+      ".reveal-fadeup, .reveal-left, .reveal-right, .reveal-scale, .stagger-children",
     );
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -71,21 +71,21 @@ const useScrollReveal = () => {
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
     );
-    
+
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 };
 
 // Animated Stat Component with counting animation on scroll reveal
-const AnimatedStat = ({ 
-  stat, 
-  index, 
-  hoveredStat, 
-  setHoveredStat 
-}: { 
+const AnimatedStat = ({
+  stat,
+  index,
+  hoveredStat,
+  setHoveredStat,
+}: {
   stat: Stat;
   index: number;
   hoveredStat: number | null;
@@ -107,7 +107,7 @@ const AnimatedStat = ({
             const duration = 1500;
             const stepTime = 20;
             const increment = targetValue / (duration / stepTime);
-            
+
             const timer = setInterval(() => {
               start += increment;
               if (start >= targetValue) {
@@ -117,14 +117,14 @@ const AnimatedStat = ({
                 setCount(Math.floor(start));
               }
             }, stepTime);
-            
+
             observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
-    
+
     if (elementRef.current) observer.observe(elementRef.current);
     return () => observer.disconnect();
   }, [targetValue]);
@@ -203,10 +203,10 @@ const AboutUs = () => {
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
-    
+
     const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener("resize", checkMobile);
       window.removeEventListener("scroll", onScroll);
@@ -214,26 +214,26 @@ const AboutUs = () => {
   }, []);
 
   // Video 10-second loop logic
-useEffect(() => {
-  const video = videoRef.current;
-  if (!video) return;
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-  const handleTimeUpdate = () => {
-    if (video.currentTime >= 10) {
-      video.currentTime = 0;
-      video.play();
-    }
-  };
+    const handleTimeUpdate = () => {
+      if (video.currentTime >= 10) {
+        video.currentTime = 0;
+        video.play();
+      }
+    };
 
-  video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("timeupdate", handleTimeUpdate);
 
-  // autoplay fix
-  video.play().catch(() => {});
+    // autoplay fix
+    video.play().catch(() => {});
 
-  return () => {
-    video.removeEventListener("timeupdate", handleTimeUpdate);
-  };
-}, []);
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, []);
   // Initialize scroll reveal animations
   useScrollReveal();
 
@@ -243,7 +243,14 @@ useEffect(() => {
   const contentTranslate = scrollY * (isMobile ? 0.1 : 0.18);
 
   return (
-    <div style={{ background: "#fdfaf2", color: "#2f2415", fontFamily: "'Inter', 'Georgia', serif", overflowX: "hidden" }}>
+    <div
+      style={{
+        background: "#fdfaf2",
+        color: "#2f2415",
+        fontFamily: "'Inter', 'Georgia', serif",
+        overflowX: "hidden",
+      }}
+    >
       <div className="fixed top-0 left-0 right-0 z-50">
         <Header />
       </div>
@@ -358,7 +365,9 @@ useEffect(() => {
 
           <h1
             style={{
-              fontSize: isMobile ? "clamp(2rem, 10vw, 3.5rem)" : "clamp(2.8rem, 7vw, 7rem)",
+              fontSize: isMobile
+                ? "clamp(2rem, 10vw, 3.5rem)"
+                : "clamp(2.8rem, 7vw, 7rem)",
               fontWeight: 400,
               lineHeight: 1.1,
               color: "#ffffff",
@@ -407,8 +416,8 @@ useEffect(() => {
               padding: isMobile ? "0 0.5rem" : 0,
             }}
           >
-            From bridal mornings to editorial shoots — every look is crafted to feel like you, only
-            elevated.
+            From bridal mornings to editorial shoots — every look is crafted to
+            feel like you, only elevated.
           </p>
 
           <div
@@ -423,7 +432,10 @@ useEffect(() => {
             }}
           >
             {ABOUT_ANURAAG.badges.map((badge, i) => (
-              <span key={i} style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+              <span
+                key={i}
+                style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}
+              >
                 <span
                   style={{
                     fontFamily: "'Inter', sans-serif",
@@ -449,7 +461,15 @@ useEffect(() => {
             ))}
           </div>
 
-          <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap", justifyContent: "center", padding: "0 1rem" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "0.8rem",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              padding: "0 1rem",
+            }}
+          >
             <a
               href="/services"
               style={{
@@ -536,7 +556,8 @@ useEffect(() => {
             style={{
               width: "1px",
               height: "2.5rem",
-              background: "linear-gradient(to bottom, rgba(224,193,104,0.8), transparent)",
+              background:
+                "linear-gradient(to bottom, rgba(224,193,104,0.8), transparent)",
               animation: "scrollPulse 2s ease-in-out infinite",
             }}
           />
@@ -565,7 +586,8 @@ useEffect(() => {
             left: 0,
             right: 0,
             height: "4px",
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.3), transparent)",
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.3), transparent)",
             pointerEvents: "none",
             zIndex: 1,
           }}
@@ -602,7 +624,9 @@ useEffect(() => {
               maxWidth: "1100px",
               margin: "0 auto",
               display: "grid",
-              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+              gridTemplateColumns: isMobile
+                ? "repeat(2, 1fr)"
+                : "repeat(4, 1fr)",
               gap: isMobile ? "0.8rem" : "1.5rem",
             }}
           >
@@ -671,7 +695,9 @@ useEffect(() => {
               </p>
               <h2
                 style={{
-                  fontSize: isMobile ? "clamp(1.8rem, 6vw, 2.8rem)" : "clamp(2.2rem, 4.5vw, 4rem)",
+                  fontSize: isMobile
+                    ? "clamp(1.8rem, 6vw, 2.8rem)"
+                    : "clamp(2.2rem, 4.5vw, 4rem)",
                   lineHeight: 1.1,
                   fontWeight: 400,
                   color: "#2f2415",
@@ -733,7 +759,8 @@ useEffect(() => {
                     lineHeight: 1.6,
                   }}
                 >
-                  "Every face is a canvas. Every look, a love letter to the person wearing it."
+                  "Every face is a canvas. Every look, a love letter to the
+                  person wearing it."
                 </p>
                 <cite
                   style={{
@@ -836,7 +863,12 @@ useEffect(() => {
                       }}
                     >
                       {item}
-                      {i === 5 && <Plane size={isMobile ? 12 : 14} style={{ color: "#b9872e", flexShrink: 0 }} />}
+                      {i === 5 && (
+                        <Plane
+                          size={isMobile ? 12 : 14}
+                          style={{ color: "#b9872e", flexShrink: 0 }}
+                        />
+                      )}
                     </span>
                   </div>
                 ))}
@@ -883,7 +915,7 @@ useEffect(() => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: "rgba(47, 36, 21, 0.55)"
+                background: "rgba(47, 36, 21, 0.55)",
               }}
             />
           </div>
@@ -905,7 +937,8 @@ useEffect(() => {
                 width: isMobile ? "15rem" : "30rem",
                 height: isMobile ? "15rem" : "30rem",
                 borderRadius: "50%",
-                background: "radial-gradient(circle,rgba(185,135,46,0.12) 0%,transparent 70%)",
+                background:
+                  "radial-gradient(circle,rgba(185,135,46,0.12) 0%,transparent 70%)",
                 pointerEvents: "none",
               }}
             />
@@ -936,7 +969,9 @@ useEffect(() => {
                   </p>
                   <h2
                     style={{
-                      fontSize: isMobile ? "clamp(1.6rem, 6vw, 2.5rem)" : "clamp(2rem,4vw,3.5rem)",
+                      fontSize: isMobile
+                        ? "clamp(1.6rem, 6vw, 2.5rem)"
+                        : "clamp(2rem,4vw,3.5rem)",
                       fontWeight: 400,
                       color: "#fdfaf2",
                       margin: 0,
@@ -944,7 +979,10 @@ useEffect(() => {
                       letterSpacing: "-0.02em",
                     }}
                   >
-                    Services <em style={{ fontStyle: "italic", color: "#e0c168" }}>offered</em>
+                    Services{" "}
+                    <em style={{ fontStyle: "italic", color: "#e0c168" }}>
+                      offered
+                    </em>
                   </h2>
                 </div>
                 <a
@@ -983,12 +1021,18 @@ useEffect(() => {
                   };
 
                   const serviceDescriptions: Record<string, string> = {
-                    "Bridal Makeup": "Complete bridal makeup with HD finish, including pre-bridal consultation and trial session.",
-                    "Engagement & Reception Makeup": "Glamorous reception look with long-lasting products and airbrush finish.",
-                    "Fashion & Editorial Shoots": "High-fashion editorial looks for magazines, lookbooks, and creative campaigns.",
-                    "Party & Occasion Makeup": "Stunning party-ready look for any occasion — birthdays, anniversaries, or night outs.",
-                    "Photoshoot Makeup": "Camera-ready makeup for professional photoshoots, celebrity events, and red carpets.",
-                    "Makeup Consultation": "Personalized one-on-one consultation to understand your skin type and style preferences.",
+                    "Bridal Makeup":
+                      "Complete bridal makeup with HD finish, including pre-bridal consultation and trial session.",
+                    "Engagement & Reception Makeup":
+                      "Glamorous reception look with long-lasting products and airbrush finish.",
+                    "Fashion & Editorial Shoots":
+                      "High-fashion editorial looks for magazines, lookbooks, and creative campaigns.",
+                    "Party & Occasion Makeup":
+                      "Stunning party-ready look for any occasion — birthdays, anniversaries, or night outs.",
+                    "Photoshoot Makeup":
+                      "Camera-ready makeup for professional photoshoots, celebrity events, and red carpets.",
+                    "Makeup Consultation":
+                      "Personalized one-on-one consultation to understand your skin type and style preferences.",
                   };
 
                   const backgroundImage = serviceImages[service] ?? "";
@@ -1001,13 +1045,17 @@ useEffect(() => {
                     el.style.transform = "translateY(-6px)";
                     el.style.boxShadow = "0 15px 30px rgba(0,0,0,0.3)";
 
-                    const imgContainer = el.querySelector<HTMLElement>(".image-container");
-                    if (imgContainer) imgContainer.style.transform = "translateY(0)";
+                    const imgContainer =
+                      el.querySelector<HTMLElement>(".image-container");
+                    if (imgContainer)
+                      imgContainer.style.transform = "translateY(0)";
 
-                    const textBlock = el.querySelector<HTMLElement>(".text-block");
+                    const textBlock =
+                      el.querySelector<HTMLElement>(".text-block");
                     if (textBlock) textBlock.style.transform = "translateY(0)";
 
-                    const arrowIcon = el.querySelector<HTMLElement>(".hover-arrow-icon");
+                    const arrowIcon =
+                      el.querySelector<HTMLElement>(".hover-arrow-icon");
                     if (arrowIcon) {
                       arrowIcon.style.opacity = "0";
                     }
@@ -1018,13 +1066,18 @@ useEffect(() => {
                     el.style.transform = "translateY(0)";
                     el.style.boxShadow = "0 4px 15px rgba(0,0,0,0.2)";
 
-                    const imgContainer = el.querySelector<HTMLElement>(".image-container");
-                    if (imgContainer) imgContainer.style.transform = "translateY(100%)";
+                    const imgContainer =
+                      el.querySelector<HTMLElement>(".image-container");
+                    if (imgContainer)
+                      imgContainer.style.transform = "translateY(100%)";
 
-                    const textBlock = el.querySelector<HTMLElement>(".text-block");
-                    if (textBlock) textBlock.style.transform = "translateY(100%)";
+                    const textBlock =
+                      el.querySelector<HTMLElement>(".text-block");
+                    if (textBlock)
+                      textBlock.style.transform = "translateY(100%)";
 
-                    const arrowIcon = el.querySelector<HTMLElement>(".hover-arrow-icon");
+                    const arrowIcon =
+                      el.querySelector<HTMLElement>(".hover-arrow-icon");
                     if (arrowIcon) {
                       arrowIcon.style.opacity = "1";
                     }
@@ -1041,45 +1094,12 @@ useEffect(() => {
                         overflow: "hidden",
                         cursor: "pointer",
                         boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-                        transition: "transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s cubic-bezier(0.23,1,0.32,1)",
+                        transition:
+                          "transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s cubic-bezier(0.23,1,0.32,1)",
                         background: "rgba(255,255,255,0.04)",
                         border: "1px solid rgba(185,135,46,0.2)",
                       }}
-                      onMouseEnter={handleEnter}
-                      onMouseLeave={handleLeave}
-                      onTouchStart={(e) => {
-                        const el = e.currentTarget;
-                        const isActive = el.classList.contains("touch-active");
-                        
-                        if (!isActive) {
-                          document.querySelectorAll<HTMLElement>(".service-card").forEach((card) => {
-                            card.classList.remove("touch-active");
-                            const imgContainer = card.querySelector<HTMLElement>(".image-container");
-                            const textBlock = card.querySelector<HTMLElement>(".text-block");
-                            const arrowIcon = card.querySelector<HTMLElement>(".hover-arrow-icon");
-                            if (imgContainer) imgContainer.style.transform = "translateY(100%)";
-                            if (textBlock) textBlock.style.transform = "translateY(100%)";
-                            if (arrowIcon) arrowIcon.style.opacity = "1";
-                            card.style.transform = "translateY(0)";
-                          });
-                          
-                          el.classList.add("touch-active");
-                          const imgContainer = el.querySelector<HTMLElement>(".image-container");
-                          const textBlock = el.querySelector<HTMLElement>(".text-block");
-                          const arrowIcon = el.querySelector<HTMLElement>(".hover-arrow-icon");
-                          if (imgContainer) imgContainer.style.transform = "translateY(0)";
-                          if (textBlock) textBlock.style.transform = "translateY(0)";
-                          if (arrowIcon) arrowIcon.style.opacity = "0";
-                        } else {
-                          el.classList.remove("touch-active");
-                          const imgContainer = el.querySelector<HTMLElement>(".image-container");
-                          const textBlock = el.querySelector<HTMLElement>(".text-block");
-                          const arrowIcon = el.querySelector<HTMLElement>(".hover-arrow-icon");
-                          if (imgContainer) imgContainer.style.transform = "translateY(100%)";
-                          if (textBlock) textBlock.style.transform = "translateY(100%)";
-                          if (arrowIcon) arrowIcon.style.opacity = "1";
-                        }
-                      }}
+
                     >
                       <div
                         style={{
@@ -1138,8 +1158,8 @@ useEffect(() => {
                         style={{
                           position: "absolute",
                           inset: 0,
-                          transform: "translateY(100%)",
-                          transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                          transform: "translateY(0%)",
+                          transition: "none",
                           zIndex: 2,
                           overflow: "hidden",
                         }}
@@ -1172,8 +1192,8 @@ useEffect(() => {
                           right: 0,
                           zIndex: 3,
                           padding: isMobile ? "1.5rem" : "2rem",
-                          transform: "translateY(100%)",
-                          transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                          transform: "translateY(0%)",
+                          transition: "none",
                         }}
                       >
                         <span
@@ -1217,7 +1237,7 @@ useEffect(() => {
                       </div>
 
                       {/* Arrow Icon */}
-                      <div
+                      {/* <div
                         className="hover-arrow-icon"
                         style={{
                           position: "absolute",
@@ -1249,7 +1269,7 @@ useEffect(() => {
                             strokeLinejoin="round"
                           />
                         </svg>
-                      </div>
+                      </div> */}
                     </div>
                   );
                 })}
@@ -1327,7 +1347,8 @@ useEffect(() => {
         <section
           style={{
             padding: isMobile ? "5rem 1rem 6rem 1rem" : "8rem 2rem 10rem 2rem",
-            background: "linear-gradient(135deg,#fffdf5 0%,#f4e5b8 60%,#ecdfa0 100%)",
+            background:
+              "linear-gradient(135deg,#fffdf5 0%,#f4e5b8 60%,#ecdfa0 100%)",
             textAlign: "center",
             position: "relative",
             overflow: "hidden",
@@ -1373,7 +1394,9 @@ useEffect(() => {
             </p>
             <h2
               style={{
-                fontSize: isMobile ? "clamp(1.8rem, 8vw, 3rem)" : "clamp(2.5rem,6vw,5rem)",
+                fontSize: isMobile
+                  ? "clamp(1.8rem, 8vw, 3rem)"
+                  : "clamp(2.5rem,6vw,5rem)",
                 fontWeight: 400,
                 lineHeight: 1.1,
                 color: "#2f2415",
@@ -1408,12 +1431,23 @@ useEffect(() => {
               {ABOUT_ANURAAG.contact.availability} — reach out at{" "}
               <a
                 href={`tel:${ABOUT_ANURAAG.contact.phone}`}
-                style={{ color: "#a93d2b", textDecoration: "none", fontWeight: 500 }}
+                style={{
+                  color: "#a93d2b",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                }}
               >
                 {ABOUT_ANURAAG.contact.phone}
               </a>
             </p>
-            <div style={{ display: "flex", justifyContent: "center", gap: "0.8rem", flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "0.8rem",
+                flexWrap: "wrap",
+              }}
+            >
               <a
                 href="/services"
                 style={{
@@ -1435,11 +1469,13 @@ useEffect(() => {
                 }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.background = "#a93d2b";
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
+                  (e.currentTarget as HTMLElement).style.transform =
+                    "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLElement).style.background = "#b9872e";
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                  (e.currentTarget as HTMLElement).style.transform =
+                    "translateY(0)";
                 }}
               >
                 Book Now &#8594;
