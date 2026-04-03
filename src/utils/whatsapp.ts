@@ -15,6 +15,6 @@ ${data.duration ? `Duration: ${data.duration}` : ""}
 
 Please share details.`;
 
-  const url = `https://wa.me/919910649876?text=${encodeURIComponent(message)}`;
+  const url = `https://wa.me/919821936847?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank");
 };

@@ -10,19 +10,23 @@ import {
   Instagram,
   Sparkles,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer/Footer";
 import Header from "../components/header/Header";
 
 const Index = () => {
   const { addToCart } = useCart();
+  const [location, setLocation] = useState<"delhi" | "outsideDelhi">("delhi");
   const popularServices = services.filter((s) => s.popular);
+  const getDisplayPrice = (service: (typeof services)[number]) =>
+    location === "delhi" ? service.delhiPrice : service.outsideDelhiPrice;
   const heroContentRef = useRef<HTMLDivElement | null>(null);
   const statsSectionRef = useRef<HTMLDivElement | null>(null);
   const beautySectionRef = useRef<HTMLDivElement | null>(null);
   const chooseSectionRef = useRef<HTMLDivElement | null>(null);
   const worksSectionRef = useRef<HTMLDivElement | null>(null);
+  const reelVideoRefs = useRef<Record<number, HTMLVideoElement | null>>({});
   const [isHeroVisible, setIsHeroVisible] = useState(false);
   const [isStatsVisible, setIsStatsVisible] = useState(false);
   const [isBeautyVisible, setIsBeautyVisible] = useState(false);
@@ -38,6 +42,10 @@ const Index = () => {
     x: 0,
     y: 0,
   });
+  const [isSmallDevice, setIsSmallDevice] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(max-width: 767px)").matches;
+  });
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showScroll, setShowScroll] = useState(false);
@@ -50,6 +58,51 @@ const Index = () => {
   useEffect(() => {
     return () => suppressGlobalCursor(false);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateSmallDevice = () => setIsSmallDevice(mediaQuery.matches);
+
+    updateSmallDevice();
+
+    if ("addEventListener" in mediaQuery) {
+      mediaQuery.addEventListener("change", updateSmallDevice);
+      return () => mediaQuery.removeEventListener("change", updateSmallDevice);
+    }
+
+    mediaQuery.addListener(updateSmallDevice);
+    return () => mediaQuery.removeListener(updateSmallDevice);
+  }, []);
+
+  const isIOSDevice = useMemo(() => {
+    if (typeof navigator === "undefined") return false;
+    const ua = navigator.userAgent ?? "";
+    const isAppleMobile = /iPad|iPhone|iPod/.test(ua);
+    const isIPadOS =
+      navigator.platform === "MacIntel" && (navigator.maxTouchPoints ?? 0) > 1;
+    return isAppleMobile || isIPadOS;
+  }, []);
+
+  const toggleReelPlayback = async (reelId: number) => {
+    const target = reelVideoRefs.current[reelId];
+    if (!target) return;
+
+    if (target.paused) {
+      Object.entries(reelVideoRefs.current).forEach(([id, video]) => {
+        if (Number(id) !== reelId) video?.pause();
+      });
+
+      try {
+        await target.play();
+      } catch {
+        // Ignore: play() can reject due to encoding/network or browser policy.
+      }
+    } else {
+      target.pause();
+    }
+  };
 
   const reels = [
     {
@@ -73,6 +126,32 @@ const Index = () => {
       title: "Final Look",
     },
   ];
+
+  useEffect(() => {
+    if (!isSmallDevice || typeof window === "undefined") return;
+
+    const tryAutoPlayReels = () => {
+      Object.values(reelVideoRefs.current).forEach((video) => {
+        if (!video) return;
+
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(() => {
+            // Ignore autoplay rejections on restrictive browsers.
+          });
+        }
+      });
+    };
+
+    tryAutoPlayReels();
+    const timerId = window.setTimeout(tryAutoPlayReels, 350);
+
+    return () => window.clearTimeout(timerId);
+  }, [isSmallDevice]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -135,9 +214,9 @@ const Index = () => {
     leftBottom: "/WhatsApp Image 2026-03-25 at 3.00.41 PM.jpeg",
     centerTop: "/WhatsApp Image 2026-03-25 at 3.01.01 PM.jpeg",
     centerBottom: "/WhatsApp Image 2026-03-25 at 3.00.28 PM.jpeg",
-    rightTop: "/WhatsApp Image 2026-03-25 at 3.00.41 PM (1).jpeg",
-    rightBottom: "/WhatsApp Image 2026-03-24 at 9.02.26 PM.jpeg",
-    bottomOne: "/WhatsApp Image 2026-03-24 at 7.17.56 PM.jpeg",
+    rightTop: "/WhatsApp Image 2026-03-24 at 5.38.06 PM.jpeg", //
+    rightBottom: "/blueceleb.jpeg",
+    bottomOne: "/WhatsApp Image 2026-03-24 at 7.17.57 PM.jpeg", //
     bottomTwo: "/WhatsApp Image 2026-03-24 at 5.38.05 PM.jpeg",
     bottomThree: "/WhatsApp Image 2026-03-24 at 5.38.07 PM (1).jpeg",
   };
@@ -271,17 +350,23 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
+  const visiblePopular =
+    typeof window !== "undefined" && window.innerWidth >= 1280
+      ? popularServices.slice(0, 3)
+      : popularServices;
+
   return (
     <div className="min-h-screen bg-[#fdfaf2] text-[#2f2415]">
       <Header />
 
       <main className="overflow-hidden">
-        <section className="relative z-[9998] isolate overflow-hidden bg-[linear-gradient(180deg,#fffdf7_0%,#f7eed2_100%)] md:min-h-[92vh]">
+        <section className="relative z-[20] isolate min-h-[92vh] overflow-hidden bg-[linear-gradient(180deg,#fffdf7_0%,#f7eed2_100%)] md:min-h-[92vh]">
           <img
             src={anuraagImage}
             alt="Anuraag Kaushik - Makeup Artist"
-            className="absolute inset-y-0 right-0 -z-20 h-full w-full object-cover object-top opacity-25 sm:opacity-40 md:w-[52%] md:opacity-100"
+            className="absolute inset-y-0 right-0 -z-20 h-full w-full object-cover object-top opacity-80 sm:opacity-85 md:w-[52%] md:opacity-100"
           />
+          <div className="absolute inset-0 z-100 bg-[linear-gradient(180deg,rgba(24,16,8,0.62)_0%,rgba(24,16,8,0.42)_44%,rgba(24,16,8,0.22)_100%)] md:hidden" />
           {/* <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,252,244,0.97)_0%,rgba(255,249,231,0.94)_46%,rgba(173,123,55,0.18)_68%,rgba(88,20,20,0.12)_100%)]" /> */}
           <div className="absolute left-[-8rem] top-[-4rem] -z-10 h-72 w-72 rounded-full bg-[#f0d98a]/35 blur-3xl" />
           <div className="absolute bottom-[-5rem] left-[14%] -z-10 h-64 w-64 rounded-full bg-[#d0472f]/10 blur-3xl" />
@@ -295,23 +380,23 @@ const Index = () => {
               }`}
             >
               <p
-                className="hero-reveal-item mb-5 font-body text-sm uppercase tracking-[0.35em] text-[#a93d2b]"
+                className="hero-reveal-item mb-5 font-body text-sm uppercase tracking-[0.35em] text-[#f7d9a2] md:text-[#a93d2b]"
                 style={{ ["--delay" as string]: "80ms" }}
               >
                 Luxury Bridal Makeup Artist
               </p>
               <h1
-                className="hero-reveal-item font-display text-[3.4rem] leading-[0.94] text-[#2f2415] sm:text-5xl md:text-7xl lg:text-[6.5rem]"
+                className="hero-reveal-item font-display text-[3.4rem] leading-[0.94] text-[#fff8ec] sm:text-5xl md:text-7xl md:text-[#2f2415] lg:text-[6.5rem]"
                 style={{ ["--delay" as string]: "220ms" }}
               >
                 Bridal beauty,
                 <br />
-                <span className="bg-gradient-to-r from-[#7a5417] via-[#c2952f] to-[#e0c168] bg-clip-text text-transparent italic px-2">
+                <span className="bg-[#e0c168] bg-clip-text text-transparent italic px-2">
                   gilded with quiet drama
                 </span>
               </h1>
               <p
-                className="hero-reveal-item mt-5 max-w-xl cursor-pointer font-body text-base font-light leading-7 text-[#5b4a2e] transition hover:border-[#a93d2b]/35 hover:text-[#a93d2b] sm:text-lg sm:leading-8 md:mt-6 md:text-xl"
+                className="hero-reveal-item mt-5 max-w-xl font-body text-base font-light leading-7 text-[#fff1da] sm:text-lg sm:leading-8 md:mt-6 md:text-xl md:text-[#5b4a2e]"
                 style={{ ["--delay" as string]: "360ms" }}
               >
                 Signature bridal artistry with radiant skin, expressive eyes,
@@ -320,7 +405,7 @@ const Index = () => {
               </p>
 
               <div
-                className="hero-reveal-item mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4"
+                className="hero-reveal-item mt-8 hidden flex-wrap gap-3 sm:mt-10 sm:gap-4 md:flex"
                 style={{ ["--delay" as string]: "500ms" }}
               >
                 <Link
@@ -331,14 +416,14 @@ const Index = () => {
                 </Link>
                 <Link
                   to="/about/our-story"
-                  className="inline-flex items-center rounded-full border border-[#b9872e]/30 bg-white/70 px-6 py-3 font-body text-xs font-medium uppercase tracking-[0.18em] text-[#6a4f1f] transition hover:border-[#a93d2b]/35 hover:text-[#a93d2b] sm:px-8 sm:text-sm"
+                  className="inline-flex items-center rounded-full border border-white/35 bg-black/30 px-6 py-3 font-body text-xs font-medium uppercase tracking-[0.18em] text-[#fff3df] transition hover:border-[#f1c57d]/45 hover:text-[#f7d9a2] sm:px-8 sm:text-sm md:border-[#b9872e]/30 md:bg-white/70 md:text-[#6a4f1f] md:hover:border-[#a93d2b]/35 md:hover:text-[#a93d2b]"
                 >
                   Learn More
                 </Link>
               </div>
 
               <div
-                className="hero-reveal-item mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+                className="hero-reveal-item mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3"
                 style={{ ["--delay" as string]: "660ms" }}
               >
                 {[
@@ -348,19 +433,34 @@ const Index = () => {
                 ].map((item, index) => (
                   <div
                     key={item}
-                    className="animate-fade-in rounded-[1.75rem] border border-[#b9872e]/12 bg-white/72 p-4 shadow-[0_18px_45px_rgba(130,99,32,0.10)] backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-[#a93d2b]/18 hover:bg-[#fffaf0]"
+                    className="animate-fade-in rounded-[1.75rem] border border-white/30 bg-black/28 p-4 shadow-[0_14px_35px_rgba(78,22,14,0.2)] backdrop-blur-sm transition duration-500 hover:-translate-y-1 hover:border-[#f0c17a]/55 hover:bg-black/34 md:border-[#b9872e]/12 md:bg-white/72 md:shadow-[0_18px_45px_rgba(130,99,32,0.10)] md:hover:border-[#a93d2b]/18 md:hover:bg-[#fffaf0]"
                     style={{
                       animationDelay: `${index * 180}ms`,
                       animationFillMode: "both",
                     }}
                   >
-                    <p className="font-body text-sm leading-6 text-[#4d3e24] hover:text-[#a93d2b] transition-colors">
+                    <p className="font-body text-sm leading-6 text-[#fff4df] md:text-[#6c5937]">
                       {item}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="absolute inset-x-4 bottom-6 z-30 flex gap-3 sm:inset-x-6 sm:bottom-8 md:hidden">
+            <Link
+              to="/services"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#b9872e] px-5 py-3 font-body text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white shadow-[0_18px_45px_rgba(185,135,46,0.28)] transition hover:-translate-y-0.5 hover:bg-[#a17829]"
+            >
+              Book Now <ArrowRight size={15} />
+            </Link>
+            <Link
+              to="/about/our-story"
+              className="inline-flex flex-1 items-center justify-center rounded-full border border-white/35 bg-black/30 px-5 py-3 font-body text-[0.72rem] font-medium uppercase tracking-[0.16em] text-[#fff3df] transition hover:border-[#f1c57d]/45 hover:text-[#f7d9a2]"
+            >
+              Learn More
+            </Link>
           </div>
 
           <div className="absolute bottom-8 right-6 hidden rounded-[1.9rem] border border-[#b9872e]/20 bg-white/78 p-5 text-[#2f2415] shadow-[0_18px_45px_rgba(130,99,32,0.14)] backdrop-blur md:block lg:right-12 lg:p-6">
@@ -379,7 +479,6 @@ const Index = () => {
         <section className="px-4 py-5 sm:px-5 md:px-8 md:py-6 lg:px-5">
           <div
             ref={statsSectionRef}
-            className="relative"
             onMouseMove={(event) => {
               if (window.innerWidth < 768) return;
               const rect = event.currentTarget.getBoundingClientRect();
@@ -399,7 +498,7 @@ const Index = () => {
               setServicesHoverTop((prev) => ({ ...prev, visible: false }));
               suppressGlobalCursor(false);
             }}
-            className={`reels-shell reels-reveal mx-auto w-full max-w-[1520px] h-auto min-h-[400px] md:min-h-[500px] rounded-[2.6rem] border border-[#b9872e]/15 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(250,242,211,0.97),rgba(255,250,239,0.92))] p-3 shadow-[0_22px_55px_rgba(150,115,38,0.10)] backdrop-blur md:p-4 ${
+            className={`relative reels-shell reels-reveal mx-auto w-full max-w-[1520px] h-auto min-h-[400px] md:min-h-[500px] rounded-[2.6rem] border border-[#b9872e]/15 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(250,242,211,0.97),rgba(255,250,239,0.92))] p-3 shadow-[0_22px_55px_rgba(150,115,38,0.10)] backdrop-blur md:p-4 ${
               isStatsVisible ? "is-visible" : ""
             }`}
           >
@@ -507,15 +606,22 @@ const Index = () => {
 
               {/* Reels Grid */}
               <div className="lg:col-span-4 h-full">
-                <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-2 scrollbar-hide">
+                <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-2 hide-scrollbar">
                   {reels.map((reel, i) => (
-                    <a
+                    <div
                       key={reel.id}
-                      href="https://www.instagram.com/anuraagkaushik_92?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Play reel: ${reel.title}`}
                       className="reel-tile reels-reveal-item group relative overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-[#2f2415] cursor-pointer min-w-[220px] sm:min-w-[240px] md:min-w-0 snap-start"
                       style={{ ["--delay" as string]: `${200 + i * 250}ms` }}
+                      onClick={() => toggleReelPlayback(reel.id)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          toggleReelPlayback(reel.id);
+                        }
+                      }}
                     >
                       {/* <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#e6cf86] via-[#b9872e] to-[#a93d2b] z-10" /> */}
 
@@ -527,9 +633,16 @@ const Index = () => {
                           src={reel.video}
                           className="h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
                           preload="metadata"
-                          autoPlay
+                          autoPlay={isSmallDevice || !isIOSDevice}
                           muted
                           loop
+                          playsInline
+                          controls={isIOSDevice && !isSmallDevice}
+                          disablePictureInPicture
+                          poster={anuraagImage}
+                          ref={(el) => {
+                            reelVideoRefs.current[reel.id] = el;
+                          }}
                         />
 
                         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(47,36,21,0.1),rgba(47,36,21,0.4))]" />
@@ -546,8 +659,16 @@ const Index = () => {
                             {reel.title}
                           </p>
                         </div>
+
+                        {isIOSDevice && !isSmallDevice ? (
+                          <div className="pointer-events-none absolute inset-x-4 bottom-14 z-20">
+                            <p className="font-body text-[0.58rem] uppercase tracking-[0.28em] text-white/75">
+                              Tap to play
+                            </p>
+                          </div>
+                        ) : null}
                       </div>
-                    </a>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -566,7 +687,7 @@ const Index = () => {
               className="beauty-panel relative overflow-hidden rounded-[2.2rem] border border-[#b9872e]/12 bg-[radial-gradient(circle_at_top_left,rgba(240,216,129,0.25),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.78),rgba(243,228,183,0.9))] p-7 lg:p-9"
               style={{ ["--delay" as string]: "0ms" }}
             >
-              <div className="absolute right-6 top-6 h-20 w-20 rounded-full border border-[#b9872e]/12" />
+              {/* <div className="absolute right-6 top-6 h-20 w-20 rounded-full border border-[#b9872e]/12" /> */}
               <p className="font-body text-sm uppercase tracking-[0.28em] text-[#a93d2b]">
                 Beauty Direction
               </p>
@@ -663,19 +784,52 @@ const Index = () => {
                   Most Requested Looks
                 </h2>
               </div>
-              <Link
+              {/* <Link
                 to="/services"
                 className="inline-flex items-center gap-1 font-body text-sm uppercase tracking-[0.18em] text-[#7a5417] transition hover:text-[#a93d2b]"
               >
                 View All <ArrowRight size={14} />
-              </Link>
+              </Link> */}
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {popularServices.map((service) => (
+            <div className="mb-8 flex justify-center md:justify-center">
+              <div className="inline-flex rounded-full border border-[#E7D8AD] p-1 bg-white/80">
+                <button
+                  onClick={() => setLocation("delhi")}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-[0.12em] uppercase transition-all ${
+                    location === "delhi" ? "text-white" : "text-[#7d6a4d]"
+                  }`}
+                  style={
+                    location === "delhi"
+                      ? { backgroundColor: "#b9872e" }
+                      : { backgroundColor: "transparent" }
+                  }
+                >
+                  Delhi
+                </button>
+                <button
+                  onClick={() => setLocation("outsideDelhi")}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-[0.12em] uppercase transition-all ${
+                    location === "outsideDelhi"
+                      ? "text-white"
+                      : "text-[#7d6a4d]"
+                  }`}
+                  style={
+                    location === "outsideDelhi"
+                      ? { backgroundColor: "#b9872e" }
+                      : { backgroundColor: "transparent" }
+                  }
+                >
+                  Outside Delhi
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-2 xl:grid-cols-3 md:overflow-visible md:gap-6 hide-scrollbar">
+              {visiblePopular.map((service) => (
                 <div
                   key={service.id}
-                  className="group overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-white/88 shadow-[0_24px_55px_rgba(150,115,38,0.10)] transition-all hover:-translate-y-1 hover:border-[#a93d2b]/18 hover:shadow-[0_28px_65px_rgba(150,115,38,0.16)]"
+                  className="group min-w-[85%] sm:min-w-[48%] md:min-w-0 xl:min-w-0 snap-start overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-white/88 shadow-[0_24px_55px_rgba(150,115,38,0.10)] transition-all hover:-translate-y-1 hover:border-[#a93d2b]/18 hover:shadow-[0_28px_65px_rgba(150,115,38,0.16)]"
                 >
                   <div className="aspect-[4/3.8] overflow-hidden bg-[#f8f0d9]">
                     <img
@@ -697,14 +851,19 @@ const Index = () => {
                     <div className="flex items-end justify-between gap-4 border-t border-[#e7d8ad] pt-5">
                       <div>
                         <span className="font-display text-2xl text-[#7a5417]">
-                          Rs. {service.price.toLocaleString()}
+                          Rs. {getDisplayPrice(service).toLocaleString()}
                         </span>
                         <span className="ml-2 font-body text-xs uppercase tracking-[0.18em] text-[#7d6a4d]">
                           {service.duration}
                         </span>
                       </div>
                       <button
-                        onClick={() => sendToWhatsapp(service)}
+                        onClick={() =>
+                          sendToWhatsapp({
+                            ...service,
+                            price: getDisplayPrice(service),
+                          })
+                        }
                         className="rounded-full bg-[#b9872e] px-5 py-2.5 font-body text-xs font-semibold tracking-[0.16em] text-white transition hover:bg-[#a17829]"
                       >
                         Book Now
@@ -713,6 +872,14 @@ const Index = () => {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-10 flex justify-center">
+              <Link
+                to="/services"
+                className="inline-flex items-center gap-2 rounded-full border border-[#b9872e]/30 px-6 py-3 font-body text-xs uppercase tracking-[0.18em] text-[#7a5417] transition hover:bg-[#b9872e] hover:text-white"
+              >
+                View All Services <ArrowRight size={14} />
+              </Link>
             </div>
           </div>
         </section>
@@ -865,7 +1032,7 @@ const Index = () => {
                   >
                     <div className="grid h-full grid-rows-2">
                       <img
-                        src="/blueceleb.jpeg"
+                        src="/anuraag_celeb2.webp"
                         alt="Finished bridal makeup look"
                         className="h-full w-full object-cover object-[center_20%] transition duration-700 group-hover:scale-105"
                       />
@@ -933,9 +1100,9 @@ const Index = () => {
               }}
             >
               <div className="relative">
-                <div className="absolute inset-0 rounded-full bg-black/24 blur-lg" />
-                <div className="relative flex h-16 w-16 flex-col items-center justify-center rounded-full border border-white/10 bg-black/24 backdrop-blur-md md:h-16 md:w-16">
-                  <span className="font-semibold text-[0.875rem] leading-none tracking-[-0.01em] text-[#e6ba55] md:text-[0.875rem]">
+                <div className="absolute inset-0 rounded-full bg-black/30 blur-xl" />
+                <div className="relative flex h-16 w-16 flex-col items-center justify-center rounded-full border border-white/20 bg-black/40 backdrop-blur-lg md:h-16 md:w-16">
+                  <span className="font-semibold text-[0.875rem] leading-none tracking-[-0.01em] text-[#ffd459] md:text-[0.875rem]">
                     Services
                   </span>
                   {/* <span className="mt-1 font-body text-[0.38rem] font-semibold tracking-[0.08em] text-white/75">
@@ -1000,7 +1167,7 @@ const Index = () => {
                   <img
                     src={collage.bottomOne}
                     alt="Bridal styling detail"
-                    className="h-[240px] w-full object-cover object-[center_20%] md:h-[280px]"
+                    className="h-[240px] w-full object-cover object-[center_5%] md:h-[280px]"
                   />
                 </article>
               </div>
@@ -1027,7 +1194,7 @@ const Index = () => {
                     at my work!
                   </p>
                   <Link
-                    to="/services"
+                    to="/about-us"
                     className="mt-8 inline-flex items-center justify-center rounded-full bg-[#f23e77] px-10 py-3 font-body text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-[#d93467]"
                   >
                     Portfolio
