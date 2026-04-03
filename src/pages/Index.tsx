@@ -303,6 +303,11 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
+  const visiblePopular =
+    typeof window !== "undefined" && window.innerWidth >= 1280
+      ? popularServices.slice(0, 3)
+      : popularServices;
+
   return (
     <div className="min-h-screen bg-[#fdfaf2] text-[#2f2415]">
       <Header />
@@ -538,7 +543,7 @@ const Index = () => {
 
               {/* Reels Grid */}
               <div className="lg:col-span-4 h-full">
-                <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-2 scrollbar-hide">
+                <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-2 hide-scrollbar">
                   {reels.map((reel, i) => (
                     <div
                       key={reel.id}
@@ -716,15 +721,15 @@ const Index = () => {
                   Most Requested Looks
                 </h2>
               </div>
-              <Link
+              {/* <Link
                 to="/services"
                 className="inline-flex items-center gap-1 font-body text-sm uppercase tracking-[0.18em] text-[#7a5417] transition hover:text-[#a93d2b]"
               >
                 View All <ArrowRight size={14} />
-              </Link>
+              </Link> */}
             </div>
 
-            <div className="mb-8 flex justify-center md:justify-end">
+            <div className="mb-8 flex justify-center md:justify-center">
               <div className="inline-flex rounded-full border border-[#E7D8AD] p-1 bg-white/80">
                 <button
                   onClick={() => setLocation("delhi")}
@@ -757,11 +762,11 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {popularServices.map((service) => (
+            <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-2 xl:grid-cols-3 md:overflow-visible md:gap-6 hide-scrollbar">
+              {visiblePopular.map((service) => (
                 <div
                   key={service.id}
-                  className="group overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-white/88 shadow-[0_24px_55px_rgba(150,115,38,0.10)] transition-all hover:-translate-y-1 hover:border-[#a93d2b]/18 hover:shadow-[0_28px_65px_rgba(150,115,38,0.16)]"
+                  className="group min-w-[85%] sm:min-w-[48%] md:min-w-0 xl:min-w-0 snap-start overflow-hidden rounded-[2rem] border border-[#b9872e]/12 bg-white/88 shadow-[0_24px_55px_rgba(150,115,38,0.10)] transition-all hover:-translate-y-1 hover:border-[#a93d2b]/18 hover:shadow-[0_28px_65px_rgba(150,115,38,0.16)]"
                 >
                   <div className="aspect-[4/3.8] overflow-hidden bg-[#f8f0d9]">
                     <img
@@ -804,6 +809,14 @@ const Index = () => {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-10 flex justify-center">
+              <Link
+                to="/services"
+                className="inline-flex items-center gap-2 rounded-full border border-[#b9872e]/30 px-6 py-3 font-body text-xs uppercase tracking-[0.18em] text-[#7a5417] transition hover:bg-[#b9872e] hover:text-white"
+              >
+                View All Services <ArrowRight size={14} />
+              </Link>
             </div>
           </div>
         </section>
@@ -1118,7 +1131,7 @@ const Index = () => {
                     at my work!
                   </p>
                   <Link
-                    to="/services"
+                    to="/about-us"
                     className="mt-8 inline-flex items-center justify-center rounded-full bg-[#f23e77] px-10 py-3 font-body text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-[#d93467]"
                   >
                     Portfolio

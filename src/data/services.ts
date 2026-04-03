@@ -136,7 +136,7 @@ export const services: Service[] = [
   delhiPrice: 35000,
   outsideDelhiPrice: 40000,
   duration: "2 hours",
-  image: "/engagement1.jpeg",
+  image: "/engagement3.jpeg",
 },
 {
   id: 11,
@@ -272,17 +272,17 @@ export const services: Service[] = [
   duration: "2 hours",
   image: "/bhaat2.jpeg",
 },
- {
-    id: 23,
-    name: "Bhaat Makeup",
-    category: "Bhaat",
-    description: "Soft yet festive bhaat makeup curated for traditional functions. Delhi: ₹20,000 | Outside Delhi: ₹25,000. Minimum booking package: 20 makeups at ₹7,000 per makeup.",
-    price: 20000,
-    delhiPrice: 20000,
-    outsideDelhiPrice: 25000,
-    duration: "2 hours",
-    image: preweddingMakeup,
-  },
+//  {
+//     id: 23,
+//     name: "Bhaat Makeup",
+//     category: "Bhaat",
+//     description: "Soft yet festive bhaat makeup curated for traditional functions. Delhi: ₹20,000 | Outside Delhi: ₹25,000. Minimum booking package: 20 makeups at ₹7,000 per makeup.",
+//     price: 20000,
+//     delhiPrice: 20000,
+//     outsideDelhiPrice: 25000,
+//     duration: "2 hours",
+//     image: preweddingMakeup,
+//   },
 ];
 
 export const ABOUT_ANURAAG = {
