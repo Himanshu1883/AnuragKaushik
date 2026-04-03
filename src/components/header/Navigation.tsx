@@ -1,6 +1,7 @@
 import { useCart } from "@/contexts/CartContext";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { FaInstagram } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
@@ -81,31 +82,13 @@ const Navigation = () => {
             </Link>
           ))}
         </div>
-
         <a
           href="https://www.instagram.com/anuraagkaushik_92"
           target="_blank"
           rel="noopener noreferrer"
-          className="relative rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 p-2.5 text-[#2f2415] shadow-sm transition hover:border-[#a93d2b]/40 hover:text-[#a93d2b] inline-flex"
+          className="p-3 rounded-full border border-[#b9872e]/20  hover:text-white transition"
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-          >
-            <rect x="2" y="2" width="20" height="20" rx="6" />
-            <circle cx="12" cy="12" r="4" />
-            <circle
-              cx="17.5"
-              cy="6.5"
-              r="1.2"
-              fill="currentColor"
-              stroke="none"
-            />
-          </svg>
+          <FaInstagram size={18} className="text-[#E1306C]" />
         </a>
       </div>
 
