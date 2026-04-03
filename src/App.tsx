@@ -34,7 +34,7 @@ const PAGE_SEO: Record<string, { title: string; description: string }> = {
     title: "Checkout",
     description:
       "Confirm your makeup booking details and complete checkout for Anuraag Kaushik's professional makeup services.",
-  },
+  }, 
   "/contact": {
     title: "Contact",
     description:
