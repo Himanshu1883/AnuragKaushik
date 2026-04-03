@@ -11,7 +11,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 
 const Footer = () => {
-  const whatsappNumber = "+918765972595"; // with country code
+  const whatsappNumber = "+919821936847"; // with country code
 
   const getWhatsappLink = (message) => {
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
