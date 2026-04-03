@@ -19,6 +19,30 @@ const Services = () => {
   const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
   const cardsRef = useRef<Record<number, HTMLDivElement | null>>({});
 
+  const scrollTrackRef = useRef<HTMLDivElement>(null);
+  const touchStartXRef = useRef<number>(0);
+  const touchStartScrollRef = useRef<number>(0);
+  const isDraggingRef = useRef<boolean>(false);
+  const [mobilePaused, setMobilePaused] = useState(false);
+
+    // Mobile auto-scroll
+// Universal auto-scroll (all screens)
+  useEffect(() => {
+    const track = scrollTrackRef.current;
+    if (!track) return;
+
+    const interval = setInterval(() => {
+      if (mobilePaused) return;
+      if (track.scrollLeft >= track.scrollWidth / 2) {
+        track.scrollLeft = 0;
+      } else {
+        track.scrollLeft += 1;
+      }
+    }, 12);
+
+    return () => clearInterval(interval);
+  }, [mobilePaused])
+
   const filtered =
     activeCategory === "All"
       ? services
@@ -149,7 +173,7 @@ const Services = () => {
 }
 
 .animate-scroll {
-  animation: scroll 15s linear infinite;
+  animation: scroll 20s linear infinite;
 }
       `}</style>
 
@@ -300,7 +324,7 @@ const Services = () => {
         )}
       </main>
       {/* ================= OUR BRANDS ================= */}
-      <section className="mt-24 px-6">
+<section className="mt-24 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Heading */}
           <div className="text-center mb-16">
@@ -318,56 +342,104 @@ const Services = () => {
 
           {/* Brands */}
           <div className="relative overflow-hidden">
-            <div className="flex gap-20 animate-scroll items-center py-6">
+            {/* Left Arrow */}
+{/* Left Arrow */}
+            <button
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10
+                w-9 h-9 flex items-center justify-center
+                text-[#b9872e] transition-all duration-300
+                hover:text-[#e0c168] active:scale-95"
+              onClick={() => {
+                if (!scrollTrackRef.current) return;
+                scrollTrackRef.current.scrollLeft -= 230;
+              }}
+              aria-label="Scroll left"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+
+            {/* Right Arrow */}
+            <button
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10
+                w-9 h-9 flex items-center justify-center
+                text-[#b9872e] transition-all duration-300
+                hover:text-[#e0c168] active:scale-95"
+              onClick={() => {
+                if (!scrollTrackRef.current) return;
+                scrollTrackRef.current.scrollLeft += 230;
+              }}
+              aria-label="Scroll right"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+
+            {/* Universal auto-scrolling + draggable track */}
+            <div
+              ref={scrollTrackRef}
+              className="flex gap-8 md:gap-14 items-center py-6 px-10
+                overflow-x-auto
+                scrollbar-hide"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              onMouseEnter={() => setMobilePaused(true)}
+              onMouseLeave={() => setMobilePaused(false)}
+              onTouchStart={(e) => {
+                touchStartXRef.current = e.touches[0].clientX;
+                touchStartScrollRef.current = scrollTrackRef.current?.scrollLeft ?? 0;
+                isDraggingRef.current = false;
+                setMobilePaused(true);
+              }}
+              onTouchMove={(e) => {
+                if (!scrollTrackRef.current) return;
+                const delta = touchStartXRef.current - e.touches[0].clientX;
+                if (Math.abs(delta) > 5) isDraggingRef.current = true;
+                scrollTrackRef.current.scrollLeft = touchStartScrollRef.current + delta;
+              }}
+              onTouchEnd={() => {
+                isDraggingRef.current = false;
+                setTimeout(() => setMobilePaused(false), 1200);
+              }}
+            >
               {[
-                // "/brands (1).jpeg",
                 "/brands (2).jpeg",
                 "/brand (3).jpg",
                 "/brands (4).jpeg",
                 "/brands (5).jpeg",
                 "/brands (6).jpeg",
                 "/brands (7).jpeg",
-                // "/brands (8).jpeg",
+                "/brands (9).jpeg",
+                "/brands (10).jpeg",
+                // duplicate set for infinite loop
+                "/brands (2).jpeg",
+                "/brand (3).jpg",
+                "/brands (4).jpeg",
+                "/brands (5).jpeg",
+                "/brands (6).jpeg",
+                "/brands (7).jpeg",
                 "/brands (9).jpeg",
                 "/brands (10).jpeg",
               ].map((logo, i) => (
                 <div
                   key={i}
-                  className="group min-w-[210px] h-[150px] flex items-center justify-center
-  bg-white rounded-2xl
-  border border-[#b9872e]/25
-  shadow-[0_15px_35px_rgba(185,135,46,0.15)]
-  transition-all duration-500
-  hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(185,135,46,0.25)]"
+                  className="group flex-shrink-0 min-w-[170px] md:min-w-[210px] h-[130px] md:h-[150px]
+                    flex items-center justify-center
+                    bg-white rounded-2xl
+                    border border-[#b9872e]/25
+                    shadow-[0_15px_35px_rgba(185,135,46,0.15)]
+                    transition-all duration-500
+                    hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(185,135,46,0.25)]"
                 >
                   <img
                     src={logo}
                     alt="brand"
-                    className="h-[140px] w-auto object-cover object-[center_20%]
-    opacity-90 group-hover:opacity-100
-    transition duration-500"
+                    className="h-[120px] md:h-[140px] w-auto object-cover object-[center_20%]
+                      opacity-90 group-hover:opacity-100
+                      transition duration-500"
                   />
                 </div>
-              ))}
-
-              {/* Duplicate for smooth infinite scroll */}
-              {[
-                // "/brands (1).jpeg",
-                "/brands (2).jpeg",
-                "/brand (3).jpg",
-                "/brands (4).jpeg",
-                "/brands (5).jpeg",
-                "/brands (6).jpeg",
-                "/brands (7).jpeg",
-                // "/brands (8).jpeg",
-                "/brands (9).jpeg",
-                "/brands (10).jpeg",
-              ].map((logo, i) => (
-                <img
-                  key={"dup" + i}
-                  src={logo}
-                  className="max-h-12 opacity-40"
-                />
               ))}
             </div>
           </div>
