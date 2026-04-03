@@ -8,14 +8,42 @@ import {
   Phone,
   Youtube,
 } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 const Footer = () => {
+  const location = useLocation();
   const whatsappNumber = "+919821936847"; // with country code
+  const [hideFloatingCta, setHideFloatingCta] = useState(false);
 
   const getWhatsappLink = (message) => {
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const isHomePage = location.pathname === "/";
+    if (!isHomePage) {
+      setHideFloatingCta(false);
+      return;
+    }
+
+    const updateVisibility = () => {
+      const heroThreshold = window.innerHeight * 0.86;
+      setHideFloatingCta(window.scrollY < heroThreshold);
+    };
+
+    updateVisibility();
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    window.addEventListener("resize", updateVisibility);
+
+    return () => {
+      window.removeEventListener("scroll", updateVisibility);
+      window.removeEventListener("resize", updateVisibility);
+    };
+  }, [location.pathname]);
+
   return (
     <>
       <footer className="mt-0 flex w-full items-stretch border-t border-[#d8c08a]/35 bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(249,239,207,0.98))] px-0 py-6 text-[#2f2415] sm:px-0 sm:py-8 lg:px-0">
@@ -296,7 +324,9 @@ px-6 py-10 lg:px-12 lg:py-12"
         href={getWhatsappLink("Hi, I'm interested in your makeup services")}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-20 left-6 z-[9997] inline-flex items-center gap-2 rounded-full bg-[#b9872e] px-5 py-3 text-white shadow-[0_14px_40px_rgba(169,61,43,0.32)] transition-all duration-300 hover:scale-105 whatsapp-float"
+        className={`fixed bottom-4 left-4 z-[9997] inline-flex items-center gap-2 rounded-full bg-[#b9872e] px-5 py-3 text-white shadow-[0_14px_40px_rgba(169,61,43,0.32)] transition-all duration-300 hover:scale-105 whatsapp-float sm:bottom-20 sm:left-6 ${
+          hideFloatingCta ? "pointer-events-none opacity-0" : "opacity-100"
+        }`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -42,6 +42,10 @@ const Index = () => {
     x: 0,
     y: 0,
   });
+  const [isSmallDevice, setIsSmallDevice] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(max-width: 767px)").matches;
+  });
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showScroll, setShowScroll] = useState(false);
@@ -53,6 +57,23 @@ const Index = () => {
 
   useEffect(() => {
     return () => suppressGlobalCursor(false);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateSmallDevice = () => setIsSmallDevice(mediaQuery.matches);
+
+    updateSmallDevice();
+
+    if ("addEventListener" in mediaQuery) {
+      mediaQuery.addEventListener("change", updateSmallDevice);
+      return () => mediaQuery.removeEventListener("change", updateSmallDevice);
+    }
+
+    mediaQuery.addListener(updateSmallDevice);
+    return () => mediaQuery.removeListener(updateSmallDevice);
   }, []);
 
   const isIOSDevice = useMemo(() => {
@@ -105,6 +126,32 @@ const Index = () => {
       title: "Final Look",
     },
   ];
+
+  useEffect(() => {
+    if (!isSmallDevice || typeof window === "undefined") return;
+
+    const tryAutoPlayReels = () => {
+      Object.values(reelVideoRefs.current).forEach((video) => {
+        if (!video) return;
+
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(() => {
+            // Ignore autoplay rejections on restrictive browsers.
+          });
+        }
+      });
+    };
+
+    tryAutoPlayReels();
+    const timerId = window.setTimeout(tryAutoPlayReels, 350);
+
+    return () => window.clearTimeout(timerId);
+  }, [isSmallDevice]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -313,12 +360,13 @@ const Index = () => {
       <Header />
 
       <main className="overflow-hidden">
-        <section className="relative z-[20] isolate overflow-hidden bg-[linear-gradient(180deg,#fffdf7_0%,#f7eed2_100%)] md:min-h-[92vh]">
+        <section className="relative z-[20] isolate min-h-[92vh] overflow-hidden bg-[linear-gradient(180deg,#fffdf7_0%,#f7eed2_100%)] md:min-h-[92vh]">
           <img
             src={anuraagImage}
             alt="Anuraag Kaushik - Makeup Artist"
-            className="absolute inset-y-0 right-0 -z-20 h-full w-full object-cover object-top opacity-25 sm:opacity-40 md:w-[52%] md:opacity-100"
+            className="absolute inset-y-0 right-0 -z-20 h-full w-full object-cover object-top opacity-80 sm:opacity-85 md:w-[52%] md:opacity-100"
           />
+          <div className="absolute inset-0 z-100 bg-[linear-gradient(180deg,rgba(24,16,8,0.62)_0%,rgba(24,16,8,0.42)_44%,rgba(24,16,8,0.22)_100%)] md:hidden" />
           {/* <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,252,244,0.97)_0%,rgba(255,249,231,0.94)_46%,rgba(173,123,55,0.18)_68%,rgba(88,20,20,0.12)_100%)]" /> */}
           <div className="absolute left-[-8rem] top-[-4rem] -z-10 h-72 w-72 rounded-full bg-[#f0d98a]/35 blur-3xl" />
           <div className="absolute bottom-[-5rem] left-[14%] -z-10 h-64 w-64 rounded-full bg-[#d0472f]/10 blur-3xl" />
@@ -332,23 +380,23 @@ const Index = () => {
               }`}
             >
               <p
-                className="hero-reveal-item mb-5 font-body text-sm uppercase tracking-[0.35em] text-[#a93d2b]"
+                className="hero-reveal-item mb-5 font-body text-sm uppercase tracking-[0.35em] text-[#f7d9a2] md:text-[#a93d2b]"
                 style={{ ["--delay" as string]: "80ms" }}
               >
                 Luxury Bridal Makeup Artist
               </p>
               <h1
-                className="hero-reveal-item font-display text-[3.4rem] leading-[0.94] text-[#2f2415] sm:text-5xl md:text-7xl lg:text-[6.5rem]"
+                className="hero-reveal-item font-display text-[3.4rem] leading-[0.94] text-[#fff8ec] sm:text-5xl md:text-7xl md:text-[#2f2415] lg:text-[6.5rem]"
                 style={{ ["--delay" as string]: "220ms" }}
               >
                 Bridal beauty,
                 <br />
-                <span className="bg-gradient-to-r from-[#7a5417] via-[#c2952f] to-[#e0c168] bg-clip-text text-transparent italic px-2">
+                <span className="bg-[#e0c168] bg-clip-text text-transparent italic px-2">
                   gilded with quiet drama
                 </span>
               </h1>
               <p
-                className="hero-reveal-item mt-5 max-w-xl cursor-pointer font-body text-base font-light leading-7 text-[#5b4a2e] transition hover:border-[#a93d2b]/35 hover:text-[#a93d2b] sm:text-lg sm:leading-8 md:mt-6 md:text-xl"
+                className="hero-reveal-item mt-5 max-w-xl font-body text-base font-light leading-7 text-[#fff1da] sm:text-lg sm:leading-8 md:mt-6 md:text-xl md:text-[#5b4a2e]"
                 style={{ ["--delay" as string]: "360ms" }}
               >
                 Signature bridal artistry with radiant skin, expressive eyes,
@@ -357,7 +405,7 @@ const Index = () => {
               </p>
 
               <div
-                className="hero-reveal-item mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4"
+                className="hero-reveal-item mt-8 hidden flex-wrap gap-3 sm:mt-10 sm:gap-4 md:flex"
                 style={{ ["--delay" as string]: "500ms" }}
               >
                 <Link
@@ -368,14 +416,14 @@ const Index = () => {
                 </Link>
                 <Link
                   to="/about/our-story"
-                  className="inline-flex items-center rounded-full border border-[#b9872e]/30 bg-white/70 px-6 py-3 font-body text-xs font-medium uppercase tracking-[0.18em] text-[#6a4f1f] transition hover:border-[#a93d2b]/35 hover:text-[#a93d2b] sm:px-8 sm:text-sm"
+                  className="inline-flex items-center rounded-full border border-white/35 bg-black/30 px-6 py-3 font-body text-xs font-medium uppercase tracking-[0.18em] text-[#fff3df] transition hover:border-[#f1c57d]/45 hover:text-[#f7d9a2] sm:px-8 sm:text-sm md:border-[#b9872e]/30 md:bg-white/70 md:text-[#6a4f1f] md:hover:border-[#a93d2b]/35 md:hover:text-[#a93d2b]"
                 >
                   Learn More
                 </Link>
               </div>
 
               <div
-                className="hero-reveal-item mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+                className="hero-reveal-item mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3"
                 style={{ ["--delay" as string]: "660ms" }}
               >
                 {[
@@ -385,19 +433,34 @@ const Index = () => {
                 ].map((item, index) => (
                   <div
                     key={item}
-                    className="animate-fade-in rounded-[1.75rem] border border-[#b9872e]/12 bg-white/72 p-4 shadow-[0_18px_45px_rgba(130,99,32,0.10)] backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-[#a93d2b]/18 hover:bg-[#fffaf0]"
+                    className="animate-fade-in rounded-[1.75rem] border border-white/30 bg-black/28 p-4 shadow-[0_14px_35px_rgba(78,22,14,0.2)] backdrop-blur-sm transition duration-500 hover:-translate-y-1 hover:border-[#f0c17a]/55 hover:bg-black/34 md:border-[#b9872e]/12 md:bg-white/72 md:shadow-[0_18px_45px_rgba(130,99,32,0.10)] md:hover:border-[#a93d2b]/18 md:hover:bg-[#fffaf0]"
                     style={{
                       animationDelay: `${index * 180}ms`,
                       animationFillMode: "both",
                     }}
                   >
-                    <p className="font-body text-sm leading-6 text-[#4d3e24] hover:text-[#a93d2b] transition-colors">
+                    <p className="font-body text-sm leading-6 text-[#fff4df] md:text-[#6c5937]">
                       {item}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="absolute inset-x-4 bottom-6 z-30 flex gap-3 sm:inset-x-6 sm:bottom-8 md:hidden">
+            <Link
+              to="/services"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#b9872e] px-5 py-3 font-body text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white shadow-[0_18px_45px_rgba(185,135,46,0.28)] transition hover:-translate-y-0.5 hover:bg-[#a17829]"
+            >
+              Book Now <ArrowRight size={15} />
+            </Link>
+            <Link
+              to="/about/our-story"
+              className="inline-flex flex-1 items-center justify-center rounded-full border border-white/35 bg-black/30 px-5 py-3 font-body text-[0.72rem] font-medium uppercase tracking-[0.16em] text-[#fff3df] transition hover:border-[#f1c57d]/45 hover:text-[#f7d9a2]"
+            >
+              Learn More
+            </Link>
           </div>
 
           <div className="absolute bottom-8 right-6 hidden rounded-[1.9rem] border border-[#b9872e]/20 bg-white/78 p-5 text-[#2f2415] shadow-[0_18px_45px_rgba(130,99,32,0.14)] backdrop-blur md:block lg:right-12 lg:p-6">
@@ -570,11 +633,11 @@ const Index = () => {
                           src={reel.video}
                           className="h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
                           preload="metadata"
-                          autoPlay={!isIOSDevice}
+                          autoPlay={isSmallDevice || !isIOSDevice}
                           muted
                           loop
                           playsInline
-                          controls={isIOSDevice}
+                          controls={isIOSDevice && !isSmallDevice}
                           disablePictureInPicture
                           poster={anuraagImage}
                           ref={(el) => {
@@ -597,7 +660,7 @@ const Index = () => {
                           </p>
                         </div>
 
-                        {isIOSDevice ? (
+                        {isIOSDevice && !isSmallDevice ? (
                           <div className="pointer-events-none absolute inset-x-4 bottom-14 z-20">
                             <p className="font-body text-[0.58rem] uppercase tracking-[0.28em] text-white/75">
                               Tap to play
