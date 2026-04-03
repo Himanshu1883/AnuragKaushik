@@ -1,18 +1,9 @@
 import anuraagImage from "@/assets/footer.jpeg";
-import {
-  ArrowRight,
-  Facebook,
-  Instagram,
-  Mail,
-  MapPin,
-  Phone,
-  Youtube,
-} from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
-import { FaInstagram, FaYoutube, FaFacebookF } from "react-icons/fa";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
 import { Link, NavLink, useLocation } from "react-router-dom";
-
 
 const Footer = () => {
   const location = useLocation();
@@ -239,7 +230,7 @@ px-6 py-10 lg:px-12 lg:py-12"
 
                       <div className="flex items-center gap-3">
                         <Phone className="text-[#a93d2b]" size={18} />
-                        <span>+91 9910649876</span>
+                        <span>+91 9821936847</span>
                       </div>
 
                       <div className="flex items-center gap-3">
@@ -249,45 +240,43 @@ px-6 py-10 lg:px-12 lg:py-12"
                     </div>
 
                     {/* Social */}
-<div className="space-y-4">
-  <h4 className="font-body text-xs uppercase tracking-[0.28em] text-[#a93d2b]">
-    Follow
-  </h4>
+                    <div className="space-y-4">
+                      <h4 className="font-body text-xs uppercase tracking-[0.28em] text-[#a93d2b]">
+                        Follow
+                      </h4>
 
-  <div className="flex gap-3">
-    
-    {/* Instagram */}
-    <a 
-      href="https://www.instagram.com/anuraagkaushik_92"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-3 rounded-full border border-[#b9872e]/20  hover:text-white transition"
-    >
-      <FaInstagram size={18} className="text-[#E1306C]" />
-    </a>
+                      <div className="flex gap-3">
+                        {/* Instagram */}
+                        <a
+                          href="https://www.instagram.com/anuraagkaushik_92"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-3 rounded-full border border-[#b9872e]/20  hover:text-white transition"
+                        >
+                          <FaInstagram size={18} className="text-[#E1306C]" />
+                        </a>
 
-    {/* Threads */}
-    <a 
-      href="https://www.threads.net/@anuraagkaushik_92"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-3 rounded-full border border-[#b9872e]/20  hover:text-white transition"
-    >
-      <FaThreads size={18} className="text-black" />
-    </a>
+                        {/* Threads */}
+                        <a
+                          href="https://www.threads.net/@anuraagkaushik_92"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-3 rounded-full border border-[#b9872e]/20  hover:text-white transition"
+                        >
+                          <FaThreads size={18} className="text-black" />
+                        </a>
 
-    {/* Facebook */}
-    <a 
-      href="https://www.facebook.com/people/Anuraag-kaushik/61556325431403/"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-3 rounded-full border border-[#b9872e]/20  hover:text-white transition"
-    >
-      <FaFacebookF size={18} className="text-[#1877F2]" />
-    </a>
-
-  </div>
-</div>
+                        {/* Facebook */}
+                        <a
+                          href="https://www.facebook.com/people/Anuraag-kaushik/61556325431403/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-3 rounded-full border border-[#b9872e]/20  hover:text-white transition"
+                        >
+                          <FaFacebookF size={18} className="text-[#1877F2]" />
+                        </a>
+                      </div>
+                    </div>
 
                     {/* CTA */}
                     <div className="space-y-4 flex flex-col h-full">
