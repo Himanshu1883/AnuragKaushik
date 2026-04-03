@@ -1,5 +1,5 @@
 import { useCart } from "@/contexts/CartContext";
-import { Menu, ShoppingCart, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -82,17 +82,31 @@ const Navigation = () => {
           ))}
         </div>
 
-        <button
-          className="relative rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 p-2.5 text-[#2f2415] shadow-sm transition hover:border-[#a93d2b]/40 hover:text-[#a93d2b]"
-          onClick={() => setIsCartOpen(true)}
+        <a
+          href="https://www.instagram.com/anuraagkaushik_92"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative rounded-full border border-[#d8c08a]/80 bg-[#fff6df]/88 p-2.5 text-[#2f2415] shadow-sm transition hover:border-[#a93d2b]/40 hover:text-[#a93d2b] inline-flex"
         >
-          <ShoppingCart size={20} />
-          {totalItems > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#a93d2b] text-[0.6rem] font-bold text-white">
-              {totalItems}
-            </span>
-          )}
-        </button>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          >
+            <rect x="2" y="2" width="20" height="20" rx="6" />
+            <circle cx="12" cy="12" r="4" />
+            <circle
+              cx="17.5"
+              cy="6.5"
+              r="1.2"
+              fill="currentColor"
+              stroke="none"
+            />
+          </svg>
+        </a>
       </div>
 
       {isMobileMenuOpen && (

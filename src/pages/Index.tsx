@@ -167,9 +167,9 @@ const Index = () => {
     leftBottom: "/WhatsApp Image 2026-03-25 at 3.00.41 PM.jpeg",
     centerTop: "/WhatsApp Image 2026-03-25 at 3.01.01 PM.jpeg",
     centerBottom: "/WhatsApp Image 2026-03-25 at 3.00.28 PM.jpeg",
-    rightTop: "/WhatsApp Image 2026-03-25 at 3.00.41 PM (1).jpeg",
+    rightTop: "/WhatsApp Image 2026-03-24 at 5.38.06 PM.jpeg", //
     rightBottom: "/blueceleb.jpeg",
-    bottomOne: "/WhatsApp Image 2026-03-24 at 7.17.56 PM.jpeg",
+    bottomOne: "/WhatsApp Image 2026-03-24 at 7.17.57 PM.jpeg", //
     bottomTwo: "/WhatsApp Image 2026-03-24 at 5.38.05 PM.jpeg",
     bottomThree: "/WhatsApp Image 2026-03-24 at 5.38.07 PM (1).jpeg",
   };
@@ -619,7 +619,7 @@ const Index = () => {
               className="beauty-panel relative overflow-hidden rounded-[2.2rem] border border-[#b9872e]/12 bg-[radial-gradient(circle_at_top_left,rgba(240,216,129,0.25),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.78),rgba(243,228,183,0.9))] p-7 lg:p-9"
               style={{ ["--delay" as string]: "0ms" }}
             >
-              <div className="absolute right-6 top-6 h-20 w-20 rounded-full border border-[#b9872e]/12" />
+              {/* <div className="absolute right-6 top-6 h-20 w-20 rounded-full border border-[#b9872e]/12" /> */}
               <p className="font-body text-sm uppercase tracking-[0.28em] text-[#a93d2b]">
                 Beauty Direction
               </p>
@@ -742,7 +742,9 @@ const Index = () => {
                 <button
                   onClick={() => setLocation("outsideDelhi")}
                   className={`px-4 py-2 rounded-full text-xs font-semibold tracking-[0.12em] uppercase transition-all ${
-                    location === "outsideDelhi" ? "text-white" : "text-[#7d6a4d]"
+                    location === "outsideDelhi"
+                      ? "text-white"
+                      : "text-[#7d6a4d]"
                   }`}
                   style={
                     location === "outsideDelhi"
@@ -789,7 +791,10 @@ const Index = () => {
                       </div>
                       <button
                         onClick={() =>
-                          sendToWhatsapp({ ...service, price: getDisplayPrice(service) })
+                          sendToWhatsapp({
+                            ...service,
+                            price: getDisplayPrice(service),
+                          })
                         }
                         className="rounded-full bg-[#b9872e] px-5 py-2.5 font-body text-xs font-semibold tracking-[0.16em] text-white transition hover:bg-[#a17829]"
                       >
@@ -1086,7 +1091,7 @@ const Index = () => {
                   <img
                     src={collage.bottomOne}
                     alt="Bridal styling detail"
-                    className="h-[240px] w-full object-cover object-[center_20%] md:h-[280px]"
+                    className="h-[240px] w-full object-cover object-[center_5%] md:h-[280px]"
                   />
                 </article>
               </div>

@@ -30,7 +30,17 @@ const Services = () => {
 
   const filtered =
     activeCategory === "All"
-      ? services
+      ? Object.values(
+          services.reduce(
+            (acc, service) => {
+              if (!acc[service.category]) {
+                acc[service.category] = service; // take first per category
+              }
+              return acc;
+            },
+            {} as Record<string, (typeof services)[number]>,
+          ),
+        )
       : services.filter((s) => s.category === activeCategory);
 
   // Re-observe whenever filtered list changes
