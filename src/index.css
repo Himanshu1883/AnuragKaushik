@@ -446,3 +446,7 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+video {
+  pointer-events: none;
+}
