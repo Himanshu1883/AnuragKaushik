@@ -2,8 +2,6 @@ import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
 import { useEffect, useState, useRef } from "react";
 import { Plane } from "lucide-react";
-import anuraagAboutImage from "@/assets/about.jpeg";
-
 import bridalMakeup from "@/assets/bridal.jpg";
 import receptionMakeup from "@/assets/recep.jpg";
 import partyMakeup from "@/assets/party1.jpg";
@@ -12,6 +10,8 @@ import engagementMakeup from "@/assets/engage.jpg";
 import preweddingMakeup from "@/assets/prewed.jpeg";
 import masterclassMakeup from "@/assets/masterclass-makeup.jpg";
 import celebrityMakeup from "@/assets/recep2.jpg";
+import engagement from "@/assets/engagement-makeup_1.jpeg";
+import bridal from "@/assets/bridal_makeup_10.jpeg";
 
 // Define types for stats
 interface Stat {
@@ -50,7 +50,7 @@ From elegant bridal makeovers to high-fashion editorial looks, Anuraag combines 
     { value: "4.9★", label: "Average Rating", numericValue: 4.9, isStar: true },
   ] as Stat[],
   contact: {
-    phone: "+91 9625272041",
+    phone: "+91 9821936847",
     availability: "Available for bookings worldwide",
   },
 };
@@ -265,21 +265,111 @@ const AboutUs = () => {
           overflow: "hidden",
         }}
       >
-        <img
-          src={anuraagAboutImage}
-          alt="Anuraag Kaushik"
+        <div
           style={{
             position: "absolute",
             inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: isMobile ? "center 30%" : "center 20%",
             transform: `scale(${imgScale})`,
             transformOrigin: "center center",
             transition: "transform 0.05s linear",
           }}
-        />
+        >
+          {[
+            {
+              src: bridalMakeup,
+              alt: "Bridal makeup",
+              top: "0%",
+              left: "0%",
+              width: isMobile ? "62%" : "44%",
+              height: isMobile ? "54%" : "58%",
+              objectPosition: "center 20%",
+            },
+            {
+              src: receptionMakeup,
+              alt: "Reception makeup",
+              top: "0%",
+              right: "0%",
+              width: isMobile ? "38%" : "30%",
+              height: isMobile ? "44%" : "42%",
+              objectPosition: "center 25%",
+            },
+            {
+              src: partyMakeup,
+              alt: "Party makeup",
+              top: isMobile ? "44%" : "42%",
+              right: "0%",
+              width: isMobile ? "45%" : "34%",
+              height: isMobile ? "56%" : "58%",
+              objectPosition: "center 18%",
+            },
+            {
+              src: editorialMakeup,
+              alt: "Editorial makeup",
+              bottom: "0%",
+              left: "0%",
+              width: isMobile ? "55%" : "40%",
+              height: isMobile ? "46%" : "42%",
+              objectPosition: "center 26%",
+            },
+            // {
+            //   src: engagementMakeup,
+            //   alt: "Engagement makeup",
+            //   top: isMobile ? "28%" : "26%",
+            //   left: isMobile ? "40%" : "33%",
+            //   width: isMobile ? "28%" : "24%",
+            //   height: isMobile ? "30%" : "36%",
+            //   objectPosition: "center 18%",
+            // },
+            // {
+            //   src: preweddingMakeup,
+            //   alt: "Prewedding makeup",
+            //   top: isMobile ? "0%" : "0%",
+            //   left: isMobile ? "62%" : "74%",
+            //   width: isMobile ? "38%" : "26%",
+            //   height: isMobile ? "26%" : "24%",
+            //   objectPosition: "center 20%",
+            // },
+            // {
+            //   src: celebrityMakeup,
+            //   alt: "Celebrity makeup",
+            //   top: isMobile ? "74%" : "70%",
+            //   left: isMobile ? "55%" : "66%",
+            //   width: isMobile ? "45%" : "34%",
+            //   height: isMobile ? "26%" : "30%",
+            //   objectPosition: "center 18%",
+            // },
+          ].map((item, i) => (
+            <img
+              key={i}
+              src={item.src}
+              alt={item.alt}
+              style={{
+                position: "absolute",
+                top: item.top,
+                right: item.right,
+                bottom: item.bottom,
+                left: item.left,
+                width: item.width,
+                height: item.height,
+                objectFit: "cover",
+                objectPosition: item.objectPosition,
+              }}
+            />
+          ))}
+          <img
+            src={masterclassMakeup}
+            alt="Makeup artistry"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center 22%",
+              zIndex: -1,
+            }}
+          />
+        </div>
 
         <div
           style={{
@@ -1012,8 +1102,8 @@ const AboutUs = () => {
               >
                 {ABOUT_ANURAAG.services.map((service, i) => {
                   const serviceImages: Record<string, string> = {
-                    "Bridal Makeup": bridalMakeup,
-                    "Engagement & Reception Makeup": engagementMakeup,
+                    "Bridal Makeup": bridal,
+                    "Engagement & Reception Makeup": engagement,
                     "Fashion & Editorial Shoots": editorialMakeup,
                     "Party & Occasion Makeup": partyMakeup,
                     "Photoshoot Makeup": celebrityMakeup,

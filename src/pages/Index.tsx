@@ -14,6 +14,14 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer/Footer";
 import Header from "../components/header/Header";
+import bride_makeup_video from "@/assets/bride_makeup_video.mp4";
+import reception from "@/assets/reception_reel_2.mp4";
+import party from "@/assets/party_makeup_video.mp4";
+import haldi from "@/assets/haldi_makeup_1.jpeg";
+import glam from "@/assets/reception-makeup_2.jpeg";
+import party1 from "@/assets/party_makeup_7.jpeg";
+import bridal from "@/assets/bridal_makeup_10.jpeg";
+import makeup from "@/assets/makeup_setup.jpeg";
 
 const Index = () => {
   const { addToCart } = useCart();
@@ -95,23 +103,23 @@ const Index = () => {
   const reels = [
     {
       id: 1,
-      video: "/REEL_1.MP4",
-      title: "Bridal Preparation",
+      video: bride_makeup_video,
+      title: "Bridal Makeup ",
     },
     {
       id: 2,
-      video: "/REEL_2.MP4",
-      title: "Makeup Application",
+      video: reception,
+      title: "Reception Makeup",
     },
     {
       id: 3,
-      video: "/REEL_3.MP4",
-      title: "Finishing Touches",
+      video: party,
+      title: "Party Makeup",
     },
     {
       id: 4,
       video: "/REEL_4.MP4",
-      title: "Final Look",
+      title: "Mehendi Makeup",
     },
   ];
 
@@ -219,14 +227,14 @@ const Index = () => {
   ];
 
   const collage = {
-    leftTop: "/WhatsApp Image 2026-03-25 at 3.01.23 PM.jpeg",
-    leftBottom: "/WhatsApp Image 2026-03-25 at 3.00.41 PM.jpeg",
-    centerTop: "/WhatsApp Image 2026-03-25 at 3.01.01 PM.jpeg",
+    leftTop: haldi,
+    leftBottom: party1,
+    centerTop: bridal,
     centerBottom: "/WhatsApp Image 2026-03-25 at 3.00.28 PM.jpeg",
     rightTop: "/WhatsApp Image 2026-03-24 at 5.38.06 PM.jpeg", //
     rightBottom: "/blueceleb.jpeg",
-    bottomOne: "/WhatsApp Image 2026-03-24 at 7.17.57 PM.jpeg", //
-    bottomTwo: "/WhatsApp Image 2026-03-24 at 5.38.05 PM.jpeg",
+    bottomOne: glam, //
+
     bottomThree: "/WhatsApp Image 2026-03-24 at 5.38.07 PM (1).jpeg",
   };
 
@@ -601,7 +609,8 @@ items-start
                       <p className="mt-1 text-[0.7rem] sm:text-[0.75rem] leading-5 text-[#6c5937]">
                         Bridal Makeup Artist ✨ <br />
                         Transforming moments into timeless beauty. <br />
-                        Delhi | Destination Weddings
+                        Global Makeup Artist | Creating Beauty for Brides
+                        Worldwide
                       </p>
 
                       {/* <div className="mt-2 sm:mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.6rem] sm:text-[0.65rem] text-[#7a5417]">
@@ -848,7 +857,7 @@ items-start
                     <img
                       src={service.image}
                       alt={service.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 object-cover object-[center_20%]"
                     />
                   </div>
                   <div className="p-5">
@@ -949,15 +958,10 @@ items-start
                     playsInline
                     className="h-[300px] w-full object-cover object-[center_20%] sm:h-[320px] md:h-[260px] lg:h-[450px]"
                   />
-                  <div className="grid h-[300px] grid-rows-2 gap-px sm:h-[320px] md:h-[260px] lg:h-[450px]">
+                  <div className="h-[300px] sm:h-[320px] md:h-[260px] lg:h-[450px]">
                     <img
-                      src="/WhatsApp Image 2026-03-24 at 9.02.22 PM.jpeg"
-                      alt="Bridal preparation moment"
-                      className="h-full w-full object-cover object-[center_20%] transition duration-700 group-hover:scale-105"
-                    />
-                    <img
-                      src="/WhatsApp Image 2026-03-24 at 9.02.26 PM.jpeg"
-                      alt="Refined makeup close-up"
+                      src= {makeup}
+                      alt="Professional makeup setup"
                       className="h-full w-full object-cover object-[center_20%] transition duration-700 group-hover:scale-105"
                     />
                   </div>
@@ -983,7 +987,7 @@ items-start
                         key={item}
                         className="rounded-[1rem] border border-white/16 bg-white/10 px-3 py-2.5 text-center backdrop-blur sm:rounded-[1.2rem] sm:px-4 sm:py-3"
                       >
-                        <p className="font-body text-[0.5rem] uppercase tracking-[0.18em] text-white/72 sm:text-[0.62rem] sm:tracking-[0.26em]">
+                        <p className="font-body text-[0.5rem] uppercase tracking-[0.18em] text-white sm:text-[0.62rem] sm:tracking-[0.26em]">
                           {item}
                         </p>
                       </div>
@@ -1050,7 +1054,7 @@ items-start
                         className="h-full w-full object-cover object-[center_20%] transition duration-700 group-hover:scale-105"
                       />
                       <img
-                        src="/WhatsApp Image 2026-03-24 at 5.38.07 PM.jpeg"
+                        src= "/glam1.jpeg"
                         alt="Close-up makeup finish"
                         className="h-full w-full object-cover object-[center_20%] transition duration-700 group-hover:scale-105"
                       />
@@ -1160,7 +1164,7 @@ items-start
                   <img
                     src={collage.leftTop}
                     alt="Bridal portrait"
-                    className="h-[260px] w-full object-cover object-[center_20%] md:h-[310px]"
+                    className="h-[260px] w-full object-cover object-[center_10%] md:h-[310px]"
                   />
                 </article>
                 <article
@@ -1170,7 +1174,7 @@ items-start
                   <img
                     src={collage.leftBottom}
                     alt="Groom styling portrait"
-                    className="h-[260px] w-full object-cover object-[center_20%] md:h-[310px]"
+                    className="h-[260px] w-full object-cover object-[center_10%] md:h-[310px]"
                   />
                 </article>
                 <article
@@ -1180,7 +1184,7 @@ items-start
                   <img
                     src={collage.bottomOne}
                     alt="Bridal styling detail"
-                    className="h-[240px] w-full object-cover object-[center_5%] md:h-[280px]"
+                    className="h-[240px] w-full object-cover object-[center_10%] md:h-[280px]"
                   />
                 </article>
               </div>
@@ -1193,7 +1197,7 @@ items-start
                   <img
                     src={collage.centerTop}
                     alt="Center bridal hero portrait"
-                    className="h-[260px] w-full object-cover object-[center_20%] md:h-[310px]"
+                    className="h-[260px] w-full object-cover object-[center_5%] md:h-[310px]"
                   />
                 </article>
                 <article
@@ -1220,7 +1224,7 @@ items-start
                   <img
                     src={collage.centerBottom}
                     alt="Evening bridal portrait"
-                    className="h-[260px] w-full object-cover object-[center_20%] md:h-[310px]"
+                    className="h-[260px] w-full object-cover object-[center_10%] md:h-[310px]"
                   />
                 </article>
               </div>
@@ -1233,7 +1237,7 @@ items-start
                   <img
                     src={collage.rightTop}
                     alt="Bridal side portrait"
-                    className="h-[260px] w-full object-cover object-[center_20%] md:h-[310px]"
+                    className="h-[260px] w-full object-cover object-[center_10%] md:h-[310px]"
                   />
                 </article>
                 <article
@@ -1243,7 +1247,7 @@ items-start
                   <img
                     src={collage.rightBottom}
                     alt="Couple portrait"
-                    className="h-[260px] w-full object-cover object-[center_20%] md:h-[310px]"
+                    className="h-[260px] w-full object-cover object-[center_10%] md:h-[310px]"
                   />
                 </article>
                 <article

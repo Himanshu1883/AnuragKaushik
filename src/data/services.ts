@@ -10,6 +10,7 @@ import bridalMakeup9 from "@/assets/bridal_makeup_9.jpeg";
 import bridalMakeup1 from "@/assets/bridal_makeup_1.jpeg";
 import bridalMakeup3 from "@/assets/bridal_makeup_3.jpeg";
 import bridalMakeup11 from "@/assets/bridal_makeup_11.jpeg";
+import bridalMakeup10 from "@/assets/bridal_makeup_10.jpeg";
 // import bridalMakeup3 from "@/assets/bridal_makeup_3.jpeg";
 import bhaatMakeup2 from "@/assets/con2.jpg";
 import engagementMakeup from "@/assets/engagement-makeup_1.jpeg";
@@ -110,20 +111,20 @@ const baseServices: Service[] = [
     delhiPrice: 50000,
     outsideDelhiPrice: 55000,
     duration: "3-4 hours",
-    image: bridalMakeup2,
+    image: bridalMakeup10,
     popular: true,
   },
-  {
-  id: 6,
-  name: "Bhaat Soft Glam",
-  category: "Bhaat",
-  description: "Soft glam bhaat look with lightweight finish.",
-  price: 30000,
-  delhiPrice: 30000,
-  outsideDelhiPrice: 35000,
-  duration: "1.5 hours",
-  image: bhaatMakeup2,
-},
+//   {
+//   id: 6,
+//   name: "Bhaat Soft Glam",
+//   category: "Bhaat",
+//   description: "Soft glam bhaat look with lightweight finish.",
+//   price: 30000,
+//   delhiPrice: 30000,
+//   outsideDelhiPrice: 35000,
+//   duration: "1.5 hours",
+//   image: bhaatMakeup2,
+// },
   {
     id: 7,
     name: "Party Makeup ",
@@ -145,17 +146,6 @@ const baseServices: Service[] = [
     outsideDelhiPrice: 22000,
     duration: "1-2 hours",
     image: partyMakeupYoung,
-  },
-  {
-    id: 9,
-    name: "Bhaat Makeup",
-    category: "Bhaat",
-    description: "Soft yet festive bhaat makeup curated for traditional functions. Delhi: ₹30,000 | Outside Delhi: ₹35,000. Minimum booking package: 20 makeups at ₹7,000 per makeup.",
-    price: 30000,
-    delhiPrice: 30000,
-    outsideDelhiPrice: 35000,
-    duration: "2 hours",
-    image: bhaatMakeup,
   },
   {
   id: 10,
@@ -291,17 +281,17 @@ const baseServices: Service[] = [
   duration: "1.5 hours",
   image: "/party3.jpeg",
 },
-{
-  id: 22,
-  name: "Bhaat HD Makeup",
-  category: "Bhaat",
-  description: "HD bhaat makeup with festive glow.",
-  price: 30000,
-  delhiPrice: 30000,
-  outsideDelhiPrice: 35000,
-  duration: "2 hours",
-  image: "/bhaat2.jpeg",
-},
+// {
+//   id: 22,
+//   name: "Bhaat HD Makeup",
+//   category: "Bhaat",
+//   description: "HD bhaat makeup with festive glow.",
+//   price: 30000,
+//   delhiPrice: 30000,
+//   outsideDelhiPrice: 35000,
+//   duration: "2 hours",
+//   image: "/bhaat2.jpeg",
+// },
 {
   id: 23,
   name: "Cocktail Glam Makeup",
@@ -368,7 +358,7 @@ const categoryExtraImages: Partial<Record<string, string[]>> = {
   Reception: [receptionMakeup, receptionMakeup2, receptionMakeup3],
   Mehndi: [mehndiMakeup, mehndiMakeup2],
   Haldi: [haldiMakeup, haldiMakeup2],
-  Bhaat: [bhaatMakeup, bhaatMakeup2],
+  
 };
 
 // Add category-wise videos here.
@@ -447,7 +437,7 @@ From elegant bridal makeovers to high-fashion editorial looks, Anuraag combines 
     "Freelance Makeup Artist with diverse experience across bridal, fashion, and event makeup.",
 
   contact: {
-    phone: "+91 9625272041",
+    phone: "+91 9821936847",
     availability: "Available for bookings worldwide",
   },
 };

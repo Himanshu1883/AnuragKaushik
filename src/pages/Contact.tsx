@@ -6,6 +6,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState, type ChangeEvent } from "react";
 import { FaInstagram } from "react-icons/fa";
 import { FiMail, FiMapPin, FiPhone } from "react-icons/fi";
+import bridal from "@/assets/bridal_makeup_1O.jpeg";  
+import glam from "@/assets/glam_makeup.jpeg"; 
+import engagement from "@/assets/engagement-makeup_1.jpeg";
+import party from "@/assets/party_makeup_9.jpeg";
+import reception from "@/assets/reception-makeup_1.jpeg";
+import party1 from "@/assets/party_makeup_8.jpeg";
+
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -23,12 +30,12 @@ const Contact = () => {
   });
 
   const bgImages = [
-    "/bridal.jpg",
-    "/celeb.jpg",
-    "/prewed.jpeg",
-    "/con1.jpg",
-    "/con2.jpg",
-    "/con3.jpg",
+    engagement,
+    glam,
+    party,
+    reception,
+    party1,
+    party
   ];
 
   const isRequiredField = (
@@ -397,7 +404,7 @@ const Contact = () => {
                 <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 md:p-10 border border-[#e8dfcc] overflow-hidden">
                   <div className="relative z-10 space-y-6 sm:space-y-8">
                     <a
-                      href="tel:+919625272041"
+                      href="tel:+919821936847"
                       className="group flex items-start gap-4 sm:gap-5 hover:translate-x-1 transition-transform duration-300"
                     >
                       <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#f5ede1] flex items-center justify-center flex-shrink-0 group-hover:bg-[#b9872e] transition-all duration-300 border border-[#e8dfcc]">
