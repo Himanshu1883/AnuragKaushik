@@ -93,7 +93,7 @@ const baseServices: Service[] = [
     name: "Reception Makeup",
     category: "Reception",
     description:
-      "High-glam reception makeup with flawless skin finish and premium products. Delhi: ?45,000 | Outside Delhi: ?50,000. Minimum booking package: 20 makeups at ?7,000 per makeup.",
+      "High-glam reception makeup with flawless skin finish and premium products. Delhi:45,000 | Outside Delhi:50,000. Minimum booking package: 20 makeups at 7,000 per makeup.",
     price: 45000,
     delhiPrice: 45000,
     outsideDelhiPrice: 50000,
