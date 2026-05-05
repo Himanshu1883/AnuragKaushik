@@ -3,7 +3,7 @@ import Header from "@/components/header/Header";
 import { useCart } from "@/contexts/CartContext";
 import { services } from "@/data/services";
 import { sendToWhatsapp } from "@/utils/whatsapp";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BsWhatsapp } from "react-icons/bs";
 import { FaClock, FaStar } from "react-icons/fa";
 
@@ -12,11 +12,19 @@ const categories = [
   ...Array.from(new Set(services.map((s) => s.category))),
 ];
 
+type SpecialMedia = {
+  type: "image" | "video";
+  url: string;
+};
+
 const Services = () => {
   const { addToCart } = useCart();
   const [activeCategory, setActiveCategory] = useState("All");
   const [location, setLocation] = useState<"delhi" | "outsideDelhi">("delhi");
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [selectedSpecialMedia, setSelectedSpecialMedia] =
+    useState<SpecialMedia | null>(null);
+  const [visibleThumbRows, setVisibleThumbRows] = useState(1);
   const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
   const cardsRef = useRef<Record<number, HTMLDivElement | null>>({});
 
@@ -47,9 +55,13 @@ const Services = () => {
     location === "delhi" ? service.delhiPrice : service.outsideDelhiPrice;
 
   const getServiceImages = (service: (typeof services)[number]) => {
-    if (service.images && service.images.length > 0) return service.images;
-    return [service.image];
+    const imgs = service.images && service.images.length > 0 ? service.images : [service.image];
+    return imgs.filter((img): img is string => Boolean(img && img.trim()));
   };
+  const getServiceVideos = (service: (typeof services)[number]) =>
+    (service.videos ?? []).filter((video): video is string =>
+      Boolean(video && video.trim()),
+    );
 
   const filtered =
     activeCategory === "All"
@@ -65,6 +77,55 @@ const Services = () => {
           ),
         )
       : services.filter((s) => s.category === activeCategory);
+  const isSpecialCategoryView = activeCategory !== "All";
+
+  const specialCategoryMedia = useMemo(() => {
+    const imgs = filtered.flatMap((service) =>
+      getServiceImages(service).map((url) => ({ type: "image" as const, url })),
+    );
+    const videos = filtered.flatMap((service) =>
+      getServiceVideos(service).map((url) => ({ type: "video" as const, url })),
+    );
+    const unique = new Map<string, SpecialMedia>();
+    [...imgs, ...videos].forEach((item) => unique.set(`${item.type}:${item.url}`, item));
+    return Array.from(unique.values());
+  }, [filtered]);
+  const specialPrimaryService = filtered[0];
+  const specialCategoryMinPrice =
+    filtered.length > 0
+      ? Math.min(...filtered.map((s) => getDisplayPrice(s)))
+      : 0;
+  const specialCategoryMaxPrice =
+    filtered.length > 0
+      ? Math.max(...filtered.map((s) => getDisplayPrice(s)))
+      : 0;
+  const isSinglePriceSpecialCategory =
+    activeCategory === "Party" || activeCategory === "Bridal";
+
+  useEffect(() => {
+    if (!isSpecialCategoryView) return;
+    setSelectedSpecialMedia(
+      specialCategoryMedia[0] ?? { type: "image", url: "/placeholder.svg" },
+    );
+    setVisibleThumbRows(1);
+  }, [activeCategory, isSpecialCategoryView]);
+
+  useEffect(() => {
+    if (!isSpecialCategoryView) return;
+    if (!selectedSpecialMedia && specialCategoryMedia.length > 0) {
+      setSelectedSpecialMedia(specialCategoryMedia[0]);
+    }
+  }, [isSpecialCategoryView, selectedSpecialMedia, specialCategoryMedia]);
+
+  const thumbsPerRow = 10;
+  const maxThumbRows = Math.max(
+    1,
+    Math.ceil(specialCategoryMedia.length / thumbsPerRow),
+  );
+  const visibleThumbs = specialCategoryMedia.slice(
+    0,
+    visibleThumbRows * thumbsPerRow,
+  );
 
   // Re-observe whenever filtered list changes
   useEffect(() => {
@@ -365,123 +426,289 @@ const Services = () => {
           </div>
         </div>
 
-        {/* Grid */}
-        <div
-          className="
+        {/* Grid / Special Category Showcase */}
+        {isSpecialCategoryView ? (
+          <section className="rounded-3xl border border-[#b9872e]/20 bg-gradient-to-b from-[#fffdfa] to-[#fff7ea] p-4 md:p-8 shadow-[0_20px_45px_rgba(24,17,5,0.1)]">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
+              <div>
+                <div className="relative rounded-2xl overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.15)]">
+                  {selectedSpecialMedia?.type === "video" ? (
+                    <video
+                      src={selectedSpecialMedia.url}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-[240px] md:h-[600px] object-cover object-[center_20%] "
+                    />
+                  ) : (
+                    <img
+                      src={selectedSpecialMedia?.url || "/placeholder.svg"}
+                      alt={`${activeCategory} showcase`}
+                      className="w-full h-[240px] md:h-[600px] object-cover object-[center_20%] "
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                  <span className="absolute bottom-3 left-3 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full bg-black/35 backdrop-blur-sm">
+                    {specialCategoryMedia.length} Media in {activeCategory}
+                  </span>
+                </div>
+                {specialCategoryMedia.length > 1 && (
+                  <>
+                  <div className="mt-3 grid grid-cols-5 md:grid-cols-10 gap-2">
+                    {visibleThumbs.map((media, i) => (
+                      <button
+                        key={`${activeCategory}-gallery-${media.type}-${i}`}
+                        type="button"
+                        onClick={() => setSelectedSpecialMedia(media)}
+                        className={`rounded-lg border overflow-hidden transition-all ${
+                          selectedSpecialMedia?.url === media.url &&
+                          selectedSpecialMedia?.type === media.type
+                            ? "border-[#b9872e] ring-2 ring-[#b9872e]/30"
+                            : "border-[#b9872e]/20"
+                        }`}
+                        aria-label={`Show ${activeCategory} media ${i + 1}`}
+                      >
+                        {media.type === "video" ? (
+                          <video
+                            src={media.url}
+                            className="h-16 md:h-20 w-full object-cover"
+                            muted
+                            playsInline
+                          />
+                        ) : (
+                          <img
+                            src={media.url}
+                            alt={`${activeCategory} look ${i + 1}`}
+                            className="h-16 md:h-20 w-full object-cover object-[center_5%]"
+                            loading="lazy"
+                          />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  {visibleThumbRows < maxThumbRows && (
+                    <div className="mt-3 flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setVisibleThumbRows((prev) => prev + 1)}
+                        className="text-xs md:text-sm font-semibold px-4 py-2 rounded-lg border border-[#b9872e]/35 text-[#8b6520] hover:bg-[#b9872e]/10 transition"
+                      >
+                        Show More
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setVisibleThumbRows(maxThumbRows)}
+                        className="text-xs md:text-sm font-semibold px-4 py-2 rounded-lg border border-[#b9872e]/35 text-[#8b6520] hover:bg-[#b9872e]/10 transition"
+                      >
+                        Show All
+                      </button>
+                    </div>
+                  )}
+                  </>
+                )}
+              </div>
+
+              <div>
+                <span className="inline-block text-[11px] tracking-[0.18em] uppercase font-semibold text-[#b9872e]">
+                  Special Service
+                </span>
+                <h2 className="font-display text-3xl md:text-4xl text-[#2f2415] mt-2">
+                  {activeCategory} Makeup Collection
+                </h2>
+                <p className="text-[#5e5140] mt-3 leading-relaxed">
+                  {specialPrimaryService?.description ||
+                    `Premium ${activeCategory.toLowerCase()} looks crafted to match your event vibe with luxury products and lasting finish.`}
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#b9872e]/10 text-[#815d1e] border border-[#b9872e]/25">
+                    {filtered.length} Service Options
+                  </span>
+                  <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#2f2415]/10 text-[#2f2415] border border-[#2f2415]/20">
+                    ₹
+                    {(isSinglePriceSpecialCategory
+                      ? specialCategoryMinPrice
+                      : specialCategoryMinPrice
+                    ).toLocaleString()}
+                    {!isSinglePriceSpecialCategory &&
+                    specialCategoryMaxPrice !== specialCategoryMinPrice
+                      ? ` - ₹${specialCategoryMaxPrice.toLocaleString()}`
+                      : ""}
+                  </span>
+                </div>
+
+                <div className="mt-6 space-y-3 max-h-[280px] overflow-y-auto pr-1 hide-scrollbar">
+                  {filtered.map((service) => (
+                    <div
+                      key={`special-row-${service.id}`}
+                      className="rounded-xl border border-[#b9872e]/20 bg-white/80 px-4 py-3"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="font-semibold text-[#2f2415]">
+                            {service.name}
+                          </h3>
+                          <p className="text-xs text-[#6b5b45] mt-1 flex items-center gap-1.5">
+                            <FaClock size={11} style={{ color: "#b9872e" }} />
+                            {service.duration}
+                          </p>
+                        </div>
+                        {!isSinglePriceSpecialCategory && (
+                          <p className="font-display text-base text-[#2f2415] font-semibold">
+                            ₹{getDisplayPrice(service).toLocaleString()}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => {
+                    if (!specialPrimaryService) return;
+                    sendToWhatsapp({
+                      ...specialPrimaryService,
+                      name: `${activeCategory} Makeup Collection`,
+                      description: `Interested in ${activeCategory} services. Please share details for all available looks.`,
+                      price: specialCategoryMinPrice,
+                    });
+                  }}
+                  className="mt-6 w-full md:w-auto px-7 py-3 rounded-xl text-sm font-semibold
+text-white shadow-md transition-all duration-300 hover:-translate-y-[1px] active:scale-95
+border border-[#d8c08a]/30 flex items-center justify-center gap-2"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #b9872e 0%, #a87a26 100%)",
+                  }}
+                >
+                  <BsWhatsapp size={16} className="drop-shadow-sm" />
+                  Book {activeCategory} Service
+                </button>
+              </div>
+            </div>
+          </section>
+        ) : (
+          <div
+            className="
   grid grid-cols-2 gap-4
   max-h-[520px] overflow-y-auto hide-scrollbar
   md:grid-cols-2 lg:grid-cols-3
   md:max-h-none md:overflow-visible
 "
-        >
-          {filtered.map((service, index) => {
-            const animationClass =
-              animationVariants[index % animationVariants.length];
-            const isVisible = visibleCards.has(service.id.toString());
+          >
+            {filtered.map((service, index) => {
+              const animationClass =
+                animationVariants[index % animationVariants.length];
+              const isVisible = visibleCards.has(service.id.toString());
 
-            return (
-              <div
-                key={`${activeCategory}-${service.id}`} // force remount on category change
-                ref={(el) => {
-                  cardsRef.current[service.id] = el;
-                }}
-                data-id={service.id}
-                className={`service-card ${
-                  isVisible ? animationClass : "opacity-0"
-                }`}
-              >
-                {/* Image */}
-                <div className="service-image-strip">
-                  {getServiceImages(service).map((img, imgIndex) => (
-                    <img
-                      key={`${service.id}-${imgIndex}`}
-                      src={img}
-                      alt={`${service.name} ${imgIndex + 1}`}
-                      className="service-image-item"
-                      loading="lazy"
-                    />
-                  ))}
-                </div>
+              return (
+                <div
+                  key={`${activeCategory}-${service.id}`} // force remount on category change
+                  ref={(el) => {
+                    cardsRef.current[service.id] = el;
+                  }}
+                  data-id={service.id}
+                  className={`service-card ${
+                    isVisible ? animationClass : "opacity-0"
+                  }`}
+                >
+                  {/* Image */}
+                  <div className="service-image-strip">
+                    {(activeCategory === "All"
+                      ? [service.image || getServiceImages(service)[0]].filter(Boolean)
+                      : getServiceImages(service)
+                    ).map((img, imgIndex) => (
+                      <img
+                        key={`${service.id}-${imgIndex}`}
+                        src={img}
+                        alt={`${service.name} ${imgIndex + 1}`}
+                        className="service-image-item"
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
 
-                {/* Overlay */}
-                <div className="card-overlay" />
+                  {/* Overlay */}
+                  <div className="card-overlay" />
 
-                {/* Badges */}
-                <div className="absolute top-4 right-2 z-10">
-                  <span
-                    className="inline-block text-gray-900 text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full shadow-lg"
-                    style={{ backgroundColor: "#b92e6f" }}
-                  >
-                    {service.category}
-                  </span>
-                </div>
-                {service.popular && (
-                  <div className="absolute top-4 left-2 z-10 hidden md:block">
+                  {/* Badges */}
+                  <div className="absolute top-4 right-2 z-10">
                     <span
-                      className="inline-flex items-center gap-1 text-white text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full shadow-lg"
-                      style={{ backgroundColor: "#b9872e" }}
+                      className="inline-block text-gray-900 text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full shadow-lg"
+                      style={{ backgroundColor: "#b92e6f" }}
                     >
-                      <FaStar size={12} fill="currentColor" />
-                      POPULAR
+                      {service.category}
                     </span>
                   </div>
-                )}
-
-                {/* Bottom content */}
-                <div className="card-bottom">
-                  <h3 className="font-display text-lg md:text-2xl text-white font-semibold leading-tight mb-1">
-                    {service.name}
-                  </h3>
-
-                  {/* Meta row */}
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-1.5">
-                      <FaClock size={13} style={{ color: "#b9872e" }} />
-                      <span className="text-gray-300 text-[11px] md:text-xs font-medium">
-                        {service.duration}
+                  {service.popular && (
+                    <div className="absolute top-4 left-2 z-10 hidden md:block">
+                      <span
+                        className="inline-flex items-center gap-1 text-white text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full shadow-lg"
+                        style={{ backgroundColor: "#b9872e" }}
+                      >
+                        <FaStar size={12} fill="currentColor" />
+                        POPULAR
                       </span>
                     </div>
-                    <p
-                      key={location}
-                      className="price-animate font-display text-sm md:text-xl font-semibold"
-                    >
-                      ₹{getDisplayPrice(service).toLocaleString()}
-                    </p>
-                  </div>
+                  )}
 
-                  {/* Description â€” slides in on hover via CSS only */}
-                  <div className="card-desc">
-                    <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                      {service.description}
-                    </p>
-                  </div>
+                  {/* Bottom content */}
+                  <div className="card-bottom">
+                    <h3 className="font-display text-lg md:text-2xl text-white font-semibold leading-tight mb-1">
+                      {service.name}
+                    </h3>
 
-                  {/* Button â€” fades in on hover via CSS only */}
-                  <button
-                    onClick={() =>
-                      sendToWhatsapp({
-                        ...service,
-                        price: getDisplayPrice(service),
-                      })
-                    }
-                    className="card-btn w-full px-6 py-2.5 rounded-lg text-sm font-semibold 
+                    {/* Meta row */}
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-1.5">
+                        <FaClock size={13} style={{ color: "#b9872e" }} />
+                        <span className="text-gray-300 text-[11px] md:text-xs font-medium">
+                          {service.duration}
+                        </span>
+                      </div>
+                      <p
+                        key={location}
+                        className="price-animate font-display text-sm md:text-xl font-semibold"
+                      >
+                        ₹{getDisplayPrice(service).toLocaleString()}
+                      </p>
+                    </div>
+
+                    {/* Description â€” slides in on hover via CSS only */}
+                    <div className="card-desc">
+                      <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                        {service.description}
+                      </p>
+                    </div>
+
+                    {/* Button â€” fades in on hover via CSS only */}
+                    <button
+                      onClick={() =>
+                        sendToWhatsapp({
+                          ...service,
+                          price: getDisplayPrice(service),
+                        })
+                      }
+                      className="card-btn w-full px-6 py-2.5 rounded-lg text-sm font-semibold 
   flex items-center justify-center gap-2 
   text-white shadow-md 
   transition-all duration-300 
   hover:-translate-y-[1px] active:scale-95
   border border-[#d8c08a]/30"
-                    style={{
-                      background: "linear-gradient(135deg, #b9872e, #a17829)",
-                    }}
-                  >
-                    <BsWhatsapp size={16} className="drop-shadow-sm" />
-                    Book Now
-                  </button>
+                      style={{
+                        background: "linear-gradient(135deg, #b9872e, #a17829)",
+                      }}
+                    >
+                      <BsWhatsapp size={16} className="drop-shadow-sm" />
+                      Book Now
+                    </button>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         {filtered.length === 0 && (
           <div className="text-center py-16">
@@ -492,7 +719,7 @@ const Services = () => {
         )}
       </main>
       {/* ================= OUR BRANDS ================= */}
-<section className="mt-24 px-6">
+<section className="md:mt-24 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Heading */}
           <div className="text-center mb-16">

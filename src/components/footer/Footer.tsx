@@ -289,7 +289,7 @@ px-6 py-10 lg:px-12 lg:py-12"
                           { label: "Home", to: "/" },
                           { label: "Services", to: "/services" },
                           // { label: "Portfolio", to: "/portfolio" },
-                          { label: "About", to: "/about/our-story" },
+                          { label: "About", to: "/about-us" },
                           { label: "Contact", to: "/contact" },
                         ].map((item) => (
                           <NavLink

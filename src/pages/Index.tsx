@@ -10,7 +10,7 @@ import {
   Instagram,
   Sparkles,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer/Footer";
 import Header from "../components/header/Header";
@@ -60,29 +60,17 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
     const mediaQuery = window.matchMedia("(max-width: 767px)");
+
     const updateSmallDevice = () => setIsSmallDevice(mediaQuery.matches);
 
     updateSmallDevice();
 
-    if ("addEventListener" in mediaQuery) {
-      mediaQuery.addEventListener("change", updateSmallDevice);
-      return () => mediaQuery.removeEventListener("change", updateSmallDevice);
-    }
+    mediaQuery.addEventListener("change", updateSmallDevice);
 
-    mediaQuery.addListener(updateSmallDevice);
-    return () => mediaQuery.removeListener(updateSmallDevice);
-  }, []);
-
-  const isIOSDevice = useMemo(() => {
-    if (typeof navigator === "undefined") return false;
-    const ua = navigator.userAgent ?? "";
-    const isAppleMobile = /iPad|iPhone|iPod/.test(ua);
-    const isIPadOS =
-      navigator.platform === "MacIntel" && (navigator.maxTouchPoints ?? 0) > 1;
-    return isAppleMobile || isIPadOS;
+    return () => {
+      mediaQuery.removeEventListener("change", updateSmallDevice);
+    };
   }, []);
 
   const toggleReelPlayback = async (reelId: number) => {
@@ -128,15 +116,22 @@ const Index = () => {
   ];
 
   useEffect(() => {
-    if (!isSmallDevice || typeof window === "undefined") return;
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
 
     const tryAutoPlayReels = () => {
       Object.values(reelVideoRefs.current).forEach((video) => {
         if (!video) return;
 
+        // iOS Safari needs muted + inline attributes before play() to allow autoplay.
         video.muted = true;
         video.defaultMuted = true;
+        video.volume = 0;
+        video.loop = true;
         video.playsInline = true;
+        video.setAttribute("muted", "");
+        video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "true");
 
         const playPromise = video.play();
         if (playPromise && typeof playPromise.catch === "function") {
@@ -147,11 +142,25 @@ const Index = () => {
       });
     };
 
-    tryAutoPlayReels();
-    const timerId = window.setTimeout(tryAutoPlayReels, 350);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        tryAutoPlayReels();
+      }
+    };
 
-    return () => window.clearTimeout(timerId);
-  }, [isSmallDevice]);
+    tryAutoPlayReels();
+    const timerId = window.setTimeout(tryAutoPlayReels, 250);
+    const frameId = window.requestAnimationFrame(tryAutoPlayReels);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pageshow", tryAutoPlayReels);
+
+    return () => {
+      window.clearTimeout(timerId);
+      window.cancelAnimationFrame(frameId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pageshow", tryAutoPlayReels);
+    };
+  }, [isStatsVisible]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -522,70 +531,80 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.2fr_repeat(4,minmax(0,1fr))] items-stretch">
+            <div
+              className="
+grid gap-3 
+grid-cols-1 
+md:grid-cols-2 
+lg:grid-cols-1 
+xl:grid-cols-[1.2fr_repeat(4,minmax(0,1fr))]
+items-start
+"
+            >
               {/* Instagram CTA Panel */}
               <div
                 className="reels-cta reels-reveal-item relative overflow-hidden rounded-[2rem] border border-[#b9872e]/12 
   bg-[radial-gradient(circle_at_top_left,rgba(241,217,139,0.34),transparent_44%),linear-gradient(180deg,rgba(255,255,255,0.82),rgba(245,233,193,0.96))] 
-  p-4 sm:p-5 md:p-6 flex flex-col h-full lg:min-h-[520px] xl:min-h-0"
+  p-4 sm:p-5 md:p-6 flex flex-col h-auto lg:h-auto"
                 style={{ ["--delay" as string]: "0ms" }}
               >
-                <p className="font-body text-[0.65rem] sm:text-[0.7rem] tracking-[0.28em] sm:tracking-[0.32em] uppercase text-[#a93d2b]">
-                  Behind the Brush
-                </p>
+                <div className="w-full lg:grid lg:grid-cols-2 lg:gap-x-10 lg:gap-y-6 xl:block">
+                  <p className="lg:col-start-1 lg:row-start-1 font-body text-[0.65rem] sm:text-[0.7rem] tracking-[0.28em] sm:tracking-[0.32em] uppercase text-[#a93d2b]">
+                    Behind the Brush
+                  </p>
 
-                <h3
-                  className="mt-3 sm:mt-4 max-w-xs font-display 
+                  <h3
+                    className="lg:col-start-2 lg:row-start-1 mt-3 sm:mt-4 lg:mt-0 lg:max-w-none font-display 
   text-[1.45rem] sm:text-[1.7rem] md:text-[2.2rem] lg:text-4xl 
   leading-[1.05] text-[#2f2415]"
-                >
-                  See the magic in motion.
-                </h3>
+                  >
+                    See the magic in motion.
+                  </h3>
 
-                <p
-                  className="mt-4 sm:mt-5 max-w-sm font-body 
+                  <p
+                    className="lg:col-start-1 lg:row-start-2 mt-4 sm:mt-5 lg:mt-0 lg:max-w-none font-body 
   text-[0.8rem] sm:text-sm leading-6 sm:leading-7 text-[#6c5937]"
-                >
-                  Watch exclusive reels of signature bridal looks, makeup
-                  techniques, and behind-the-scenes moments from the studio.
-                </p>
+                  >
+                    Watch exclusive reels of signature bridal looks, makeup
+                    techniques, and behind-the-scenes moments from the studio.
+                  </p>
 
-                <a
-                  href="https://www.instagram.com/anuraagkaushik_92?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 sm:mt-8 inline-flex items-center gap-2 sm:gap-3 
-    rounded-full border border-[#b9872e]/15 bg-white/55 
-    px-3 sm:px-4 py-2 transition hover:border-[#a93d2b]/30 hover:bg-white/75 w-fit"
-                >
-                  <Instagram className="h-4 w-4 text-[#a93d2b]" />
-                  <span className="font-body text-[0.65rem] sm:text-[0.68rem] uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#7a5417]">
-                    Follow on Instagram
-                  </span>
-                </a>
+                  <a
+                    href="https://www.instagram.com/anuraagkaushik_92?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="lg:col-start-2 lg:row-start-2 mt-6 sm:mt-8 lg:mt-2 inline-flex items-center gap-2 sm:gap-3 
+  rounded-full border border-[#b9872e]/15 bg-white/55 
+  px-3 sm:px-4 py-2 transition hover:border-[#a93d2b]/30 hover:bg-white/75 w-fit"
+                  >
+                    <Instagram className="h-4 w-4 text-[#a93d2b]" />
+                    <span className="font-body text-[0.65rem] sm:text-[0.68rem] uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#7a5417]">
+                      Follow on Instagram
+                    </span>
+                  </a>
 
-                {/* Profile */}
-                <div className="mt-auto pt-5 sm:pt-6 lg:pt-4 flex items-start gap-3 sm:gap-4">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-[#b9872e]/20 flex-shrink-0">
-                    <img
-                      src={anuraagImage}
-                      alt="profile"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
+                  {/* Profile */}
+                  <div className="lg:col-start-1 lg:row-start-3 pt-5 sm:pt-6 lg:pt-4 flex items-start gap-3 sm:gap-4">
+                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-[#b9872e]/20 flex-shrink-0">
+                      <img
+                        src={anuraagImage}
+                        alt="profile"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
 
-                  <div className="flex-1">
-                    <p className="font-body text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#a93d2b]">
-                      Anuraag Kaushik
-                    </p>
+                    <div className="flex-1">
+                      <p className="font-body text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#a93d2b]">
+                        Anuraag Kaushik
+                      </p>
 
-                    <p className="mt-1 text-[0.7rem] sm:text-[0.75rem] leading-5 text-[#6c5937]">
-                      Bridal Makeup Artist ✨ <br />
-                      Transforming moments into timeless beauty. <br />
-                      Delhi | Destination Weddings
-                    </p>
+                      <p className="mt-1 text-[0.7rem] sm:text-[0.75rem] leading-5 text-[#6c5937]">
+                        Bridal Makeup Artist ✨ <br />
+                        Transforming moments into timeless beauty. <br />
+                        Delhi | Destination Weddings
+                      </p>
 
-                    {/* <div className="mt-2 sm:mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.6rem] sm:text-[0.65rem] text-[#7a5417]">
+                      {/* <div className="mt-2 sm:mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.6rem] sm:text-[0.65rem] text-[#7a5417]">
                       <span>
                         <strong>120K+</strong> followers
                       </span>
@@ -596,16 +615,17 @@ const Index = () => {
                         <strong>5★</strong> rated
                       </span>
                     </div> */}
+                    </div>
                   </div>
-                </div>
 
-                <p className="mt-3 sm:mt-4 text-[0.6rem] sm:text-[0.65rem] text-center text-[#a93d2b]/80 italic">
-                  “Every bride deserves to feel iconic.”
-                </p>
+                  <p className="lg:col-start-2 lg:row-start-3 mt-3 sm:mt-4 lg:mt-6 text-[0.6rem] sm:text-[0.65rem] text-left lg:text-left text-[#a93d2b]/80 italic">
+                    “Every bride deserves to feel iconic.”
+                  </p>
+                </div>
               </div>
 
               {/* Reels Grid */}
-              <div className="lg:col-span-4 h-full">
+              <div className="lg:col-span-1 xl:col-span-4 h-full">
                 <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-2 hide-scrollbar">
                   {reels.map((reel, i) => (
                     <div
@@ -632,17 +652,18 @@ const Index = () => {
                         <video
                           src={reel.video}
                           className="h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
-                          preload="metadata"
-                          autoPlay={isSmallDevice || !isIOSDevice}
+                          autoPlay
                           muted
                           loop
                           playsInline
-                          controls={isIOSDevice && !isSmallDevice}
+                          preload="auto"
+                          controls={false}
                           disablePictureInPicture
                           poster={anuraagImage}
                           ref={(el) => {
                             reelVideoRefs.current[reel.id] = el;
                           }}
+                          webkit-playsinline="true"
                         />
 
                         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(47,36,21,0.1),rgba(47,36,21,0.4))]" />
@@ -659,14 +680,6 @@ const Index = () => {
                             {reel.title}
                           </p>
                         </div>
-
-                        {isIOSDevice && !isSmallDevice ? (
-                          <div className="pointer-events-none absolute inset-x-4 bottom-14 z-20">
-                            <p className="font-body text-[0.58rem] uppercase tracking-[0.28em] text-white/75">
-                              Tap to play
-                            </p>
-                          </div>
-                        ) : null}
                       </div>
                     </div>
                   ))}

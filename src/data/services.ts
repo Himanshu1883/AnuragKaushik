@@ -1,14 +1,41 @@
 ﻿import bhaatMakeup from "@/assets/bhaat2.jpeg";
-import bridalMakeup from "@/assets/bridal.jpg";
+import bridalMakeup from "@/assets/bridal_makeup_10.jpeg";
+import bridalMakeup2 from "@/assets/bridal_makeup_2.jpeg";
+import bridalMakeup4 from "@/assets/bridal_makeup_4.jpeg";
+import bridalMakeup5 from "@/assets/bridal_makeup_5.jpeg";
+import bridalMakeup6 from "@/assets/bridal_makeup_6.jpeg";
+import bridalMakeup7 from "@/assets/bridal_makeup_7.jpeg";
+import bridalMakeup8 from "@/assets/bridal_makeup_8.jpeg";
+import bridalMakeup9 from "@/assets/bridal_makeup_9.jpeg";
+import bridalMakeup1 from "@/assets/bridal_makeup_1.jpeg";
+import bridalMakeup3 from "@/assets/bridal_makeup_3.jpeg";
+import bridalMakeup11 from "@/assets/bridal_makeup_11.jpeg";
+// import bridalMakeup3 from "@/assets/bridal_makeup_3.jpeg";
 import bhaatMakeup2 from "@/assets/con2.jpg";
-import engagementMakeup from "@/assets/engage.jpg";
-import haldiMakeup from "@/assets/haldi.jpg";
-import Haldi2 from "@/assets/haldi2.jpeg";
-import mehndi2 from "@/assets/mehndi2.jpeg";
-import partyMakeupYoung from "@/assets/party.jpeg";
-import partyMakeup from "@/assets/party1.jpg";
-import preweddingMakeup from "@/assets/prewed.jpeg";
-import receptionMakeup from "@/assets/recep.jpg";
+import engagementMakeup from "@/assets/engagement-makeup_1.jpeg";
+import haldiMakeup2 from "@/assets/haldi2.jpeg";
+import haldiMakeup from "@/assets/haldi_makeup_1.jpeg";
+import mehndiMakeup from "@/assets/mehendi_makeup_1.jpeg";
+import mehndiMakeup2 from "@/assets/mehendi_makeup_2.jpeg";
+import partyMakeupYoung from "@/assets/party_makeup_1.jpeg";
+import partyMakeup from "@/assets/party_makeup_2.jpeg";
+import partyMakeup3 from "@/assets/party_makeup_3.jpeg";
+import partyMakeup4 from "@/assets/party_makeup_4.jpeg";
+import receptionMakeup2 from "@/assets/reception-makeup_1.jpeg";
+import receptionMakeup3 from "@/assets/reception-makeup_2.jpeg";
+import receptionMakeup from "@/assets/reception_makeup_1.jpeg";
+import cocktail from "@/assets/cocktails_1.jpeg";
+import party_makeup_video from "@/assets/party_makeup_video.mp4";
+import party_makeup_video2 from "@/assets/party_makeup_video2.mp4";
+import reception_makeup_video from "@/assets/reception_reel_1.mp4";
+import reception_makeup_video2 from "@/assets/reception_reel_2.mp4";
+import Reception_video from "@/assets/Reception_video.mp4";
+import reception_video2 from "@/assets/Reception_video2.mp4";
+import bride_video from "@/assets/bride_makeup_video.mp4";
+import mehendi_video from "@/assets/mehendi_video.mp4";
+import reception_video4 from "@/assets/reception_video3.mp4";
+import party_makeUP_video3 from "@/assets/party_makeup_video3.mp4";
+
 
 export interface Service {
   id: number;
@@ -21,10 +48,11 @@ export interface Service {
   duration: string;
   image: string;
   images?: string[];
+  videos?: string[];
   popular?: boolean;
 }
 
-export const services: Service[] = [
+const baseServices: Service[] = [
   {
     id: 1,
     name: "Engagement Makeup",
@@ -41,12 +69,13 @@ export const services: Service[] = [
     id: 2,
     name: "Mehndi Makeup",
     category: "Mehndi",
-    description: "Fresh and vibrant mehndi look with long-lasting products. Delhi: ₹25,000 | Outside Delhi: ₹30,000. Minimum booking package: 20 makeups at ₹7,000 per makeup.",
+    description:
+      "Fresh and vibrant mehndi look with long-lasting products. Delhi:25,000 | Outside Delhi:30,000. Minimum booking package: 20 makeups at 7,000 per makeup.",
     price: 25000,
     delhiPrice: 25000,
     outsideDelhiPrice: 30000,
     duration: "2-3 hours",
-    image: preweddingMakeup,
+    image: mehndiMakeup,
   },
   {
     id: 3,
@@ -63,7 +92,8 @@ export const services: Service[] = [
     id: 4,
     name: "Reception Makeup",
     category: "Reception",
-    description: "High-glam reception makeup with flawless skin finish and premium products. Delhi: ₹45,000 | Outside Delhi: ₹50,000. Minimum booking package: 20 makeups at ₹7,000 per makeup.",
+    description:
+      "High-glam reception makeup with flawless skin finish and premium products. Delhi: ?45,000 | Outside Delhi: ?50,000. Minimum booking package: 20 makeups at ?7,000 per makeup.",
     price: 45000,
     delhiPrice: 45000,
     outsideDelhiPrice: 50000,
@@ -80,7 +110,7 @@ export const services: Service[] = [
     delhiPrice: 50000,
     outsideDelhiPrice: 55000,
     duration: "3-4 hours",
-    image: bridalMakeup,
+    image: bridalMakeup2,
     popular: true,
   },
   {
@@ -96,7 +126,7 @@ export const services: Service[] = [
 },
   {
     id: 7,
-    name: "Party Makeup (Old)",
+    name: "Party Makeup ",
     category: "Party",
     description: "Classic party glam for mature features with balanced, elegant detailing. Delhi: ₹17,000 | Outside Delhi: ₹22,000.",
     price: 17000,
@@ -116,7 +146,7 @@ export const services: Service[] = [
     duration: "1-2 hours",
     image: partyMakeupYoung,
   },
-    {
+  {
     id: 9,
     name: "Bhaat Makeup",
     category: "Bhaat",
@@ -158,7 +188,7 @@ export const services: Service[] = [
   delhiPrice: 25000,
   outsideDelhiPrice: 30000,
   duration: "1.5 hours",
-  image: mehndi2,
+  image: "",
 },
 {
   id: 13,
@@ -180,7 +210,7 @@ export const services: Service[] = [
   delhiPrice: 25000,
   outsideDelhiPrice: 30000,
   duration: "1.5 hours",
-  image: Haldi2,
+  image: "",
 },
 // {
 //   id: 15,
@@ -281,7 +311,7 @@ export const services: Service[] = [
   delhiPrice: 40000,
   outsideDelhiPrice: 45000,
   duration: "2 hours",
-  image: "",
+  image: cocktail,
 },
 {
   id: 24,
@@ -292,7 +322,7 @@ export const services: Service[] = [
   delhiPrice: 35000,
   outsideDelhiPrice: 40000,
   duration: "2 hours",
-  image: "",
+  image: "/mehndi3.jpeg",
 },
 {
   id: 25,
@@ -303,7 +333,7 @@ export const services: Service[] = [
   delhiPrice: 12000,
   outsideDelhiPrice: 15000,
   duration: "1.5 hours",
-  image: "",
+  image: bridalMakeup11,
 }
 //  {
 //     id: 23,
@@ -318,10 +348,69 @@ export const services: Service[] = [
 //   },
 ];
 
+// Add more images category-wise here without creating new service entries.
+// Example:
+// Party: ["/party4.jpeg", "/party5.jpeg"]
+const categoryExtraImages: Partial<Record<string, string[]>> = {
+  Bridal: [
+    bridalMakeup1,
+    bridalMakeup2,
+    bridalMakeup3,
+    bridalMakeup4,
+    bridalMakeup5,
+    bridalMakeup6,
+    bridalMakeup7,
+    bridalMakeup8,
+    bridalMakeup9,
+    bridalMakeup11,
+  ],
+  Party: [partyMakeup, partyMakeupYoung, partyMakeup3, partyMakeup4],
+  Reception: [receptionMakeup, receptionMakeup2, receptionMakeup3],
+  Mehndi: [mehndiMakeup, mehndiMakeup2],
+  Haldi: [haldiMakeup, haldiMakeup2],
+  Bhaat: [bhaatMakeup, bhaatMakeup2],
+};
+
+// Add category-wise videos here.
+// Example:
+// Bridal: ["/videos/bridal1.mp4", "/videos/bridal2.mp4"]
+const categoryExtraVideos: Partial<Record<string, string[]>> = {
+  Bridal: [bride_video],
+  Party: [party_makeup_video, party_makeup_video2],
+  Cocktail: [],
+  Groom: [],
+  Sangeet: [],
+  Reception: [reception_makeup_video, reception_makeup_video2, Reception_video, reception_video4],
+  Mehndi: [mehendi_video],
+  Haldi: [],
+  Bhaat: [],
+};
+
+export const services: Service[] = baseServices.map((service) => {
+  const ownImages = (service.images ?? []).filter(Boolean);
+  const ownVideos = (service.videos ?? []).filter(Boolean);
+  const fallbackImage = service.image ? [service.image] : [];
+  const categoryImages = categoryExtraImages[service.category] ?? [];
+  const categoryVideos = categoryExtraVideos[service.category] ?? [];
+
+  const mergedImages = Array.from(
+    new Set([...ownImages, ...fallbackImage, ...categoryImages].filter(Boolean)),
+  );
+  const mergedVideos = Array.from(
+    new Set([...ownVideos, ...categoryVideos].filter(Boolean)),
+  );
+
+  return {
+    ...service,
+    images: mergedImages.length > 0 ? mergedImages : undefined,
+    videos: mergedVideos.length > 0 ? mergedVideos : undefined,
+  };
+});
+
 export const ABOUT_ANURAAG = {
   name: "Anuraag Kaushik",
   title: "Professional Makeup Artist",
-  tagline: "Bridal & Fashion Glam Specialist âœ¨",
+  tagline: "Bridal & Fashion Glam Specialist ✨",
 
   image: "/assets/about.jpeg", // adjust path if needed
 
@@ -335,7 +424,7 @@ From elegant bridal makeovers to high-fashion editorial looks, Anuraag combines 
     "Personalized Makeup Sessions",
     "High-Quality Premium Products",
     "Focus on Skin-Friendly Techniques",
-    "Available for Travel Worldwide "
+    "Available for Travel Worldwide ",
   ],
 
   services: [
@@ -344,21 +433,22 @@ From elegant bridal makeovers to high-fashion editorial looks, Anuraag combines 
     "Fashion & Editorial Shoots",
     "Party & Occasion Makeup",
     "Photoshoot Makeup",
-    "Makeup Consultation"
+    "Makeup Consultation",
   ],
 
   stats: [
     { value: "500+", label: "Brides Styled" },
     { value: "8+", label: "Years Experience" },
     { value: "50+", label: "Celebrity Clients" },
-    { value: "4.9â˜…", label: "Average Rating" },
+    { value: "4.9★", label: "Average Rating" },
   ],
 
-  experienceNote: "Freelance Makeup Artist with diverse experience across bridal, fashion, and event makeup.",
+  experienceNote:
+    "Freelance Makeup Artist with diverse experience across bridal, fashion, and event makeup.",
 
   contact: {
     phone: "+91 9625272041",
-    availability: "Available for bookings worldwide"
-  }
+    availability: "Available for bookings worldwide",
+  },
 };
 
