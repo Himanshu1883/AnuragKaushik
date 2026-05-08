@@ -53,7 +53,7 @@ const Contact = () => {
       }
     };
 
-  const handleSendInquiry = () => {
+  const handleSendInquiry = () => { 
     const nextErrors = {
       name: formData.name.trim() ? "" : "Name is required",
       phone: formData.phone.trim() ? "" : "Phone number is required",
