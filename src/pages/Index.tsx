@@ -976,7 +976,7 @@ items-start
                       A finish that photographs beautifully, wears comfortably,
                       and feels personal from start to end.
                     </p>
-                    <p className="mt-2 max-w-[17rem] font-body text-[0.88rem] leading-6 text-white/92 sm:mt-3 sm:max-w-xl sm:text-sm sm:leading-6 md:max-w-2xl md:leading-7 hover:text-[#FFD700] transition-colors">
+                    <p className="mt-2 max-w-[17rem] font-body text-[0.88rem] leading-6 text-white/70 sm:mt-3 sm:max-w-xl sm:text-sm sm:leading-6 md:max-w-2xl md:leading-7 hover:text-[#FFD700] transition-colors">
                       Real prep moments, real finish shots, and a calm workflow
                       that turns makeup into a complete luxury service.
                     </p>

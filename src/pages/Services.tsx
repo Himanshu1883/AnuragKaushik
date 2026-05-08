@@ -611,7 +611,11 @@ border border-[#d8c08a]/30 flex items-center justify-center gap-2"
                   data-id={service.id}
                   className={`service-card ${
                     isVisible ? animationClass : "opacity-0"
-                  }`}
+                  } ${activeCategory === "All" ? "cursor-pointer" : ""}`}
+                  onClick={() => {
+                    if (activeCategory !== "All") return;
+                    setActiveCategory(service.category);
+                  }}
                 >
                   {/* Image */}
                   <div className="service-image-strip">
@@ -684,12 +688,13 @@ border border-[#d8c08a]/30 flex items-center justify-center gap-2"
 
                     {/* Button â€” fades in on hover via CSS only */}
                     <button
-                      onClick={() =>
+                      onClick={(e) => {
+                        e.stopPropagation();
                         sendToWhatsapp({
                           ...service,
                           price: getDisplayPrice(service),
-                        })
-                      }
+                        });
+                      }}
                       className="card-btn w-full px-6 py-2.5 rounded-lg text-sm font-semibold 
   flex items-center justify-center gap-2 
   text-white shadow-md 

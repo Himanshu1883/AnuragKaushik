@@ -8,7 +8,8 @@ import partyMakeup from "@/assets/party1.jpg";
 import editorialMakeup from "@/assets/edit.jpg";
 import engagementMakeup from "@/assets/engage.jpg";
 import preweddingMakeup from "@/assets/prewed.jpeg";
-import masterclassMakeup from "@/assets/masterclass-makeup.jpg";
+import masterclassMakeup from "@/assets/makeup_setup.jpeg";
+import party3 from "@/assets/party_makeup_3.jpeg";
 import celebrityMakeup from "@/assets/recep2.jpg";
 import engagement from "@/assets/engagement-makeup_1.jpeg";
 import bridal from "@/assets/bridal_makeup_10.jpeg";
@@ -357,7 +358,7 @@ const AboutUs = () => {
             />
           ))}
           <img
-            src={masterclassMakeup}
+            src={party3}
             alt="Makeup artistry"
             style={{
               position: "absolute",
@@ -365,7 +366,7 @@ const AboutUs = () => {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              objectPosition: "center 22%",
+              objectPosition: "center 20%",
               zIndex: -1,
             }}
           />
